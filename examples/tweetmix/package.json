@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "superflare": "^1.0.0"
+    "superflare": "workspace:*",
+    "tsconfig": "workspace:*"
   }
 }

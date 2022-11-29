@@ -14,9 +14,11 @@ importers:
 
   examples/tweetmix:
     specifiers:
-      superflare: ^1.0.0
+      superflare: workspace:*
+      tsconfig: workspace:*
     dependencies:
       superflare: link:../../packages/superflare
+      tsconfig: link:../../packages/tsconfig
 
   packages/eslint-config-custom:
     specifiers:

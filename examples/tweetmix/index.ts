@@ -1,3 +1,12 @@
 import { Tweet } from "./tweet";
 
-const tweet = await Tweet.find(1);
+async function go() {
+  const tweet = await Tweet.first();
+
+  if (!tweet) return;
+
+  tweet.id;
+  tweet.hello();
+}
+
+go();
