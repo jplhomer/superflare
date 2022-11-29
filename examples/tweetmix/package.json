@@ -1,16 +1,53 @@
 {
   "name": "tweetmix",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An example Superflare app powered by Remix",
+  "private": true,
+  "sideEffects": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "run-p \"build:*\"",
+    "build:remix": "remix build",
+    "build:css": "npm run generate:css -- --minify",
+    "dev:css": "npm run generate:css -- --watch",
+    "dev:remix": "remix watch",
+    "dev:wrangler": "cross-env NODE_ENV=development wrangler dev --local --persist",
+    "dev": "touch ./app/tailwind.css && remix build && run-p \"dev:*\"",
+    "generate:css": "npx tailwindcss -o ./app/tailwind.css",
+    "start": "cross-env NODE_ENV=production npm run dev:wrangler",
+    "db:migrate:fresh": "mkdir -p ./.wrangler/state/d1 && touch ./.wrangler/state/d1/TWEETS_DB.sqlite3 && sqlite3 ./.wrangler/state/d1/TWEETS_DB.sqlite3 < ./db/migrations.sql"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Josh Larson <jplhomer@gmail.com>",
+  "license": "MIT",
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.2.0",
+    "@heroicons/react": "^2.0.13",
+    "@remix-run/cloudflare": "^1.7.5",
+    "@remix-run/react": "^1.7.5",
+    "clsx": "^1.2.1",
+    "cross-env": "^7.0.3",
+    "isbot": "^3.6.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "superflare": "workspace:*",
-    "tsconfig": "workspace:*"
+    "tailwindcss": "^3.2.3",
+    "tiny-invariant": "^1.3.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.14.1",
+    "@remix-run/dev": "^1.7.5",
+    "@remix-run/eslint-config": "^1.7.5",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "better-sqlite3": "^7.6.2",
+    "eslint": "^8.23.1",
+    "npm-run-all": "^4.1.5",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.7.4",
+    "wrangler": "^2.3.2"
+  },
+  "engines": {
+    "node": ">=16.13"
   }
 }
