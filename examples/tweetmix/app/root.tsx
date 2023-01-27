@@ -13,11 +13,9 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import { Layout } from "./components/Layout";
-import { getUserId, logout } from "./lib/session.server";
-import { User } from "./models/user.server";
 import { config } from "superflare";
 import styles from "./tailwind.css";
+import { Tweet } from "../tweet";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -27,24 +25,7 @@ export const meta: MetaFunction = () => ({
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
-export async function loader({ request, context }: LoaderArgs) {
-  config({ database: context.DB });
-  const userId = await getUserId(request);
-
-  try {
-    const user = userId ? await User.find(userId, context) : null;
-
-    return json({
-      user,
-    });
-  } catch (error) {
-    throw await logout(request);
-  }
-}
-
 export default function App() {
-  const { user } = useLoaderData<typeof loader>();
-
   return (
     <html lang="en">
       <head>
@@ -52,9 +33,7 @@ export default function App() {
         <Links />
       </head>
       <body className="dark:text-gray-100 dark:bg-black">
-        <Layout user={user}>
-          <Outlet />
-        </Layout>
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

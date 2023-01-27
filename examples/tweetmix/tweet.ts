@@ -1,6 +1,6 @@
-import { Tweet as BaseTweet } from "./types/superflare";
+import { Model } from "superflare";
 
-export class Tweet extends BaseTweet {
+export class Tweet extends Model {
   static tableName = "tweets";
 
   hello() {
