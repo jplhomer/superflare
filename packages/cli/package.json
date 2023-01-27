@@ -1,0 +1,16 @@
+{
+  "name": "@superflare/cli",
+  "version": "1.0.0",
+  "description": "The CLI for Superflare",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsconfig": "workspace:*",
+    "vitest": "^0.28.3"
+  }
+}

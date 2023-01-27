@@ -9,17 +9,18 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "test": "vitest",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
-    "turbo": "latest"
+    "turbo": "latest",
+    "vitest": "^0.28.3"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
   "packageManager": "pnpm@7.17.1"
 }
