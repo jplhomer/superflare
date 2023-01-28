@@ -90,14 +90,15 @@ describe("generateTypesFromSqlite", () => {
   const sql = `
     CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email VARCHAR(255),
-    name VARCHAR(255)
+    email VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL
   );
 
   CREATE TABLE posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title VARCHAR(255),
-    user_id INTEGER,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    user_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
   `;
@@ -112,6 +113,26 @@ describe("generateTypesFromSqlite", () => {
 
   it("creates types from a sqlite database", () => {
     const result = generateTypesFromSqlite(db);
-    console.log({ result });
+
+    expect(result.length).toBe(2);
+
+    expect(result.find((r) => r.model === "User")).toEqual({
+      model: "User",
+      types: [
+        { name: "id", type: "number", nullable: false },
+        { name: "email", type: "string", nullable: false },
+        { name: "name", type: "string", nullable: false },
+      ],
+    });
+
+    expect(result.find((r) => r.model === "Post")).toEqual({
+      model: "Post",
+      types: [
+        { name: "id", type: "number", nullable: false },
+        { name: "title", type: "string", nullable: false },
+        { name: "description", type: "string", nullable: true },
+        { name: "user_id", type: "number", nullable: false },
+      ],
+    });
   });
 });

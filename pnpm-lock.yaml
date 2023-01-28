@@ -72,13 +72,17 @@ importers:
   packages/cli:
     specifiers:
       '@types/better-sqlite3': ^7.6.3
+      '@types/pluralize': ^0.0.29
       better-sqlite3: ^7.6.2
+      pluralize: ^8.0.0
       tsconfig: workspace:*
       vitest: ^0.28.3
     dependencies:
       better-sqlite3: 7.6.2
+      pluralize: 8.0.0
     devDependencies:
       '@types/better-sqlite3': 7.6.3
+      '@types/pluralize': 0.0.29
       tsconfig: link:../tsconfig
       vitest: 0.28.3
 
@@ -2324,6 +2328,10 @@ packages:
 
   /@types/node/18.11.9:
     resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
+    dev: true
+
+  /@types/pluralize/0.0.29:
+    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
     dev: true
 
   /@types/prop-types/15.7.5:
@@ -7316,6 +7324,11 @@ packages:
       mlly: 1.1.0
       pathe: 1.1.0
     dev: true
+
+  /pluralize/8.0.0:
+    resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
+    engines: {node: '>=4'}
+    dev: false
 
   /posix-character-classes/0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}

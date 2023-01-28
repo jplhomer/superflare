@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import pluralize from "pluralize";
 
 export interface SuperflareType {
   name: string;
@@ -46,13 +47,27 @@ function wrapWithTypeMarkers(source: string): string {
   return `${SUPERFLARE_TYPES_START_MARKER}\n${source}\n  ${SUPERFLARE_TYPES_END_MARKER}`;
 }
 
-export interface SqliteTableListTable {
+interface SqliteTableListTable {
   schema: string;
   name: string;
   type: string;
   ncol: number;
   wr: number;
   strict: number;
+}
+
+interface SqliteTableInfoColumn {
+  cid: number;
+  name: string;
+  type: string;
+  notnull: boolean;
+  dflt_value: any;
+  pk: boolean;
+}
+
+interface ModelWithSuperflareTypes {
+  model: string;
+  types: SuperflareType[];
 }
 
 /**
@@ -66,24 +81,48 @@ export function generateTypesFromSqlite(db: Database.Database) {
       (table) => !table.name.startsWith("sqlite_")
     ) as SqliteTableListTable[];
 
-  const types: Array<{ table: string; types: SuperflareType[] }> = [];
+  const types: ModelWithSuperflareTypes[] = [];
 
   for (const table of tableList) {
-    const tableInfo = db.prepare(`PRAGMA table_info(${table.name})`).all();
+    const tableInfo = db
+      .prepare(`PRAGMA table_info(${table.name})`)
+      .all() as SqliteTableInfoColumn[];
     const tableTypes: SuperflareType[] = [];
 
     for (const column of tableInfo) {
-      const type = column.type.toLowerCase();
+      const type = sqliteColumnTypeToSuperflareType(column.type.toLowerCase());
 
       tableTypes.push({
         name: column.name,
-        type: type === "integer" ? "number" : type,
-        nullable: column.notnull === 0,
+        type,
+        nullable: column.pk ? false : !column.notnull,
       });
     }
 
-    types.push({ table: table.name, types: tableTypes });
+    types.push({ model: tableNameToModel(table.name), types: tableTypes });
   }
 
   return types;
+}
+
+function sqliteColumnTypeToSuperflareType(
+  type: string
+): SuperflareType["type"] {
+  switch (type) {
+    case "integer":
+      return "number";
+    case "boolean":
+      return "boolean";
+    case "text":
+    default:
+      return "string";
+  }
+}
+
+function tableNameToModel(tableName: string): string {
+  return tableName
+    .split("_")
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .map((part) => pluralize.singular(part))
+    .join("");
 }

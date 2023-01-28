@@ -11,10 +11,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.3",
+    "@types/pluralize": "^0.0.29",
     "tsconfig": "workspace:*",
     "vitest": "^0.28.3"
   },
   "dependencies": {
-    "better-sqlite3": "^7.6.2"
+    "better-sqlite3": "^7.6.2",
+    "pluralize": "^8.0.0"
   }
 }
