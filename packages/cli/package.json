@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.3",
     "tsconfig": "workspace:*",
     "vitest": "^0.28.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^7.6.2"
   }
 }

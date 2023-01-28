@@ -1,3 +1,5 @@
+import Database from "better-sqlite3";
+
 export interface SuperflareType {
   name: string;
   // Mimics the types available in SQLite
@@ -42,4 +44,46 @@ export function addTypesToModelClass(
 
 function wrapWithTypeMarkers(source: string): string {
   return `${SUPERFLARE_TYPES_START_MARKER}\n${source}\n  ${SUPERFLARE_TYPES_END_MARKER}`;
+}
+
+export interface SqliteTableListTable {
+  schema: string;
+  name: string;
+  type: string;
+  ncol: number;
+  wr: number;
+  strict: number;
+}
+
+/**
+ * Takes a JSON schema and generates a list of Superflare types for each table.
+ */
+export function generateTypesFromSqlite(db: Database.Database) {
+  const tableList = db
+    .prepare("PRAGMA table_list")
+    .all()
+    .filter(
+      (table) => !table.name.startsWith("sqlite_")
+    ) as SqliteTableListTable[];
+
+  const types: Array<{ table: string; types: SuperflareType[] }> = [];
+
+  for (const table of tableList) {
+    const tableInfo = db.prepare(`PRAGMA table_info(${table.name})`).all();
+    const tableTypes: SuperflareType[] = [];
+
+    for (const column of tableInfo) {
+      const type = column.type.toLowerCase();
+
+      tableTypes.push({
+        name: column.name,
+        type: type === "integer" ? "number" : type,
+        nullable: column.notnull === 0,
+      });
+    }
+
+    types.push({ table: table.name, types: tableTypes });
+  }
+
+  return types;
 }

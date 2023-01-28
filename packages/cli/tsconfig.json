@@ -3,6 +3,7 @@
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "lib": ["ES2019"]
+    "lib": ["ES2019"],
+    "esModuleInterop": true
   }
 }
