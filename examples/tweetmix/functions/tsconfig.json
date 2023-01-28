@@ -1,0 +1,22 @@
+{
+  "include": ["../types/cloudflare.d.ts", "**/*.ts"],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["../app/*"],
+      "#build": ["../types/build.d.ts", "../build/index.js"]
+    },
+
+    // Wrangler takes care of building everything in the `functions` director.
+    "noEmit": true
+  }
+}

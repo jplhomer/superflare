@@ -1,14 +1,3 @@
 name = "tweetmix"
-main = "worker.ts"
-compatibility_date = "2022-06-13"
+compatibility_date = "2023-01-18"
 compatibility_flags = ["streams_enable_constructors"]
-
-workers_dev = true
-
-[site]
-bucket = "./public"
-
-[[ d1_databases ]]
-binding = "DB" # i.e. available in your Worker on env.DB
-database_name = "tweets-db"
-database_id = "41543858-c8b5-4b4b-a204-04edfa9d7fe2"
