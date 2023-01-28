@@ -244,4 +244,86 @@ describe("addTypesToModelsInDirectory", () => {
       status: "updated",
     });
   });
+
+  it("does not create new files by default", () => {
+    const files = {
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
+}`,
+    };
+
+    Object.entries(files).forEach(([filename, file]) => {
+      fs.writeFileSync(path.join(tmpDir, filename), file);
+    });
+
+    const types = generateTypesFromSqlite(db);
+    const results = addTypesToModelsInDirectory(tmpDir, types);
+
+    // Expect `user.ts` to not exist
+    expect(fs.existsSync(path.join(tmpDir, "User.ts"))).toBe(false);
+
+    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
+      .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
+  ${SUPERFLARE_TYPES_START_MARKER}
+  id: number;
+  title: string;
+  description?: string;
+  user_id: number;
+  ${SUPERFLARE_TYPES_END_MARKER}
+}`);
+
+    expect(results.find((r) => r.model === "User")).toEqual({
+      model: "User",
+      status: "not-found",
+    });
+    expect(results.find((r) => r.model === "Post")).toEqual({
+      model: "Post",
+      status: "updated",
+    });
+  });
+
+  it("creates new model files if requested", () => {
+    const files = {
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
+}`,
+    };
+
+    Object.entries(files).forEach(([filename, file]) => {
+      fs.writeFileSync(path.join(tmpDir, filename), file);
+    });
+
+    const types = generateTypesFromSqlite(db);
+    const results = addTypesToModelsInDirectory(tmpDir, types, {
+      createIfNotFound: true,
+    });
+
+    // Expect `user.ts` to have been created
+    expect(fs.existsSync(path.join(tmpDir, "User.ts"))).toBe(true);
+    expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8"))
+      .toBe(`import { Model } from 'superflare';\n\nexport class User extends Model {
+  ${SUPERFLARE_TYPES_START_MARKER}
+  id: number;
+  email: string;
+  name: string;
+  ${SUPERFLARE_TYPES_END_MARKER}
+}`);
+
+    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
+      .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
+  ${SUPERFLARE_TYPES_START_MARKER}
+  id: number;
+  title: string;
+  description?: string;
+  user_id: number;
+  ${SUPERFLARE_TYPES_END_MARKER}
+}`);
+
+    expect(results.find((r) => r.model === "User")).toEqual({
+      model: "User",
+      status: "created",
+    });
+    expect(results.find((r) => r.model === "Post")).toEqual({
+      model: "Post",
+      status: "updated",
+    });
+  });
 });

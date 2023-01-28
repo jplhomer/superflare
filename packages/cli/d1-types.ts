@@ -130,7 +130,10 @@ function tableNameToModel(tableName: string): string {
 
 export function addTypesToModelsInDirectory(
   pathToModels: string,
-  types: ModelWithSuperflareTypes[]
+  types: ModelWithSuperflareTypes[],
+  options: {
+    createIfNotFound?: boolean;
+  } = {}
 ) {
   return types.map((type) => {
     try {
@@ -153,6 +156,25 @@ export function addTypesToModelsInDirectory(
         status: modelSource !== newModelSource ? "updated" : "unchanged",
       };
     } catch (e) {
+      if (options?.createIfNotFound) {
+        const oldModelSource = `import { Model } from 'superflare';\n\nexport class ${type.model} extends Model {\n}`;
+        const newModelSource = addTypesToModelClass(
+          oldModelSource,
+          type.model,
+          type.types
+        );
+
+        fs.writeSync(
+          fs.openSync(`${pathToModels}/${type.model}.ts`, "w"),
+          newModelSource
+        );
+
+        return {
+          model: type.model,
+          status: "created",
+        };
+      }
+
       return {
         model: type.model,
         status: "not-found",
