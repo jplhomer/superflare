@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import pluralize from "pluralize";
+import fs from "fs";
 
 export interface SuperflareType {
   name: string;
@@ -125,4 +126,45 @@ function tableNameToModel(tableName: string): string {
     .map((part) => part[0].toUpperCase() + part.slice(1))
     .map((part) => pluralize.singular(part))
     .join("");
+}
+
+export function addTypesToModelsInDirectory(
+  pathToModels: string,
+  types: ModelWithSuperflareTypes[]
+) {
+  return types.map((type) => {
+    try {
+      const modelSource = fs.readFileSync(
+        `${pathToModels}/${type.model}.ts`,
+        "utf-8"
+      );
+      const newModelSource = addTypesToModelClass(
+        modelSource,
+        type.model,
+        type.types
+      );
+      fs.writeSync(
+        fs.openSync(`${pathToModels}/${type.model}.ts`, "w"),
+        newModelSource
+      );
+
+      return {
+        model: type.model,
+        status: modelSource !== newModelSource ? "updated" : "unchanged",
+      };
+    } catch (e) {
+      return {
+        model: type.model,
+        status: "not-found",
+      };
+    }
+  });
+}
+
+function readJsOrTsFile(pathWithoutExtension: string) {
+  try {
+    return fs.readFileSync(`${pathWithoutExtension}.ts`, "utf-8");
+  } catch (_e) {
+    return fs.readFileSync(`${pathWithoutExtension}.js`, "utf-8");
+  }
 }
