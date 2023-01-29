@@ -1,3 +1,4 @@
+-- Migration number: 0000 	 2023-01-29T13:42:11.033Z
 drop table if exists users;
 create table users (
   id integer primary key,

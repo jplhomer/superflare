@@ -10,6 +10,7 @@ import {
 import Database, { type Database as DatabaseType } from "better-sqlite3";
 import path from "path";
 import fs from "fs";
+import os from "os";
 
 describe("addTypesToModelClass", () => {
   it("adds types to a model class", () => {
@@ -159,12 +160,13 @@ describe("addTypesToModelsInDirectory", () => {
 
   const dbPath = ":memory:";
   let db: DatabaseType;
+  const osTmpDir = os.tmpdir();
   let tmpDir: string;
 
   beforeEach(() => {
     db = new Database(dbPath);
     db.exec(sql);
-    tmpDir = fs.mkdtempSync("superflare-test-models");
+    tmpDir = fs.mkdtempSync(path.join(osTmpDir, "superflare-test-models"));
   });
 
   afterEach(() => {

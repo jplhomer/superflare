@@ -14,7 +14,8 @@
     "dev": "touch ./app/tailwind.css && concurrently \"npm:dev:*\"",
     "generate:css": "npx tailwindcss -o ./app/tailwind.css",
     "start": "cross-env NODE_ENV=production npm run dev:wrangler",
-    "db:migrate:fresh": "mkdir -p ./.wrangler/state/d1 && touch ./.wrangler/state/d1/TWEETS_DB.sqlite3 && sqlite3 ./.wrangler/state/d1/TWEETS_DB.sqlite3 < ./db/migrations.sql"
+    "db:migrate:fresh": "mkdir -p ./.wrangler/state/d1 && touch ./.wrangler/state/d1/TWEETS_DB.sqlite3 && sqlite3 ./.wrangler/state/d1/TWEETS_DB.sqlite3 < ./db/migrations.sql",
+    "migrate": "superflare migrate"
   },
   "keywords": [],
   "author": "Josh Larson <jplhomer@gmail.com>",
@@ -23,6 +24,7 @@
     "@remix-run/cloudflare": "^1.11.0",
     "@remix-run/react": "^1.11.0",
     "@remix-run/serve": "^1.11.0",
+    "@superflare/cli": "*",
     "isbot": "^3.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

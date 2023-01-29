@@ -2,9 +2,14 @@
   "name": "@superflare/cli",
   "version": "1.0.0",
   "description": "The CLI for Superflare",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "superflare": "dist/index.js"
+  },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "build": "tsup index.ts --dts",
+    "dev": "tsup index.ts --watch --dts"
   },
   "keywords": [],
   "author": "",
@@ -12,11 +17,15 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.3",
     "@types/pluralize": "^0.0.29",
+    "@types/yargs": "^17.0.20",
     "tsconfig": "workspace:*",
+    "tsup": "^6.5.0",
     "vitest": "^0.28.3"
   },
   "dependencies": {
     "better-sqlite3": "^7.6.2",
-    "pluralize": "^8.0.0"
+    "pluralize": "^8.0.0",
+    "wrangler": "^2.8.0",
+    "yargs": "^17.6.2"
   }
 }
