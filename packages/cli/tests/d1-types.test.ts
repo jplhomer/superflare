@@ -105,6 +105,10 @@ describe("generateTypesFromSqlite", () => {
     user_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE d1_migrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT
+  );
   `;
 
   const dbPath = ":memory:";
@@ -181,10 +185,8 @@ describe("addTypesToModelsInDirectory", () => {
 
   it("adds types to all existing typescript models in a directory", () => {
     populateDirectoryWithFiles({
-      "User.ts": `import { Model } from 'superflare';\n\nexport class User extends Model {
-}`,
-      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
-}`,
+      "User.ts": `import { Model } from 'superflare';\n\nexport class User extends Model {\n}`,
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {\n}`,
     });
 
     const types = generateTypesFromSqlite(db);

@@ -71,6 +71,9 @@ interface ModelWithSuperflareTypes {
   types: SuperflareType[];
 }
 
+const ignoreSqliteTable = (table: string) =>
+  table.startsWith("sqlite_") || table === "d1_migrations";
+
 /**
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
@@ -79,7 +82,7 @@ export function generateTypesFromSqlite(db: Database.Database) {
     .prepare("PRAGMA table_list")
     .all()
     .filter(
-      (table) => !table.name.startsWith("sqlite_")
+      (table) => !ignoreSqliteTable(table.name)
     ) as SqliteTableListTable[];
 
   const types: ModelWithSuperflareTypes[] = [];
