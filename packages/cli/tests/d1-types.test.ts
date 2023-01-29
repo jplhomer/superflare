@@ -28,10 +28,10 @@ describe("addTypesToModelClass", () => {
 
     expect(result).toBe(`export class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: string;
-  name: string;
-  email: string;
-  password: string;
+  id!: string;
+  name!: string;
+  email!: string;
+  password!: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
   });
@@ -52,9 +52,9 @@ describe("addTypesToModelClass", () => {
 
     expect(result).toBe(`export class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: string;
-  name: string;
-  email: string;
+  id!: string;
+  name!: string;
+  email!: string;
   password?: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
@@ -63,9 +63,9 @@ describe("addTypesToModelClass", () => {
   it("replaces existing types if they exist", () => {
     const source = `export class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: string;
-  name: string;
-  email: string;
+  id!: string;
+  name!: string;
+  email!: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`;
 
@@ -81,10 +81,10 @@ describe("addTypesToModelClass", () => {
 
     expect(result).toBe(`export class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: string;
-  name: string;
-  email: string;
-  password: string;
+  id!: string;
+  name!: string;
+  email!: string;
+  password!: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
   });
@@ -163,6 +163,12 @@ describe("addTypesToModelsInDirectory", () => {
   const osTmpDir = os.tmpdir();
   let tmpDir: string;
 
+  function populateDirectoryWithFiles(files: Record<string, string>) {
+    Object.entries(files).forEach(([filename, file]) => {
+      fs.writeFileSync(path.join(tmpDir, filename), file);
+    });
+  }
+
   beforeEach(() => {
     db = new Database(dbPath);
     db.exec(sql);
@@ -174,15 +180,11 @@ describe("addTypesToModelsInDirectory", () => {
   });
 
   it("adds types to all existing typescript models in a directory", () => {
-    const files = {
+    populateDirectoryWithFiles({
       "User.ts": `import { Model } from 'superflare';\n\nexport class User extends Model {
 }`,
       "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
 }`,
-    };
-
-    Object.entries(files).forEach(([filename, file]) => {
-      fs.writeFileSync(path.join(tmpDir, filename), file);
     });
 
     const types = generateTypesFromSqlite(db);
@@ -191,33 +193,27 @@ describe("addTypesToModelsInDirectory", () => {
     expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  email: string;
-  name: string;
+  id!: number;
+  email!: string;
+  name!: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
 
     expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  title: string;
+  id!: number;
+  title!: string;
   description?: string;
-  user_id: number;
+  user_id!: number;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
   });
 
   it("ignores javascript models models in a directory", () => {
-    const files = {
-      "User.js": `import { Model } from 'superflare';\n\nexport class User extends Model {
-}`,
-      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
-}`,
-    };
-
-    Object.entries(files).forEach(([filename, file]) => {
-      fs.writeFileSync(path.join(tmpDir, filename), file);
+    populateDirectoryWithFiles({
+      "User.js": `import { Model } from 'superflare';\n\nexport class User extends Model {\n}`,
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {\n}`,
     });
 
     const types = generateTypesFromSqlite(db);
@@ -230,10 +226,10 @@ describe("addTypesToModelsInDirectory", () => {
     expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  title: string;
+  id!: number;
+  title!: string;
   description?: string;
-  user_id: number;
+  user_id!: number;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
 
@@ -248,13 +244,8 @@ describe("addTypesToModelsInDirectory", () => {
   });
 
   it("does not create new files by default", () => {
-    const files = {
-      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
-}`,
-    };
-
-    Object.entries(files).forEach(([filename, file]) => {
-      fs.writeFileSync(path.join(tmpDir, filename), file);
+    populateDirectoryWithFiles({
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {\n}`,
     });
 
     const types = generateTypesFromSqlite(db);
@@ -266,10 +257,10 @@ describe("addTypesToModelsInDirectory", () => {
     expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  title: string;
+  id!: number;
+  title!: string;
   description?: string;
-  user_id: number;
+  user_id!: number;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
 
@@ -284,13 +275,8 @@ describe("addTypesToModelsInDirectory", () => {
   });
 
   it("creates new model files if requested", () => {
-    const files = {
-      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {
-}`,
-    };
-
-    Object.entries(files).forEach(([filename, file]) => {
-      fs.writeFileSync(path.join(tmpDir, filename), file);
+    populateDirectoryWithFiles({
+      "Post.ts": `import { Model } from 'superflare';\n\nexport class Post extends Model {\n}`,
     });
 
     const types = generateTypesFromSqlite(db);
@@ -303,19 +289,19 @@ describe("addTypesToModelsInDirectory", () => {
     expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class User extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  email: string;
-  name: string;
+  id!: number;
+  email!: string;
+  name!: string;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
 
     expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8"))
       .toBe(`import { Model } from 'superflare';\n\nexport class Post extends Model {
   ${SUPERFLARE_TYPES_START_MARKER}
-  id: number;
-  title: string;
+  id!: number;
+  title!: string;
   description?: string;
-  user_id: number;
+  user_id!: number;
   ${SUPERFLARE_TYPES_END_MARKER}
 }`);
 

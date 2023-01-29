@@ -33,7 +33,7 @@ export function addTypesToModelClass(
     : new RegExp(`export class ${modelClass} extends Model {`);
 
   const typesAsString = types.map(
-    (type) => `  ${type.name}${type.nullable ? "?" : ""}: ${type.type};`
+    (type) => `  ${type.name}${type.nullable ? "?" : "!"}: ${type.type};`
   );
 
   const replacement = modelHasTypes
