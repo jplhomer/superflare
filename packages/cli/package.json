@@ -24,6 +24,8 @@
   },
   "dependencies": {
     "better-sqlite3": "^7.6.2",
+    "chalk": "^4.1.2",
+    "cli-table3": "^0.6.3",
     "pluralize": "^8.0.0",
     "wrangler": "^2.8.0",
     "yargs": "^17.6.2"

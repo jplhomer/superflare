@@ -8,6 +8,7 @@ import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
 } from "./d1-types";
+import { logger } from "./logger";
 
 yargs(hideBin(process.argv))
   .command(
@@ -20,12 +21,11 @@ yargs(hideBin(process.argv))
       );
       const modelsDirectory = path.join(process.cwd(), "app", "models");
       const types = generateTypesFromSqlite(db);
-      console.log({ types });
       const results = addTypesToModelsInDirectory(modelsDirectory, types, {
         createIfNotFound: true,
       });
 
-      console.log({ results });
+      logger.table(results);
     }
   )
   .parse();
