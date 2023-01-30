@@ -5,6 +5,7 @@ import type { Constructor } from "./types";
 export class Model {
   static connection = "default";
   static tableName = "";
+  id?: number;
 
   constructor(public attributes: any) {
     Object.assign(this, attributes);
@@ -34,6 +35,10 @@ export class Model {
     return this.query<M>().first();
   }
 
+  static count(): Promise<number> {
+    return this.query().count();
+  }
+
   static where<M extends Model>(
     this: ModelClass<M>,
     field: string,
@@ -52,6 +57,34 @@ export class Model {
     value?: string | number
   ) {
     return this.query<M>().where(field, operator, value);
+  }
+
+  /**
+   * Create a model with the attributes, and return an instance of the model.
+   */
+  static async create<M extends Model>(this: ModelClass<M>, attributes: any) {
+    const model = new this(attributes);
+    await model.save();
+    return model;
+  }
+
+  async #performInsert() {
+    const query = new QueryBuilder(this.constructor as ModelClass<Model>);
+    const results = await query.insert(this.attributes);
+    // TODO: Dedupe this.
+    this.id = results.id;
+    this.attributes.id = results.id;
+    return true;
+  }
+
+  async #performUpdate() {
+    const query = new QueryBuilder(this.constructor as ModelClass<Model>);
+    await query.update(this.attributes);
+    return true;
+  }
+
+  async save() {
+    return this.id ? await this.#performUpdate() : await this.#performInsert();
   }
 
   toJSON() {

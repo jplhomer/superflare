@@ -3,20 +3,19 @@ import type { Model, ModelClass } from "./model";
 
 export class QueryBuilder<M extends Model, R = M[]> {
   #selects: string[] = [];
+  #from: string;
   #bindings: any[] = [];
   #where: string[] = [];
   #limit: number | null = null;
   #single: boolean = false;
 
-  constructor(public model: ModelClass<M>) {}
+  constructor(public model: ModelClass<M>) {
+    this.#from = model.tableName;
+  }
 
   select(...fields: string[]) {
     this.#selects.push(...fields);
     return this;
-  }
-
-  #tableName() {
-    return this.model.tableName;
   }
 
   #connection() {
@@ -26,7 +25,7 @@ export class QueryBuilder<M extends Model, R = M[]> {
   #buildQuery() {
     return [
       `select ${this.#selects.length ? this.#selects.join(",") : "*"}`,
-      ` from ${this.#tableName()}`,
+      ` from ${this.#from}`,
       this.#where.length ? " where " + this.#where.join(", ") : "",
       this.#limit ? ` limit ${this.#limit}` : "",
     ].join("");
@@ -74,6 +73,49 @@ export class QueryBuilder<M extends Model, R = M[]> {
   first(): QueryBuilder<M, M | null> {
     this.#single = true;
     return this.limit(1);
+  }
+
+  async insert(attributes: Record<string, any>): Promise<Record<string, any>> {
+    const id = await this.#connection()
+      .prepare(
+        `insert into ${this.#from} (${Object.keys(attributes).join(
+          ","
+        )}) values (${Object.keys(attributes)
+          .map((_, i) => `?`)
+          .join(",")}) returning id`
+      )
+      .bind(...Object.values(attributes))
+      .first<number>("id");
+
+    return {
+      ...attributes,
+      id,
+    };
+  }
+
+  async update(attributes: Record<string, any>): Promise<boolean> {
+    const keysToUpdate = Object.keys(attributes).filter((key) => key !== "id");
+    const results = await this.#connection()
+      .prepare(
+        `update ${this.#from} set ${keysToUpdate
+          .map((key) => `${key} = ?`)
+          .join(",")} where id = ?`
+      )
+      .bind(...keysToUpdate.map((key) => attributes[key]), attributes.id)
+      .run();
+
+    return results.success;
+  }
+
+  async count() {
+    this.select("count(*) as count");
+    const query = this.#buildQuery();
+    const results = await this.#connection()
+      .prepare(query)
+      .bind(...this.#bindings)
+      .first<{ count: number }>();
+
+    return results.count;
   }
 
   then<R1 = R, R2 = never>(
