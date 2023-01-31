@@ -88,4 +88,41 @@ describe("model", () => {
       expect(post.body).toBe("This is a test post 2");
     });
   });
+
+  test("#all", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const posts = await Post.all();
+
+    expect(posts).toHaveLength(2);
+    expect(posts[0]).toBeInstanceOf(Post);
+    expect(posts[0].id).toBe(1);
+    expect(posts[0].title).toBe("Hello World");
+  });
+
+  test("#first", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const post = await Post.first();
+
+    expect(post).toBeTruthy();
+    expect(post!.id).toBe(1);
+    expect(post!.title).toBe("Hello World");
+  });
 });
