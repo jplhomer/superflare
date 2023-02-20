@@ -1,7 +1,6 @@
 import invariant from "tiny-invariant";
-import type { Model, ModelClass } from "./model";
 
-export class QueryBuilder<M extends Model, R = M[]> {
+export class QueryBuilder {
   #selects: string[] = [];
   #from: string;
   #bindings: any[] = [];
@@ -9,7 +8,7 @@ export class QueryBuilder<M extends Model, R = M[]> {
   #limit: number | null = null;
   #single: boolean = false;
 
-  constructor(public model: ModelClass<M>) {
+  constructor(public model: any) {
     this.#from = model.tableName;
   }
 
@@ -44,7 +43,7 @@ export class QueryBuilder<M extends Model, R = M[]> {
       return new this.model(results.results[0]) || null;
     }
 
-    return results.results.map((data) => new this.model(data));
+    return results.results.map((data: any) => new this.model(data));
   }
 
   where(field: string, value: any): this;
@@ -66,16 +65,16 @@ export class QueryBuilder<M extends Model, R = M[]> {
     return this;
   }
 
-  all(): Promise<R> {
+  all(): Promise<any> {
     return this.#execute();
   }
 
-  first(): QueryBuilder<M, M | null> {
+  first(): any {
     this.#single = true;
     return this.limit(1);
   }
 
-  async insert(attributes: Record<string, any>): Promise<Record<string, any>> {
+  async insert(attributes: Record<string, any>): Promise<any> {
     const id = await this.#connection()
       .prepare(
         `insert into ${this.#from} (${Object.keys(attributes).join(
@@ -85,7 +84,7 @@ export class QueryBuilder<M extends Model, R = M[]> {
           .join(",")}) returning id`
       )
       .bind(...Object.values(attributes))
-      .first<number>("id");
+      .first("id");
 
     return {
       ...attributes,
@@ -113,22 +112,22 @@ export class QueryBuilder<M extends Model, R = M[]> {
     const results = await this.#connection()
       .prepare(query)
       .bind(...this.#bindings)
-      .first<{ count: number }>();
+      .first();
 
     return results.count;
   }
 
-  then<R1 = R, R2 = never>(
-    onfulfilled?: ((value: R) => R1 | PromiseLike<R1>) | undefined | null,
-    onrejected?: ((reason: any) => R2 | PromiseLike<R2>) | undefined | null
-  ): Promise<R1 | R2> {
+  then(
+    onfulfilled?: ((value: any) => any) | undefined | null,
+    onrejected?: ((reason: any) => any) | undefined | null
+  ) {
     const promise = this.all();
     return promise.then(onfulfilled, onrejected);
   }
 
   catch<FR = never>(
     onrejected?: ((reason: any) => FR | PromiseLike<FR>) | undefined | null
-  ): Promise<R | FR> {
+  ): Promise<any> {
     const promise = this.all();
     return promise.catch(onrejected);
   }

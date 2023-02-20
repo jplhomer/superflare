@@ -10,8 +10,8 @@ importers:
       vitest: ^0.28.3
     devDependencies:
       eslint-config-custom: link:packages/eslint-config-custom
-      prettier: 2.8.3
-      turbo: 1.7.0
+      prettier: 2.8.4
+      turbo: 1.8.1
       vitest: 0.28.3
 
   examples/tweetmix:
@@ -118,6 +118,9 @@ importers:
       better-sqlite3: ^7.6.2
       tiny-invariant: ^1.3.1
       tsconfig: workspace:*
+      tsup: ^6.5.0
+      typescript: ^4.9.5
+      vitest: ^0.28.3
     dependencies:
       '@superflare/cli': link:../cli
       better-sqlite3: 7.6.2
@@ -129,6 +132,9 @@ importers:
       '@miniflare/shared': 2.11.0
       '@types/better-sqlite3': 7.6.3
       tsconfig: link:../tsconfig
+      tsup: 6.5.0_typescript@4.9.5
+      typescript: 4.9.5
+      vitest: 0.28.3
 
   packages/tsconfig:
     specifiers: {}
@@ -8233,8 +8239,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier/2.8.3:
-    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
+  /prettier/2.8.4:
+    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -9524,6 +9530,42 @@ packages:
       - ts-node
     dev: true
 
+  /tsup/6.5.0_typescript@4.9.5:
+    resolution: {integrity: sha512-36u82r7rYqRHFkD15R20Cd4ercPkbYmuvRkz3Q1LCm5BsiFNUgpo36zbjVhCOgvjyxNBWNKHsaD5Rl8SykfzNA==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': ^1
+      postcss: ^8.4.12
+      typescript: ^4.1.0
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      bundle-require: 3.1.2_esbuild@0.15.18
+      cac: 6.7.14
+      chokidar: 3.5.3
+      debug: 4.3.4
+      esbuild: 0.15.18
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      postcss-load-config: 3.1.4
+      resolve-from: 5.0.0
+      rollup: 3.11.0
+      source-map: 0.8.0-beta.0
+      sucrase: 3.29.0
+      tree-kill: 1.2.2
+      typescript: 4.9.5
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+    dev: true
+
   /tsutils/3.21.0_typescript@4.9.3:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
@@ -9540,65 +9582,65 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /turbo-darwin-64/1.7.0:
-    resolution: {integrity: sha512-hSGAueSf5Ko8J67mpqjpt9FsP6ePn1nMcl7IVPoJq5dHsgX3anCP/BPlexJ502bNK+87DDyhQhJ/LPSJXKrSYQ==}
+  /turbo-darwin-64/1.8.1:
+    resolution: {integrity: sha512-H7pxGF/vsYG7kbY+vB8h+3r8VXn2L6hhYQi0XWA+EjZ1e2zu7+TzEMRWFYmvJPx8TRo5cV5txtg0I22/Y7bxUA==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.7.0:
-    resolution: {integrity: sha512-BLLOW5W6VZxk5+0ZOj5AO1qjM0P5isIgjbEuyAl8lHZ4s9antUbY4CtFrspT32XxPTYoDl4UjviPMcSsbcl3WQ==}
+  /turbo-darwin-arm64/1.8.1:
+    resolution: {integrity: sha512-zMcvplVGluR6v4oJXW7S1/R9QFsHdDkXMhPq8PIdvT3HwTb69ms0MNv7aKiQ0ZFy5D/eKCTyBRUFZvjorZmBqA==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.7.0:
-    resolution: {integrity: sha512-aw2qxmfZa+kT87SB3GNUoFimqEPzTlzlRqhPgHuAAT6Uf0JHnmebPt4K+ZPtDNl5yfVmtB05bhHPqw+5QV97Yg==}
+  /turbo-linux-64/1.8.1:
+    resolution: {integrity: sha512-eJNx8iWDn5Lt8d0221RFd6lBjViLiPCVWNFF5JtqOohgRYplvepY3y/THa1GivMxY4px6zjTiy2oPE/VscVP4w==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.7.0:
-    resolution: {integrity: sha512-AJEx2jX+zO5fQtJpO3r6uhTabj4oSA5ZhB7zTs/rwu/XqoydsvStA4X8NDW4poTbOjF7DcSHizqwi04tSMzpJw==}
+  /turbo-linux-arm64/1.8.1:
+    resolution: {integrity: sha512-hFZkm8tq9kLE8tdbOzD6EbNzftdzMR4JEuuoKC6AbTzx1ZsWRvXJ/BGTeSH9/dYYm/wfuIEUiOP7HeXWiZRx7g==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.7.0:
-    resolution: {integrity: sha512-ewj7PPv2uxqv0r31hgnBa3E5qwUu7eyVRP5M1gB/TJXfSHduU79gbxpKCyxIZv2fL/N2/3U7EPOQPSZxBAoljA==}
+  /turbo-windows-64/1.8.1:
+    resolution: {integrity: sha512-o3oDg0lTYZl5KZD3Mi753On2vQT51unIiungoUmHDCeDH5JXfWPFu+6p+GAoIyRwQkZPvaEzMLuUtRgklKcBJw==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.7.0:
-    resolution: {integrity: sha512-LzjOUzveWkvTD0jP8DBMYiAnYemmydsvqxdSmsUapHHJkl6wKZIOQNSO7pxsy+9XM/1/+0f9Y9F9ZNl5lePTEA==}
+  /turbo-windows-arm64/1.8.1:
+    resolution: {integrity: sha512-NDYr2Mra21KOdl18BhMRoH2jQmlu+oqkpqRd+cGB8+c5P0B6LDVCM83cfcXQ+PNqX9S3Y1eZDRENZJx9I03sSw==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.7.0:
-    resolution: {integrity: sha512-cwympNwQNnQZ/TffBd8yT0i0O10Cf/hlxccCYgUcwhcGEb9rDjE5thDbHoHw1hlJQUF/5ua7ERJe7Zr0lNE/ww==}
+  /turbo/1.8.1:
+    resolution: {integrity: sha512-g8RltmG5zd0nYbKpkBQwnTSXTWUiup9+yileQ1TETNzpjxI3TL5k7kt2WkgUHEqR947IPUV+ckIduZHVITJmIQ==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.7.0
-      turbo-darwin-arm64: 1.7.0
-      turbo-linux-64: 1.7.0
-      turbo-linux-arm64: 1.7.0
-      turbo-windows-64: 1.7.0
-      turbo-windows-arm64: 1.7.0
+      turbo-darwin-64: 1.8.1
+      turbo-darwin-arm64: 1.8.1
+      turbo-linux-64: 1.8.1
+      turbo-linux-arm64: 1.8.1
+      turbo-windows-64: 1.8.1
+      turbo-windows-arm64: 1.8.1
     dev: true
 
   /type-check/0.3.2:
@@ -9637,6 +9679,12 @@ packages:
 
   /typescript/4.9.3:
     resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
