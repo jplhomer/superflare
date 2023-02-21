@@ -1,6 +1,8 @@
 import { Model } from "superflare";
 
 export class Tweet extends Model {
+  static tableName = "tweets";
+
   /* superflare-types-start */
   id!: number;
   user_id!: number;

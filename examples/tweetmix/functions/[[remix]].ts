@@ -3,6 +3,7 @@ import {
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
 import { type AppLoadContext } from "@remix-run/server-runtime";
+import { config } from "superflare";
 
 import * as build from "#build";
 
@@ -28,6 +29,10 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const session = await sessionStorage.getSession(
     ctx.request.headers.get("Cookie")
   );
+
+  config({
+    database: ctx.env.DB,
+  });
 
   const loadContext: AppLoadContext = {
     cf: ctx.request.cf,

@@ -1,9 +1,4 @@
-import type {
-  LinksFunction,
-  MetaFunction,
-  LoaderArgs,
-} from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
 import {
   Links,
   LiveReload,
@@ -11,11 +6,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from "@remix-run/react";
-import { config } from "superflare";
 import styles from "./tailwind.css";
-import { Tweet } from "../tweet";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
