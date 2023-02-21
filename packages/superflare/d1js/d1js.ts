@@ -5,6 +5,7 @@
  */
 
 /* eslint-disable */
+// @ts-nocheck
 // Vendored from internal D1JS repository, with some extra `@ts-expect-error`s
 
 import type { fetch } from "@miniflare/core";
