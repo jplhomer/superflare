@@ -41,6 +41,8 @@ describe("model", () => {
     });
   });
 
+  // Class methods
+
   test("#create", async () => {
     const post = await Post.create({
       title: "Hello World",
@@ -54,6 +56,45 @@ describe("model", () => {
 
     expect(await Post.count()).toBe(1);
   });
+
+  test("#all", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const posts = await Post.all();
+
+    expect(posts).toHaveLength(2);
+    expect(posts[0]).toBeInstanceOf(Post);
+    expect(posts[0].id).toBe(1);
+    expect(posts[0].title).toBe("Hello World");
+  });
+
+  test("#first", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const post = await Post.first();
+
+    expect(post).toBeTruthy();
+    expect(post!.id).toBe(1);
+    expect(post!.title).toBe("Hello World");
+  });
+
+  // Instance methods
 
   describe("#save", async () => {
     it("saves a new model", async () => {
@@ -94,40 +135,32 @@ describe("model", () => {
     });
   });
 
-  test("#all", async () => {
-    await database
-      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
-      .bind(
-        "Hello World",
-        "This is a test post",
-        "Hello World 2",
-        "This is a test post 2"
-      )
-      .run();
+  describe("#toJSON", () => {
+    it("returns the attributes", () => {
+      const post = new Post({
+        title: "Hello World",
+        body: "This is a test post",
+      });
 
-    const posts = await Post.all();
+      expect(post.toJSON()).toEqual({
+        title: "Hello World",
+        body: "This is a test post",
+      });
+    });
 
-    expect(posts).toHaveLength(2);
-    expect(posts[0]).toBeInstanceOf(Post);
-    expect(posts[0].id).toBe(1);
-    expect(posts[0].title).toBe("Hello World");
-  });
+    it("returns the attributes with ID if persisted", async () => {
+      const post = new Post({
+        title: "Hello World",
+        body: "This is a test post",
+      });
 
-  test("#first", async () => {
-    await database
-      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
-      .bind(
-        "Hello World",
-        "This is a test post",
-        "Hello World 2",
-        "This is a test post 2"
-      )
-      .run();
+      await post.save();
 
-    const post = await Post.first();
-
-    expect(post).toBeTruthy();
-    expect(post!.id).toBe(1);
-    expect(post!.title).toBe("Hello World");
+      expect(post.toJSON()).toEqual({
+        id: 1,
+        title: "Hello World",
+        body: "This is a test post",
+      });
+    });
   });
 });
