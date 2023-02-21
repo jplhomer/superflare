@@ -1,6 +1,9 @@
 import { Config } from "./config";
 import { QueryBuilder } from "./query-builder";
-import type { Constructor } from "./types";
+
+interface Constructor<T> {
+  new (...args: any): T;
+}
 
 export class Model {
   static connection = "default";
@@ -23,53 +26,39 @@ export class Model {
     return Config.database.connections[this.connection];
   }
 
-  static query<M extends Model>(this: ModelClass<M>) {
-    return new QueryBuilder<M>(this);
+  static query() {
+    return new QueryBuilder(this);
   }
 
-  static all<M extends Model>(this: ModelClass<M>) {
-    return this.query<M>().select("*").all();
+  static all() {
+    return this.query().select("*").all();
   }
 
-  static first<M extends Model>(this: ModelClass<M>) {
-    return this.query<M>().first();
+  static first() {
+    return this.query().first();
   }
 
   static count(): Promise<number> {
     return this.query().count();
   }
 
-  static where<M extends Model>(
-    this: ModelClass<M>,
-    field: string,
-    value: string | number
-  ): QueryBuilder<M>;
-  static where<M extends Model>(
-    this: ModelClass<M>,
-    field: string,
-    operator: string,
-    value?: string | number
-  ): QueryBuilder<M>;
-  static where<M extends Model>(
-    this: ModelClass<M>,
-    field: string,
-    operator: string,
-    value?: string | number
-  ) {
-    return this.query<M>().where(field, operator, value);
+  static where(field: string, value: string | number): any;
+  static where(field: string, operator: string, value?: string | number): any;
+  static where(field: string, operator: string, value?: string | number) {
+    return this.query().where(field, operator, value);
   }
 
   /**
    * Create a model with the attributes, and return an instance of the model.
    */
-  static async create<M extends Model>(this: ModelClass<M>, attributes: any) {
+  static async create(attributes: any) {
     const model = new this(attributes);
     await model.save();
     return model;
   }
 
   async #performInsert() {
-    const query = new QueryBuilder(this.constructor as ModelClass<Model>);
+    const query = new QueryBuilder(this.constructor);
     const results = await query.insert(this.attributes);
     // TODO: Dedupe this.
     this.id = results.id;
@@ -78,7 +67,7 @@ export class Model {
   }
 
   async #performUpdate() {
-    const query = new QueryBuilder(this.constructor as ModelClass<Model>);
+    const query = new QueryBuilder(this.constructor);
     await query.update(this.attributes);
     return true;
   }
@@ -93,10 +82,3 @@ export class Model {
 }
 
 export interface ModelConstructor<M extends Model> extends Constructor<M> {}
-
-export interface ModelClass<M extends Model> extends ModelConstructor<M> {
-  tableName: string;
-  connection: string;
-  getConnection(): D1Database;
-  query<M extends Model>(): QueryBuilder<M>;
-}

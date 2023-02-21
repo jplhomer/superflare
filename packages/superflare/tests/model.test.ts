@@ -1,10 +1,15 @@
+/// <reference path="../types/index.ts" />
+
 import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, describe, expect, it, test } from "vitest";
 import { config } from "../config";
 import { Model } from "../model";
 import { D1Database, D1DatabaseAPI } from "../d1js";
+import { BaseModel } from "superflare";
 
-class Post extends Model {
+let ModelConstructor = Model as unknown as BaseModel;
+
+class Post extends ModelConstructor {
   static tableName = "posts";
 
   id!: number;
