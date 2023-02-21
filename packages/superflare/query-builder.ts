@@ -1,4 +1,5 @@
 import invariant from "tiny-invariant";
+import { modelToTableName } from "./string";
 
 export class QueryBuilder {
   #selects: string[] = [];
@@ -9,7 +10,7 @@ export class QueryBuilder {
   #single: boolean = false;
 
   constructor(public model: any) {
-    this.#from = model.tableName;
+    this.#from = model.table || modelToTableName(model.name);
   }
 
   select(...fields: string[]) {

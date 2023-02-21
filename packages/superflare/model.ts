@@ -7,7 +7,7 @@ interface Constructor<T> {
 
 export class Model {
   static connection = "default";
-  static tableName = "";
+  static table = "";
   id?: number;
 
   constructor(public attributes: any) {

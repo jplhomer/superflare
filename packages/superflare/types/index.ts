@@ -5,7 +5,7 @@ declare module "superflare" {
     id?: number;
     attributes: any;
     save(): Promise<boolean>;
-    toJSON(): any;
+    toJSON(): ModelInstance["attributes"];
   }
 
   export interface BaseModel {

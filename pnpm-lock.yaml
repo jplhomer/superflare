@@ -115,7 +115,9 @@ importers:
       '@miniflare/shared': ^2.11.0
       '@superflare/cli': '*'
       '@types/better-sqlite3': ^7.6.3
+      '@types/pluralize': ^0.0.29
       better-sqlite3: ^7.6.2
+      pluralize: ^8.0.0
       tiny-invariant: ^1.3.1
       tsconfig: workspace:*
       tsup: ^6.5.0
@@ -124,6 +126,7 @@ importers:
     dependencies:
       '@superflare/cli': link:../cli
       better-sqlite3: 7.6.2
+      pluralize: 8.0.0
       tiny-invariant: 1.3.1
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
@@ -131,6 +134,7 @@ importers:
       '@miniflare/d1': 2.11.0
       '@miniflare/shared': 2.11.0
       '@types/better-sqlite3': 7.6.3
+      '@types/pluralize': 0.0.29
       tsconfig: link:../tsconfig
       tsup: 6.5.0_typescript@4.9.5
       typescript: 4.9.5

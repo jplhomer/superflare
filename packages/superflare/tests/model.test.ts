@@ -8,8 +8,6 @@ import type { BaseModel } from "superflare";
 let ModelConstructor = Model as unknown as BaseModel;
 
 class Post extends ModelConstructor {
-  static tableName = "posts";
-
   id!: number;
   title!: string;
   body?: string;
