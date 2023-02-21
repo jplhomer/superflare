@@ -8,10 +8,14 @@ export function tableNameToModel(tableName: string): string {
     .join("");
 }
 
+/**
+ * Lowercase, snake_case, pluralize the last word.
+ */
 export function modelToTableName(modelName: string): string {
-  return modelName
-    .split(/(?=[A-Z])/)
+  const parts = modelName.split(/(?=[A-Z])/);
+  const last = parts.pop()!;
+  return parts
     .map((part) => part.toLowerCase())
-    .map((part) => plural(part))
+    .concat(plural(last.toLowerCase()))
     .join("_");
 }
