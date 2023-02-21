@@ -11,7 +11,30 @@ export class Model {
   id?: number;
 
   constructor(public attributes: any) {
-    Object.assign(this, attributes);
+    return new Proxy(this, {
+      get(target, prop) {
+        if (prop in target) {
+          return target[prop as keyof Model];
+        }
+
+        if (prop in target.attributes) {
+          return target.attributes[prop];
+        }
+
+        return undefined;
+      },
+
+      set(target, prop, value) {
+        if (prop in target) {
+          target[prop as keyof Model] = value;
+          return true;
+        }
+
+        // Everything else goes in the `attributes` bag.
+        target.attributes[prop] = value;
+        return true;
+      },
+    });
   }
 
   static getConnection(): D1Database {
@@ -57,23 +80,21 @@ export class Model {
     return model;
   }
 
-  async #performInsert() {
+  private async performInsert() {
     const query = new QueryBuilder(this.constructor);
     const results = await query.insert(this.attributes);
-    // TODO: Dedupe this.
     this.id = results.id;
-    this.attributes.id = results.id;
     return true;
   }
 
-  async #performUpdate() {
+  private async performUpdate() {
     const query = new QueryBuilder(this.constructor);
     await query.update(this.attributes);
     return true;
   }
 
   async save() {
-    return this.id ? await this.#performUpdate() : await this.#performInsert();
+    return this.id ? await this.performUpdate() : await this.performInsert();
   }
 
   toJSON() {
