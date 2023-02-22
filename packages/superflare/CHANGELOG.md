@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.3
+
+### Patch Changes
+
+- [`e794ea7`](https://github.com/jplhomer/superflare/commit/e794ea72d851fd9a60c533f0d277341e497f50b3) Thanks [@jplhomer](https://github.com/jplhomer)! - Add back hashbang
+
 ## 0.0.2
 
 ### Patch Changes
