@@ -41,6 +41,8 @@ declare module "superflare" {
     limit(limit: number): this;
     all(): Promise<R[]>;
     first(): Promise<null | R>;
+    then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
+    catch(onrejected?: (reason: any) => any): Promise<R[]>;
   }
 
   export interface SupercloudUserConfig {

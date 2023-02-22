@@ -55,8 +55,7 @@ export class QueryBuilder {
       operator = "=";
     }
 
-    const nextBinding = this.#bindings.length + 1;
-    this.#where.push(`${field} ${operator} ?${nextBinding}`);
+    this.#where.push(`${field} ${operator} ?`);
     this.#bindings.push(value);
     return this;
   }
