@@ -221,7 +221,7 @@ describe("addTypesToModelsInDirectory", () => {
     const types = generateTypesFromSqlite(db);
     const results = addTypesToModelsInDirectory(tmpDir, types);
 
-    expect(fs.readFileSync(path.join(tmpDir, "user.js"), "utf8")).toBe(
+    expect(fs.readFileSync(path.join(tmpDir, "User.js"), "utf8")).toBe(
       `import { Model } from 'superflare';\n\nexport class User extends Model {\n}`
     );
 
