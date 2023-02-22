@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import Database from "better-sqlite3";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -59,5 +57,3 @@ yargs(hideBin(process.argv))
     }
   )
   .parse();
-
-export {};

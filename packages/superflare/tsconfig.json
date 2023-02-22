@@ -4,6 +4,7 @@
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "module": "commonjs",
     "experimentalDecorators": true,
     "isolatedModules": false,
     "rootDir": ".",
