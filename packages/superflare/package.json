@@ -4,6 +4,9 @@
   "description": "The missing full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/jplhomer/superflare/issues"
+  },
   "scripts": {
     "test": "vitest",
     "build": "tsc",
@@ -12,7 +15,14 @@
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "framework",
+    "full-stack",
+    "orm",
+    "d1"
+  ],
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {

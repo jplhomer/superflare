@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The CLI for Superflare",
   "main": "dist/index.js",
+  "private": true,
   "bin": {
     "superflare": "dist/index.js"
   },
