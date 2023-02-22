@@ -1,7 +1,7 @@
 {
   "name": "superflare",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "The missing full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
@@ -13,8 +13,8 @@
     "dist"
   ],
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Josh Larson <jplhomer@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@superflare/cli": "*",
     "better-sqlite3": "^7.6.2",
