@@ -10,7 +10,8 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepack": "pnpm build"
   },
   "files": [
     "dist"
