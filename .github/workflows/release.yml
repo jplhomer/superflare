@@ -15,15 +15,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.26.2
+
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: pnpm
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 7.26.2
 
       - name: Install Dependencies
         run: pnpm i
