@@ -1,0 +1,5 @@
+---
+"superflare": patch
+---
+
+Update README
