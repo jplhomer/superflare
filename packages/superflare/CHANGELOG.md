@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.4
+
+### Patch Changes
+
+- 596524e: Fix `#where` sqlite bug and add tests
+
 ## 0.0.3
 
 ### Patch Changes
