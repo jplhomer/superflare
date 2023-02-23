@@ -11,7 +11,7 @@ import styles from "./tailwind.css";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Tweetmix",
+  title: "Remix CMS",
   viewport: "width=device-width,initial-scale=1",
 });
 

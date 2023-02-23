@@ -1,5 +1,5 @@
 {
-  "name": "tweetmix",
+  "name": "remix-cms",
   "version": "1.0.0",
   "description": "An example Superflare app powered by Remix",
   "private": true,
@@ -18,9 +18,12 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@headlessui/react": "^1.7.11",
+    "@heroicons/react": "^2.0.16",
     "@remix-run/cloudflare": "^1.13.0",
     "@remix-run/react": "^1.13.0",
     "@remix-run/serve": "^1.13.0",
+    "clsx": "^1.2.1",
     "isbot": "^3.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
