@@ -1,10 +1,13 @@
 import { Model } from 'superflare';
 
-export class TweetLike extends Model {
+export class Article extends Model {
   /* superflare-types-start */
   id!: number;
+  title!: string;
+  slug!: string;
+  content!: string;
   user_id!: number;
-  tweet_id!: number;
+  status!: string;
   created_at!: string;
   updated_at!: string;
   /* superflare-types-end */

@@ -10,26 +10,14 @@ create table users (
   updated_at timestamp not null default current_timestamp
 );
 
-drop table if exists tweets;
-create table tweets (
+drop table if exists articles;
+create table articles (
   id integer primary key,
-  user_id integer not null,
-  text text not null,
+  title text not null,
+  slug text not null unique,
+  content text not null,
+  user_id integer not null references users(id),
+  status text not null default 'draft',
   created_at timestamp not null default current_timestamp,
-  updated_at timestamp not null default current_timestamp,
-  number_likes integer not null default 0,
-  number_retweets integer not null default 0,
-  number_replies integer not null default 0,
-  foreign key (user_id) references users(id)
-);
-
-drop table if exists tweet_likes;
-create table tweet_likes (
-  id integer primary key,
-  user_id integer not null,
-  tweet_id integer not null,
-  created_at timestamp not null default current_timestamp,
-  updated_at timestamp not null default current_timestamp,
-  foreign key (user_id) references users(id),
-  foreign key (tweet_id) references tweets(id)
+  updated_at timestamp not null default current_timestamp
 );

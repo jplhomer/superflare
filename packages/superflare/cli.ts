@@ -1,17 +1,24 @@
 #!/usr/bin/env node
 
 import Database from "better-sqlite3";
-import yargs from "yargs";
+import makeCLI from "yargs";
 import { hideBin } from "yargs/helpers";
 import path from "path";
+import fs from "fs";
 import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
 } from "./d1-types";
 import { logger } from "./logger";
+import { wranglerMigrate } from "./wrangler";
 
-yargs(hideBin(process.argv))
-  .command(
+function createCLIParser(argv: string[]) {
+  const superflare = makeCLI(argv).strict().scriptName("superflare");
+
+  superflare.help().alias("help", "h");
+
+  // Migrate
+  superflare.command(
     "migrate",
     "⚡️ migrate your database and update types",
     (yargs) => {
@@ -46,10 +53,29 @@ yargs(hideBin(process.argv))
         describe: "Create a model if it doesn't exist",
         default: false,
       });
+
+      // Option to run a "fresh" migration by dropping the existing database first
+      yargs.option("fresh", {
+        alias: "f",
+        boolean: true,
+        default: false,
+        describe: "Run a fresh migration by dropping the existing database",
+      });
     },
-    (argv) => {
-      const db = new Database(argv.db as string);
+    async (argv) => {
+      const fresh = argv.fresh as boolean;
       const modelsDirectory = argv.models as string;
+      const dbPath = argv.db as string;
+
+      if (fresh) {
+        if (fs.existsSync(dbPath)) {
+          fs.rmSync(dbPath);
+        }
+        await wranglerMigrate();
+      }
+
+      const db = new Database(dbPath);
+
       const types = generateTypesFromSqlite(db);
       const results = addTypesToModelsInDirectory(modelsDirectory, types, {
         createIfNotFound: argv.create as boolean,
@@ -57,5 +83,9 @@ yargs(hideBin(process.argv))
 
       logger.table(results);
     }
-  )
-  .parse();
+  );
+
+  return superflare;
+}
+
+createCLIParser(hideBin(process.argv)).parse();
