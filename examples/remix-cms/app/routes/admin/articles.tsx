@@ -1,8 +1,18 @@
-import { Link } from "@remix-run/react";
-import Button from "~/components/admin/Button";
+import { json } from "@remix-run/cloudflare";
+import { Link, useLoaderData } from "@remix-run/react";
+import { Button } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
+import { Article } from "~/models/Article";
+
+export async function loader() {
+  const articles = await Article.all();
+
+  return json({ articles });
+}
 
 export default function Articles() {
+  const { articles } = useLoaderData<typeof loader>();
+
   const ArticlesTable = (
     <div className="mt-8 flow-root">
       <div className="-my-2 -mx-6 overflow-x-auto lg:-mx-8">
@@ -20,19 +30,19 @@ export default function Articles() {
                   scope="col"
                   className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Title
+                  Status
                 </th>
                 <th
                   scope="col"
                   className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Email
+                  User
                 </th>
                 <th
                   scope="col"
                   className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
                 >
-                  Role
+                  Created At
                 </th>
                 <th scope="col" className="relative py-3 pl-3 pr-6 sm:pr-0">
                   <span className="sr-only">Edit</span>
@@ -40,26 +50,26 @@ export default function Articles() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {[].map((person) => (
-                <tr key={person.email}>
+              {articles.map((article) => (
+                <tr key={article.slug}>
                   <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                    {person.name}
+                    {article.title}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                    {person.title}
+                    {article.status}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                    {person.email}
+                    {article.user_id}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                    {person.role}
+                    {article.created_at}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">
                     <Link
-                      to={`./articles/${person.slug}`}
+                      to={`./articles/${article.slug}`}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
-                      Edit<span className="sr-only">, {person.name}</span>
+                      Edit<span className="sr-only">, {article.name}</span>
                     </Link>
                   </td>
                 </tr>

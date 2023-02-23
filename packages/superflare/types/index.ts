@@ -9,6 +9,10 @@ declare module "superflare" {
   }
 
   export interface BaseModel {
+    find<T extends BaseModel>(
+      this: T,
+      id: number
+    ): Promise<null | InstanceType<T>>;
     first<T extends BaseModel>(this: T): Promise<null | InstanceType<T>>;
     all<T extends BaseModel>(this: T): Promise<InstanceType<T>[]>;
     where<T extends BaseModel>(
@@ -56,4 +60,6 @@ declare module "superflare" {
       connections: Record<string, D1Database>;
     };
   }
+
+  export class DatabaseException extends Error {}
 }

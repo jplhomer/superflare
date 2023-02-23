@@ -33,18 +33,23 @@ export class QueryBuilder {
 
   async #execute() {
     const query = this.#buildQuery();
-    const results = await this.#connection()
-      .prepare(query)
-      .bind(...this.#bindings)
-      .all();
 
-    invariant(results.results, `Query failed: ${results.error}`);
+    try {
+      const results = await this.#connection()
+        .prepare(query)
+        .bind(...this.#bindings)
+        .all();
 
-    if (this.#single) {
-      return new this.model(results.results[0]) || null;
+      invariant(results.results, `Query failed: ${results.error}`);
+
+      if (this.#single) {
+        return new this.model(results.results[0]) || null;
+      }
+
+      return results.results.map((data: any) => new this.model(data));
+    } catch (e: any) {
+      throw new DatabaseException(e?.cause || e?.message);
     }
-
-    return results.results.map((data: any) => new this.model(data));
   }
 
   where(field: string, value: any): this;
@@ -75,21 +80,25 @@ export class QueryBuilder {
   }
 
   async insert(attributes: Record<string, any>): Promise<any> {
-    const id = await this.#connection()
-      .prepare(
-        `insert into ${this.#from} (${Object.keys(attributes).join(
-          ","
-        )}) values (${Object.keys(attributes)
-          .map((_, i) => `?`)
-          .join(",")}) returning id`
-      )
-      .bind(...Object.values(attributes))
-      .first("id");
+    try {
+      const id = await this.#connection()
+        .prepare(
+          `insert into ${this.#from} (${Object.keys(attributes).join(
+            ","
+          )}) values (${Object.keys(attributes)
+            .map((_, i) => `?`)
+            .join(",")}) returning id`
+        )
+        .bind(...Object.values(attributes))
+        .first("id");
 
-    return {
-      ...attributes,
-      id,
-    };
+      return {
+        ...attributes,
+        id,
+      };
+    } catch (e: any) {
+      throw new DatabaseException(e?.cause || e?.message);
+    }
   }
 
   async update(attributes: Record<string, any>): Promise<boolean> {
@@ -132,3 +141,5 @@ export class QueryBuilder {
     return promise.catch(onrejected);
   }
 }
+
+export class DatabaseException extends Error {}

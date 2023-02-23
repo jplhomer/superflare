@@ -5,7 +5,7 @@ export class Article extends Model {
   id!: number;
   title!: string;
   slug!: string;
-  content!: string;
+  content?: string;
   user_id!: number;
   status!: string;
   created_at!: string;

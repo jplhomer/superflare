@@ -15,7 +15,7 @@ create table articles (
   id integer primary key,
   title text not null,
   slug text not null unique,
-  content text not null,
+  content text,
   user_id integer not null references users(id),
   status text not null default 'draft',
   created_at timestamp not null default current_timestamp,
