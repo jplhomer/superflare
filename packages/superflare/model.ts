@@ -11,6 +11,11 @@ export class Model {
   id?: number;
 
   constructor(public attributes: any) {
+    this.attributes = attributes;
+    Object.keys(attributes).forEach((key) => {
+      this[key as keyof Model] = attributes[key];
+    });
+
     return new Proxy(this, {
       get(target, prop) {
         if (prop in target) {
@@ -25,12 +30,7 @@ export class Model {
       },
 
       set(target, prop, value) {
-        if (prop in target) {
-          target[prop as keyof Model] = value;
-          return true;
-        }
-
-        // Everything else goes in the `attributes` bag.
+        target[prop as keyof Model] = value;
         target.attributes[prop] = value;
         return true;
       },
@@ -97,8 +97,14 @@ export class Model {
     return this.id ? await this.performUpdate() : await this.performInsert();
   }
 
+  serialize() {
+    return {
+      ...this.attributes,
+    };
+  }
+
   toJSON() {
-    return this.attributes;
+    return this.serialize();
   }
 }
 

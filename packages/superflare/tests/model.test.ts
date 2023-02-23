@@ -178,4 +178,19 @@ describe("model", () => {
       });
     });
   });
+
+  test("it can be spread and retain attributes", async () => {
+    const post = await Post.create({
+      title: "Hello World",
+      body: "This is a test post",
+    });
+
+    const newPost = { ...post };
+
+    expect(newPost).toMatchObject({
+      id: 1,
+      title: "Hello World",
+      body: "This is a test post",
+    });
+  });
 });
