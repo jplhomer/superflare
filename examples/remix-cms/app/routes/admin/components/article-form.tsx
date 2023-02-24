@@ -25,7 +25,7 @@ const enum Intent {
 
 const badResponse = (data: ActionData) => json(data, { status: 422 });
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request, context: { session } }: ActionArgs) {
   const body = new URLSearchParams(await request.text());
   const title = body.get("title");
   const content = body.get("content");
@@ -62,11 +62,11 @@ export async function action({ request }: ActionArgs) {
         slug,
       });
 
+      session.flash("flash", { success: "Article created!" });
+
       return redirect(`/admin/articles/${article.slug}`);
     } else {
       const article = await Article.find(parseInt(id as string));
-
-      console.log({ article });
 
       invariant(article, "Article not found");
 
@@ -76,6 +76,8 @@ export async function action({ request }: ActionArgs) {
       article.slug = body.get("slug") as string;
 
       await article.save();
+
+      session.flash("flash", { success: "Article saved!" });
 
       return redirect(`/admin/articles/${article.slug}`);
     }

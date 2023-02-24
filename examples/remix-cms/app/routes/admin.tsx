@@ -4,6 +4,7 @@ import {
   Bars3Icon,
   CalendarIcon,
   ChartBarIcon,
+  ExclamationCircleIcon,
   FolderIcon,
   HomeIcon,
   InboxIcon,
@@ -11,14 +12,25 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { NavLink, Outlet } from "@remix-run/react";
+import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Toast } from "~/components/Toast";
+import { json, type LoaderArgs } from "@remix-run/cloudflare";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, end: true },
   { name: "Articles", href: "./articles", icon: FolderIcon },
 ];
 
-export default function Example() {
+export async function loader({ context: { session } }: LoaderArgs) {
+  const flash = session.get("flash");
+
+  return json({
+    flash,
+  });
+}
+
+export default function AdminLayout() {
+  const { flash } = useLoaderData<typeof loader>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -221,6 +233,7 @@ export default function Example() {
           </main>
         </div>
       </div>
+      <Toast success={flash?.success} error={flash?.error} />
     </>
   );
 }
