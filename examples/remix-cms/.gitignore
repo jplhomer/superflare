@@ -1,7 +1,7 @@
 node_modules
 
 /.cache
-/build
+/build/*
 !/build/index.d.ts
 /public/build
 .env
