@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import type { ElementType } from "react";
 
 export function FormField({
   label,
@@ -11,11 +12,11 @@ export function FormField({
 }: {
   label: string;
   name: string;
-  as?: "input" | "textarea" | "select";
+  as?: ElementType;
   wrapperClassName?: string;
   inputClassName?: string;
   options?: { label: string; value: string }[];
-} & React.ComponentPropsWithoutRef<"input" | "textarea" | "select">) {
+} & React.ComponentPropsWithoutRef<ElementType>) {
   const Component = as;
 
   return (

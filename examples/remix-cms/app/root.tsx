@@ -19,12 +19,12 @@ export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
 export default function App() {
   return (
-    <html lang="en" className="h-full bg-gray-100">
+    <html lang="en" className="h-full bg-gray-100 dark:bg-black">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="dark:text-gray-100 dark:bg-black h-full">
+      <body className="dark:text-gray-100 h-full">
         <Outlet />
         <ScrollRestoration />
         <Scripts />

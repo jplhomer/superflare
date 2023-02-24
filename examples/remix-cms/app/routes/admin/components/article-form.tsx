@@ -4,6 +4,7 @@ import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import { Button, SecondaryButton } from "~/components/admin/Button";
+import { TextareaMarkdown } from "textarea-markdown-editor/dist/TextareaMarkdown";
 
 interface ActionData {
   title: string | null;
@@ -105,6 +106,16 @@ export function ArticleForm({ article }: { article?: Article }) {
             required
           />
 
+          <FormField
+            name="content"
+            label="Content"
+            defaultValue={article?.content}
+            className="font-mono w-full dark:bg-gray-700"
+            cols={80}
+            rows={20}
+            as={TextareaMarkdown}
+          />
+
           {article && (
             <FormField
               name="slug"
@@ -119,7 +130,7 @@ export function ArticleForm({ article }: { article?: Article }) {
             <FormField
               name="status"
               label="Status"
-              defaultValue={article.slug}
+              defaultValue={article.status}
               as="select"
               required
               options={[
