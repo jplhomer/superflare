@@ -5,7 +5,7 @@ import { Page } from "~/components/admin/Page";
 import { Article } from "~/models/Article";
 
 export async function loader() {
-  const articles = await Article.all();
+  const articles = await Article.orderBy("created_at", "desc");
 
   return json({ articles });
 }

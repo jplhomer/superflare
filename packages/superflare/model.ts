@@ -65,6 +65,10 @@ export class Model {
     return this.query().where("id", id).first();
   }
 
+  static orderBy(field: string, direction: "asc" | "desc" = "asc") {
+    return this.query().orderBy(field, direction);
+  }
+
   static count(): Promise<number> {
     return this.query().count();
   }

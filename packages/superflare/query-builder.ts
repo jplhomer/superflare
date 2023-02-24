@@ -6,6 +6,7 @@ export class QueryBuilder {
   #from: string;
   #bindings: any[] = [];
   #where: string[] = [];
+  #orderBy: string[] = [];
   #limit: number | null = null;
   #single: boolean = false;
 
@@ -27,6 +28,7 @@ export class QueryBuilder {
       `select ${this.#selects.length ? this.#selects.join(",") : "*"}`,
       ` from ${this.#from}`,
       this.#where.length ? " where " + this.#where.join(", ") : "",
+      this.#orderBy.length ? " order by " + this.#orderBy.join(", ") : "",
       this.#limit ? ` limit ${this.#limit}` : "",
     ].join("");
   }
@@ -67,6 +69,11 @@ export class QueryBuilder {
 
   limit(limit: number) {
     this.#limit = limit;
+    return this;
+  }
+
+  orderBy(field: string, direction: "asc" | "desc" = "asc") {
+    this.#orderBy.push(`${field} ${direction}`);
     return this;
   }
 

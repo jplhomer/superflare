@@ -1,4 +1,4 @@
-import { Model } from 'superflare';
+import { Model } from "superflare";
 
 export class Article extends Model {
   /* superflare-types-start */

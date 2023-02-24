@@ -14,6 +14,11 @@ declare module "superflare" {
       id: number
     ): Promise<null | InstanceType<T>>;
     first<T extends BaseModel>(this: T): Promise<null | InstanceType<T>>;
+    orderBy<T extends BaseModel>(
+      this: T,
+      field: string,
+      direction?: "asc" | "desc"
+    ): QueryBuilder<T>;
     all<T extends BaseModel>(this: T): Promise<InstanceType<T>[]>;
     where<T extends BaseModel>(
       this: T,
@@ -45,6 +50,11 @@ declare module "superflare" {
     limit(limit: number): this;
     all(): Promise<R[]>;
     first(): Promise<null | R>;
+    orderBy<T extends BaseModel>(
+      this: T,
+      field: string,
+      direction?: "asc" | "desc"
+    ): this;
     then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
     catch(onrejected?: (reason: any) => any): Promise<R[]>;
   }
