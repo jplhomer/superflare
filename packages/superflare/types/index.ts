@@ -1,13 +1,20 @@
 declare module "superflare" {
   export const Model: BaseModel;
 
+  /**
+   * Shape of the model instance.
+   */
   export interface ModelInstance {
     id?: number;
+    // TODO: Figure out how to not have this be `any`.
     attributes: any;
     save(): Promise<boolean>;
     toJSON(): ModelInstance["attributes"];
   }
 
+  /**
+   * Shape of the model constructor (static properties).
+   */
   export interface BaseModel {
     find<T extends BaseModel>(
       this: T,
