@@ -15,15 +15,31 @@ import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
 import { spawn } from "node:child_process";
 
+export class CommandLineArgsError extends Error {}
+
 function createCLIParser(argv: string[]) {
   const superflare = makeCLI(argv).strict().scriptName("superflare");
 
   superflare.help().alias("help", "h");
 
+  // Help
+  superflare.command(
+    ["*"],
+    false,
+    () => {},
+    async (args) => {
+      if (args._.length > 0) {
+        throw new CommandLineArgsError(`Unknown command: ${args._}.`);
+      } else {
+        superflare.showHelp("log");
+      }
+    }
+  );
+
   // Migrate
   superflare.command(
     "migrate",
-    "⚡️ migrate your database and update types",
+    "🏗️  migrate your database and update types",
     (yargs) => {
       // Option to specify the path to the database
       yargs.option("db", {
@@ -133,7 +149,7 @@ function createCLIParser(argv: string[]) {
 
   superflare.command(
     "dev",
-    "⚡️ start the development server",
+    "🏄 start the development server",
     (yargs) => {},
     async (argv) => {
       logger.info('Starting "wrangler pages dev"...');
@@ -179,6 +195,11 @@ function createCLIParser(argv: string[]) {
       spawn("npx", args, {
         stdio: "inherit",
         shell: true,
+        env: {
+          ...process.env,
+          // TODO: Remove this when D1 is stable
+          NO_D1_WARNING: "true",
+        },
       });
     }
   );
