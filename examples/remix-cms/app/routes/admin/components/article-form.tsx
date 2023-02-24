@@ -139,7 +139,7 @@ export function ArticleForm({ article }: { article?: Article }) {
 
       <div className="pt-5">
         <div className="flex justify-end space-x-2">
-          <SecondaryButton type="button">Cancel</SecondaryButton>
+          <SecondaryButton to="/admin/articles">Cancel</SecondaryButton>
           <Button type="submit">{article ? "Update" : "Create"}</Button>
         </div>
       </div>

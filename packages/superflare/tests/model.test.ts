@@ -2,7 +2,6 @@ import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, describe, expect, it, test } from "vitest";
 import { config } from "../config";
 import { Model } from "../model";
-import { D1Database, D1DatabaseAPI } from "../d1js";
 import type { BaseModel } from "superflare";
 import { createD1Database } from "../d1-database";
 
