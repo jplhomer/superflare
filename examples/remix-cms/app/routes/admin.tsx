@@ -21,7 +21,7 @@ const navigation = [
   { name: "Articles", href: "./articles", icon: FolderIcon },
 ];
 
-export async function loader({ context: { session } }: LoaderArgs) {
+export async function loader({ context: { session, env } }: LoaderArgs) {
   const flash = session.get("flash");
 
   return json({

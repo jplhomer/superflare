@@ -36,6 +36,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   const loadContext: AppLoadContext = {
     cf: ctx.request.cf,
+    env: ctx.env,
     DB: ctx.env.DB,
     session,
   };

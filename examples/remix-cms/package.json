@@ -8,11 +8,15 @@
     "build": "npm run build:remix",
     "build:remix": "remix build",
     "dev:remix": "remix watch",
-    "dev:wrangler": "wrangler pages dev public --compatibility-date=2023-01-18 --d1 DB --binding SESSION_SECRET=s --local --persist --live-reload",
+    "dev:wrangler": "superflare dev",
     "dev": "concurrently \"npm:dev:*\"",
     "start": "cross-env NODE_ENV=production npm run dev:wrangler",
     "db:migrate:fresh": "mkdir -p ./.wrangler/state/d1 && touch ./.wrangler/state/d1/TWEETS_DB.sqlite3 && sqlite3 ./.wrangler/state/d1/TWEETS_DB.sqlite3 < ./db/migrations.sql",
     "migrate": "superflare migrate"
+  },
+  "superflare": {
+    "d1": "DB",
+    "r2": "REMIX_CMS"
   },
   "keywords": [],
   "author": "Josh Larson <jplhomer@gmail.com>",

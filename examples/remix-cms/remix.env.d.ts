@@ -9,5 +9,6 @@ declare module "@remix-run/server-runtime" {
     cf?: IncomingRequestCfProperties<unknown>;
     DB: D1Database;
     session: Session;
+    env: Env;
   }
 }

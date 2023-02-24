@@ -13,6 +13,8 @@ import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
+import { spawn } from "child_process";
+import { getSuperflareConfigFromPackageJson } from "./cli/config";
 
 function createCLIParser(argv: string[]) {
   const superflare = makeCLI(argv).strict().scriptName("superflare");
@@ -111,6 +113,55 @@ function createCLIParser(argv: string[]) {
       logger.table(results);
 
       logger.info("Done!");
+    }
+  );
+
+  superflare.command(
+    "dev",
+    "⚡️ start the development server",
+    (yargs) => {},
+    async (argv) => {
+      logger.info('Starting "wrangler pages dev"...');
+
+      const config = await getSuperflareConfigFromPackageJson(process.cwd());
+      if (!config) {
+        logger.warn(
+          "Warning: Did not find a `superflare` config in your package.json. " +
+            "You will want to add one in order to specify D1 and R2 bindings for Superflare to use."
+        );
+      }
+
+      const d1Binding = config?.d1;
+
+      if (d1Binding) {
+        logger.info(`Using D1 binding: ${d1Binding}`);
+      }
+
+      const r2Binding = config?.r2;
+
+      if (r2Binding) {
+        logger.info(`Using R2 binding: ${r2Binding}`);
+      }
+
+      const args = [
+        "wrangler",
+        "pages",
+        "dev",
+        "public",
+        "--compatibility-date=2023-01-18",
+        d1Binding && `--d1 ${d1Binding}`,
+        r2Binding && `--r2 ${r2Binding}`,
+        "--binding",
+        "SESSION_SECRET=secret",
+        "--local",
+        "--persist",
+        "--live-reload",
+      ].filter(Boolean) as string[];
+
+      spawn("npx", args, {
+        stdio: "inherit",
+        shell: true,
+      });
     }
   );
 
