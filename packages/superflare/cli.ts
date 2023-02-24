@@ -94,13 +94,21 @@ function createCLIParser(argv: string[]) {
         logger.info(`Seeding database...`);
 
         register();
-        const seedModule = await import(seedPath);
-
+        const seedModule = require(seedPath);
         const d1Database = createD1Database(db);
-        if (seedModule.default) {
-          await seedModule.default(d1Database);
+        // TODO: Find out why errors in the seeder are not bubbled to this try/catch
+        try {
+          if (seedModule.default) {
+            await seedModule.default(d1Database);
+            logger.info(`Seeding complete!`);
+          } else {
+            logger.warn(
+              `Warning: Did not find a default export in ${seedPath}.`
+            );
+          }
+        } catch (e: any) {
+          logger.error(`Error seeding database: ${e.message}`);
         }
-        logger.info(`Seeding complete!`);
       }
 
       logger.info("Generating types from database...");

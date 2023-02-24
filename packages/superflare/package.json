@@ -30,6 +30,8 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@miniflare/core": "^2.11.0",
+    "@miniflare/shared": "^2.11.0",
     "better-sqlite3": "^7.6.2",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
@@ -42,9 +44,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",
-    "@miniflare/core": "^2.11.0",
-    "@miniflare/d1": "^2.11.0",
-    "@miniflare/shared": "^2.11.0",
     "@types/better-sqlite3": "^7.6.3",
     "@types/node": "^18.14.1",
     "@types/pluralize": "^0.0.29",

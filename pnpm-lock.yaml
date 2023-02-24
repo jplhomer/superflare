@@ -97,7 +97,6 @@ importers:
     specifiers:
       '@cloudflare/workers-types': ^4.20221111.1
       '@miniflare/core': ^2.11.0
-      '@miniflare/d1': ^2.11.0
       '@miniflare/shared': ^2.11.0
       '@types/better-sqlite3': ^7.6.3
       '@types/node': ^18.14.1
@@ -117,6 +116,8 @@ importers:
       wrangler: ^2.8.0
       yargs: ^17.6.2
     dependencies:
+      '@miniflare/core': 2.11.0
+      '@miniflare/shared': 2.11.0
       better-sqlite3: 7.6.2
       chalk: 4.1.2
       cli-table3: 0.6.3
@@ -128,9 +129,6 @@ importers:
       yargs: 17.6.2
     devDependencies:
       '@cloudflare/workers-types': 4.20221111.1
-      '@miniflare/core': 2.11.0
-      '@miniflare/d1': 2.11.0
-      '@miniflare/shared': 2.11.0
       '@types/better-sqlite3': 7.6.3
       '@types/node': 18.14.1
       '@types/pluralize': 0.0.29
@@ -2381,7 +2379,7 @@ packages:
       set-cookie-parser: 2.5.1
       undici: 5.9.1
       urlpattern-polyfill: 4.0.3
-    dev: true
+    dev: false
 
   /@miniflare/core/2.12.0:
     resolution: {integrity: sha512-TrlmF3lrXhPlkheNiYGFkVTEhZyN/ok7F42+csE7UDPZpm94n4VqbT/85ssAy5rOJRVlyscHMExrrPeB40L34A==}
@@ -2397,14 +2395,6 @@ packages:
       set-cookie-parser: 2.5.1
       undici: 5.11.0
       urlpattern-polyfill: 4.0.3
-
-  /@miniflare/d1/2.11.0:
-    resolution: {integrity: sha512-aDdBVQZ2C0Zs3+Y9ZbRctmuQxozPfpumwJ/6NG6fBadANvune/hW7ddEoxyteIEU9W3IgzVj8s4by4VvasX90A==}
-    engines: {node: '>=16.7'}
-    dependencies:
-      '@miniflare/core': 2.11.0
-      '@miniflare/shared': 2.11.0
-    dev: true
 
   /@miniflare/d1/2.12.0:
     resolution: {integrity: sha512-KmaJoXnijuwldplWYnORy3/A2H6XKtrk51HUUe3hg6/JL46L3c7iRrKmruYUC5VtVwWMpvWzGT5uQfpdGQdiHw==}
@@ -2458,7 +2448,7 @@ packages:
     engines: {node: '>=16.7'}
     dependencies:
       '@miniflare/shared': 2.11.0
-    dev: true
+    dev: false
 
   /@miniflare/queues/2.12.0:
     resolution: {integrity: sha512-NSR2lSpK4xrrugj3vDaA9181sCydshff/1onAz7ypHOpWMrFebM8BWBeAT7Q1ktkn6633ropqHdOzwjByJj0EQ==}
@@ -2495,7 +2485,7 @@ packages:
       kleur: 4.1.5
       npx-import: 1.1.4
       picomatch: 2.3.1
-    dev: true
+    dev: false
 
   /@miniflare/shared/2.12.0:
     resolution: {integrity: sha512-hxBZv0bhiSuUwEtIBmfnBvH3Zfv4OU0LVtKGc98icGQyI5pocBhMy9bXthZdEybQv7MikVp5HEFV2KRCudg2GA==}
@@ -2532,7 +2522,7 @@ packages:
     engines: {node: '>=16.13'}
     dependencies:
       '@miniflare/shared': 2.11.0
-    dev: true
+    dev: false
 
   /@miniflare/watcher/2.12.0:
     resolution: {integrity: sha512-IH4bENdS2xM+KhlJ/1wAt0FGtOClQ+ortaycIA/FTxaS7v+hu3qha6DlV3/LKM1y3r1IcPK5+fEDrf+RPcEgJA==}
@@ -9256,7 +9246,7 @@ packages:
   /undici/5.9.1:
     resolution: {integrity: sha512-6fB3a+SNnWEm4CJbgo0/CWR8RGcOCQP68SF4X0mxtYTq2VNN8T88NYrWVBAeSX+zb7bny2dx2iYhP3XHi00omg==}
     engines: {node: '>=12.18'}
-    dev: true
+    dev: false
 
   /unicode-canonical-property-names-ecmascript/2.0.0:
     resolution: {integrity: sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ==}
