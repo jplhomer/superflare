@@ -22,25 +22,25 @@ export default function Articles() {
               <tr>
                 <th
                   scope="col"
-                  className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-0"
+                  className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300 sm:pl-0"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
                 >
                   Status
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
                 >
                   User
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
                 >
                   Created At
                 </th>
@@ -49,25 +49,25 @@ export default function Articles() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-gray-200 bg-white dark:bg-black">
               {articles.map((article) => (
                 <tr key={article.slug}>
-                  <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 dark:text-gray-100 sm:pl-0">
                     {article.title}
                   </td>
-                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
                     {article.status}
                   </td>
-                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
                     {article.user_id}
                   </td>
-                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
+                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
                     {article.created_at}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">
                     <Link
                       to={`./${article.slug}`}
-                      className="text-indigo-600 hover:text-indigo-900"
+                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
                     >
                       Edit<span className="sr-only">, {article.name}</span>
                     </Link>
