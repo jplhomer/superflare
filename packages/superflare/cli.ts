@@ -9,12 +9,11 @@ import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
 } from "./d1-types";
-import { logger } from "./logger";
+import { Logger, logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
 import { spawn } from "child_process";
-import { getSuperflareConfigFromPackageJson } from "./cli/config";
 
 function createCLIParser(argv: string[]) {
   const superflare = makeCLI(argv).strict().scriptName("superflare");
@@ -123,7 +122,10 @@ function createCLIParser(argv: string[]) {
     async (argv) => {
       logger.info('Starting "wrangler pages dev"...');
 
-      const config = await getSuperflareConfigFromPackageJson(process.cwd());
+      const config = await getSuperflareConfigFromPackageJson(
+        process.cwd(),
+        logger
+      );
       if (!config) {
         logger.warn(
           "Warning: Did not find a `superflare` config in your package.json. " +
@@ -166,6 +168,24 @@ function createCLIParser(argv: string[]) {
   );
 
   return superflare;
+}
+
+interface SuperflarePackageJsonConfig {
+  d1?: string;
+  r2?: string;
+}
+
+export async function getSuperflareConfigFromPackageJson(
+  workingDir: string,
+  logger?: Logger
+): Promise<SuperflarePackageJsonConfig | null> {
+  try {
+    const pkg = require(path.join(workingDir, "package.json"));
+    return pkg.superflare;
+  } catch (e: any) {
+    logger?.debug(`Error loading package.json: ${e.message}`);
+    return null;
+  }
 }
 
 createCLIParser(hideBin(process.argv)).parse();

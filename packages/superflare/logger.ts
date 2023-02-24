@@ -18,7 +18,7 @@ export type TableRow<Keys extends string> = Record<Keys, string>;
  * Inspired by wrangler's `Logger` class
  * @see https://github.com/cloudflare/wrangler2/blob/6b6ce5060a12e94a59c76249bb8022ea2737c5f7/packages/wrangler/src/logger.ts#L45
  */
-class Logger {
+export class Logger {
   debug = (...args: unknown[]) => this.doLog("debug", args);
   info = (...args: unknown[]) => this.doLog("info", args);
   log = (...args: unknown[]) => this.doLog("log", args);

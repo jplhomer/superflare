@@ -3,14 +3,14 @@
   "version": "0.0.4",
   "description": "The missing full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.types.d.ts",
   "bugs": {
     "url": "https://github.com/jplhomer/superflare/issues"
   },
   "scripts": {
     "test": "vitest",
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "prepack": "pnpm build"
   },
   "files": [
@@ -50,7 +50,24 @@
     "@types/pluralize": "^0.0.29",
     "@types/yargs": "^17.0.20",
     "tsconfig": "workspace:*",
+    "tsup": "^6.6.3",
     "typescript": "^4.9.5",
     "vitest": "^0.28.3"
-  }
+  },
+  "tsup": [
+    {
+      "entry": [
+        "index.ts",
+        "cli.ts"
+      ]
+    },
+    {
+      "entry": [
+        "index.types.ts"
+      ],
+      "dts": {
+        "only": true
+      }
+    }
+  ]
 }
