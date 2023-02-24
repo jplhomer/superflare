@@ -49,7 +49,7 @@ export default function Articles() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:bg-black">
+            <tbody className="divide-y divide-gray-200 ">
               {articles.map((article) => (
                 <tr key={article.slug}>
                   <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900 dark:text-gray-100 sm:pl-0">

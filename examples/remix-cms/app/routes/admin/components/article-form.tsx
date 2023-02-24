@@ -112,7 +112,7 @@ export function ArticleForm({ article }: { article?: Article }) {
             name="content"
             label="Content"
             defaultValue={article?.content}
-            className="font-mono w-full dark:bg-gray-700"
+            className="font-mono block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700"
             cols={80}
             rows={20}
             as={TextareaMarkdown}
