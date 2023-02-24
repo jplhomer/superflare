@@ -66,7 +66,7 @@ export default function Articles() {
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">
                     <Link
-                      to={`./articles/${article.slug}`}
+                      to={`./${article.slug}`}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
                       Edit<span className="sr-only">, {article.name}</span>
@@ -82,7 +82,7 @@ export default function Articles() {
   );
   return (
     <Page title="Articles" action={<Button to="./new">Create Article</Button>}>
-      {[].length ? ArticlesTable : <p>No articles yet. Create one!</p>}
+      {articles.length ? ArticlesTable : <p>No articles yet. Create one!</p>}
     </Page>
   );
 }

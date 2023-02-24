@@ -14,7 +14,7 @@ export async function loader({ params }: LoaderArgs) {
 
   const article = await Article.where("slug", slug).first();
 
-  return json(article);
+  return json({ article });
 }
 
 export default function NewArticle() {

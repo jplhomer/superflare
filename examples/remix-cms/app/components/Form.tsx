@@ -18,7 +18,10 @@ export function FormField({
 
   return (
     <div className={clsx("sm:col-span-4", wrapperClassName)}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+      >
         {label}
       </label>
       <div className="mt-1">
@@ -27,7 +30,7 @@ export function FormField({
           id={name}
           name={name}
           className={clsx(
-            "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+            "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700",
             inputClassName
           )}
           {...props}
