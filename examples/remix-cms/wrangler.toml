@@ -1,0 +1,10 @@
+# Sigh. This is necessary in order for `wrangler d1 migrations apply <DB>` to work,
+# even while in local mode. I hope to remove this someday soon.
+
+name = "remix-cms"
+compatibility_date = "2023-01-18"
+compatibility_flags = ["streams_enable_constructors"]
+
+[[d1_databases]]
+binding = "DB"
+database_id = "41543858-c8b5-4b4b-a204-04edfa9d7fe2"

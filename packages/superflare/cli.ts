@@ -3,8 +3,8 @@
 import Database from "better-sqlite3";
 import makeCLI from "yargs";
 import { hideBin } from "yargs/helpers";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
@@ -13,7 +13,7 @@ import { Logger, logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
-import { spawn } from "child_process";
+import { spawn } from "node:child_process";
 
 function createCLIParser(argv: string[]) {
   const superflare = makeCLI(argv).strict().scriptName("superflare");
@@ -67,7 +67,13 @@ function createCLIParser(argv: string[]) {
 
       yargs.option("seed", {
         alias: "s",
-        describe: "Seed the database after migrating with the following file",
+        describe: "Seed the database after migrating",
+        boolean: true,
+        default: false,
+      });
+
+      yargs.option("seed-path", {
+        describe: "Path to the seed file",
         default: path.join(process.cwd(), "db", "seed.ts"),
       });
     },
@@ -84,13 +90,15 @@ function createCLIParser(argv: string[]) {
         if (fs.existsSync(dbPath)) {
           fs.rmSync(dbPath);
         }
-        await wranglerMigrate();
       }
+
+      await wranglerMigrate();
 
       const db = new Database(dbPath);
 
-      const seedPath = argv.seed as string;
-      if (seedPath && fs.existsSync(seedPath)) {
+      const seed = argv.seed as string;
+      const seedPath = argv["seed-path"] as string;
+      if (seed && seedPath && fs.existsSync(seedPath)) {
         logger.info(`Seeding database...`);
 
         register();
