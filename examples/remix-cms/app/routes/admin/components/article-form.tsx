@@ -96,16 +96,38 @@ export function ArticleForm({ article }: { article?: Article }) {
       {article && <input type="hidden" name="id" value={article.id} />}
 
       <div className="space-y-8 divide-y divide-gray-200">
-        <div>
-          <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <FormField
+            name="title"
+            label="Title"
+            defaultValue={article?.title}
+            type="text"
+            required
+          />
+
+          {article && (
             <FormField
-              name="title"
-              label="Title"
-              defaultValue={article?.title}
+              name="slug"
+              label="Slug"
+              defaultValue={article.slug}
               type="text"
               required
             />
-          </div>
+          )}
+
+          {article && (
+            <FormField
+              name="status"
+              label="Status"
+              defaultValue={article.slug}
+              as="select"
+              required
+              options={[
+                { label: "Draft", value: "draft" },
+                { label: "Published", value: "published" },
+              ]}
+            />
+          )}
         </div>
       </div>
 

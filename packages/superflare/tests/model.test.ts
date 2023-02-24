@@ -4,6 +4,7 @@ import { config } from "../config";
 import { Model } from "../model";
 import { D1Database, D1DatabaseAPI } from "../d1js";
 import type { BaseModel } from "superflare";
+import { createD1Database } from "../d1-database";
 
 let ModelConstructor = Model as unknown as BaseModel;
 
@@ -28,7 +29,7 @@ function refreshDatabase(database: DatabaseType) {
 
 describe("model", () => {
   const sqliteDb = new Database(":memory:");
-  const database = new D1Database(new D1DatabaseAPI(sqliteDb));
+  const database = createD1Database(sqliteDb);
 
   beforeEach(async () => {
     refreshDatabase(sqliteDb);
@@ -107,6 +108,24 @@ describe("model", () => {
     expect(posts[0]).toBeInstanceOf(Post);
     expect(posts[0].id).toBe(2);
     expect(posts[0].title).toBe("Hello World 2");
+  });
+
+  test("#find", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const post = await Post.find(2);
+
+    expect(post).toBeTruthy();
+    expect(post!.id).toBe(2);
+    expect(post!.title).toBe("Hello World 2");
   });
 
   // Instance methods

@@ -6,14 +6,16 @@ export function FormField({
   as = "input",
   wrapperClassName = "",
   inputClassName = "",
+  options,
   ...props
 }: {
   label: string;
   name: string;
-  as?: "input" | "textarea";
+  as?: "input" | "textarea" | "select";
   wrapperClassName?: string;
   inputClassName?: string;
-} & React.ComponentPropsWithoutRef<"input" | "textarea">) {
+  options?: { label: string; value: string }[];
+} & React.ComponentPropsWithoutRef<"input" | "textarea" | "select">) {
   const Component = as;
 
   return (
@@ -34,7 +36,13 @@ export function FormField({
             inputClassName
           )}
           {...props}
-        />
+        >
+          {options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Component>
       </div>
     </div>
   );
