@@ -11,6 +11,8 @@ import {
 } from "./d1-types";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
+import { register } from "esbuild-register/dist/node";
+import { createD1Database } from "./d1-database";
 
 function createCLIParser(argv: string[]) {
   const superflare = makeCLI(argv).strict().scriptName("superflare");
@@ -61,13 +63,23 @@ function createCLIParser(argv: string[]) {
         default: false,
         describe: "Run a fresh migration by dropping the existing database",
       });
+
+      yargs.option("seed", {
+        alias: "s",
+        describe: "Seed the database after migrating with the following file",
+        default: path.join(process.cwd(), "db", "seed.ts"),
+      });
     },
     async (argv) => {
       const fresh = argv.fresh as boolean;
       const modelsDirectory = argv.models as string;
       const dbPath = argv.db as string;
 
+      logger.info(`Migrating database...`);
+
       if (fresh) {
+        logger.info("Dropping existing database...");
+
         if (fs.existsSync(dbPath)) {
           fs.rmSync(dbPath);
         }
@@ -76,12 +88,29 @@ function createCLIParser(argv: string[]) {
 
       const db = new Database(dbPath);
 
+      const seedPath = argv.seed as string;
+      if (seedPath && fs.existsSync(seedPath)) {
+        logger.info(`Seeding database...`);
+
+        register();
+        const seedModule = await import(seedPath);
+
+        const d1Database = createD1Database(db);
+        if (seedModule.default) {
+          await seedModule.default(d1Database);
+        }
+        logger.info(`Seeding complete!`);
+      }
+
+      logger.info("Generating types from database...");
       const types = generateTypesFromSqlite(db);
       const results = addTypesToModelsInDirectory(modelsDirectory, types, {
         createIfNotFound: argv.create as boolean,
       });
 
       logger.table(results);
+
+      logger.info("Done!");
     }
   );
 

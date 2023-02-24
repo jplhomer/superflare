@@ -61,6 +61,10 @@ export class Model {
     return this.query().first();
   }
 
+  static find(id: number) {
+    return this.query().where("id", id).first();
+  }
+
   static count(): Promise<number> {
     return this.query().count();
   }

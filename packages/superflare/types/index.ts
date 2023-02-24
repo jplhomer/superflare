@@ -62,4 +62,6 @@ declare module "superflare" {
   }
 
   export class DatabaseException extends Error {}
+
+  export function seed(callback: () => void): (database: D1Database) => void;
 }

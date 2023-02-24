@@ -103,16 +103,20 @@ export class QueryBuilder {
 
   async update(attributes: Record<string, any>): Promise<boolean> {
     const keysToUpdate = Object.keys(attributes).filter((key) => key !== "id");
-    const results = await this.#connection()
-      .prepare(
-        `update ${this.#from} set ${keysToUpdate
-          .map((key) => `${key} = ?`)
-          .join(",")} where id = ?`
-      )
-      .bind(...keysToUpdate.map((key) => attributes[key]), attributes.id)
-      .run();
+    try {
+      const results = await this.#connection()
+        .prepare(
+          `update ${this.#from} set ${keysToUpdate
+            .map((key) => `${key} = ?`)
+            .join(",")} where id = ?`
+        )
+        .bind(...keysToUpdate.map((key) => attributes[key]), attributes.id)
+        .run();
 
-    return results.success;
+      return results.success;
+    } catch (e: any) {
+      throw new DatabaseException(e?.cause || e?.message);
+    }
   }
 
   async count() {
