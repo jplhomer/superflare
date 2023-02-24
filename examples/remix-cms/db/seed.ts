@@ -1,5 +1,5 @@
 import { seed } from "superflare";
-import { User } from "../app/models/User";
+import { User } from "~/models/User";
 
 export default seed(() => {
   User.create({
