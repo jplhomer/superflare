@@ -5,7 +5,7 @@ import {
 import { type AppLoadContext } from "@remix-run/server-runtime";
 import { config } from "superflare";
 
-import * as build from "#build";
+import * as build from "../build";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
