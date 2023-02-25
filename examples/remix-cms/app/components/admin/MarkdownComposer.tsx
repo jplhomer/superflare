@@ -28,7 +28,6 @@ export default function MarkdownComposer({
     const textarea = ref.current;
     const cursor = textarea?.cursor;
     if (!cursor) {
-      console.log("no cursor!");
       return;
     }
     cursor.insert(`${cursor.MARKER}${text}${cursor.MARKER}`);
@@ -37,7 +36,7 @@ export default function MarkdownComposer({
   const upload = useCallback(
     async (file: File) => {
       if (!onInsertImage) return;
-      print(`![${file!.name}](Uploading...)`);
+      print(`![Uploading ${file!.name}...]()`);
       const url = await onInsertImage(file);
       print(`![${file.name}](${url})`);
     },

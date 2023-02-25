@@ -14,7 +14,9 @@
     "migrate": "superflare migrate"
   },
   "superflare": {
-    "d1": "DB",
+    "d1": [
+      "DB"
+    ],
     "r2": [
       "REMIX_CMS_MEDIA"
     ]

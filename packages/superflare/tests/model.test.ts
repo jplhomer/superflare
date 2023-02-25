@@ -2,7 +2,7 @@ import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, describe, expect, it, test } from "vitest";
 import { config } from "../config";
 import { Model } from "../model";
-import type { BaseModel } from "superflare";
+import type { BaseModel } from "../index.types";
 import { createD1Database } from "../d1-database";
 
 let ModelConstructor = Model as unknown as BaseModel;
@@ -33,7 +33,9 @@ describe("model", () => {
   beforeEach(async () => {
     refreshDatabase(sqliteDb);
     config({
-      database,
+      database: {
+        default: database,
+      },
     });
   });
 

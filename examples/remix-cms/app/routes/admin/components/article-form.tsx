@@ -98,9 +98,17 @@ export function ArticleForm({ article }: { article?: Article }) {
     return (
       <MarkdownComposer
         onInsertImage={async (file) => {
-          const response = await fetch(`/admin/upload/${file.name}`, {
+          /**
+           * Sending the image as FormData has some advantages:
+           * - Filename is included automatically
+           * - Mime type is included automatically
+           * - No need to manually set the Content-Type header
+           */
+          const formData = new FormData();
+          formData.append("file", file, file.name);
+          const response = await fetch(`/admin/upload`, {
             method: "POST",
-            body: file,
+            body: formData,
           });
 
           const url = await response.text();

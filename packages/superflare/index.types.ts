@@ -6,7 +6,7 @@
 export * from "./config";
 export { DatabaseException } from "./query-builder";
 export { seed } from "./seeder";
-export { storage } from "./storage";
+export { storage, servePublicPathFromStorage } from "./storage";
 
 /**
  * Shape of the model instance.

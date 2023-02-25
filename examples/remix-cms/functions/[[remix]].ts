@@ -31,9 +31,14 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   );
 
   config({
-    database: ctx.env.DB,
+    database: {
+      default: ctx.env.DB,
+    },
     storage: {
-      default: ctx.env.REMIX_CMS_MEDIA,
+      default: {
+        binding: ctx.env.REMIX_CMS_MEDIA,
+        publicPath: "/storage/media",
+      },
     },
   });
 

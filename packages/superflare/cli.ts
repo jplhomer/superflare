@@ -165,10 +165,10 @@ function createCLIParser(argv: string[]) {
         );
       }
 
-      const d1Binding = config?.d1;
+      const d1Bindings = config?.d1;
 
-      if (d1Binding) {
-        logger.info(`Using D1 binding: ${d1Binding}`);
+      if (d1Bindings && Array.isArray(d1Bindings)) {
+        logger.info(`Using D1 binding: ${d1Bindings.join(", ")}`);
       }
 
       const r2Bindings = config?.r2;
@@ -183,7 +183,8 @@ function createCLIParser(argv: string[]) {
         "dev",
         "public",
         "--compatibility-date=2023-01-18",
-        d1Binding && `--d1 ${d1Binding}`,
+        d1Bindings?.length &&
+          d1Bindings.map((d1Binding) => `--d1 ${d1Binding}`).join(" "),
         r2Bindings?.length &&
           r2Bindings.map((r2Binding) => `--r2 ${r2Binding}`).join(" "),
         "--binding",
@@ -209,7 +210,7 @@ function createCLIParser(argv: string[]) {
 }
 
 interface SuperflarePackageJsonConfig {
-  d1?: string;
+  d1?: string[];
   r2?: string[];
 }
 
