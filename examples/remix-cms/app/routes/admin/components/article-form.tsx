@@ -3,7 +3,6 @@ import { Form, useActionData } from "@remix-run/react";
 import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
-import { Button, SecondaryButton } from "~/components/admin/Button";
 import MarkdownComposer from "~/components/admin/MarkdownComposer";
 
 interface ActionData {
@@ -91,7 +90,13 @@ export async function action({ request, context: { session } }: ActionArgs) {
   }
 }
 
-export function ArticleForm({ article }: { article?: Article }) {
+export function ArticleForm({
+  article,
+  id,
+}: {
+  article?: Article;
+  id?: string;
+}) {
   const actionData = useActionData<ActionData>();
 
   const ContentMarkdown = (props: any) => {
@@ -124,7 +129,7 @@ export function ArticleForm({ article }: { article?: Article }) {
   };
 
   return (
-    <Form method="post">
+    <Form method="post" id={id}>
       {article && <input type="hidden" name="id" value={article.id} />}
 
       <div className="space-y-8 divide-y divide-gray-200">
@@ -178,13 +183,6 @@ export function ArticleForm({ article }: { article?: Article }) {
           {actionData.error}
         </div>
       )}
-
-      <div className="pt-5">
-        <div className="flex justify-end space-x-2">
-          <SecondaryButton to="/admin/articles">Cancel</SecondaryButton>
-          <Button type="submit">{article ? "Update" : "Create"}</Button>
-        </div>
-      </div>
     </Form>
   );
 }

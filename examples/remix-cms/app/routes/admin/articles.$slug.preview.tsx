@@ -1,3 +1,4 @@
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { json, type LoaderArgs } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -28,7 +29,8 @@ export default function NewArticle() {
       title="Preview Article"
       action={
         <SecondaryButton to="../" relative="path">
-          Edit
+          <PencilSquareIcon className="w-4 h-4" />
+          <span>Edit</span>
         </SecondaryButton>
       }
     >
