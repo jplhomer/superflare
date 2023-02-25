@@ -16,6 +16,7 @@ import { createD1Database } from "./d1-database";
 import { spawn } from "node:child_process";
 import { generate } from "./cli/generate";
 import type Yargs from "yargs";
+import { createRepl } from "./console";
 
 const resetColor = "\x1b[0m";
 const fgGreenColor = "\x1b[32m";
@@ -224,6 +225,42 @@ function createCLIParser(argv: string[]) {
   superflare.command(["generate", "g"], "🌇 Generate things", (yargs) => {
     return generate(yargs.command(subHelp));
   });
+
+  superflare.command(
+    ["console", "c"],
+    "🔮 Open a console",
+    (yargs) => {
+      // Option to specify the path to the database
+      yargs.option("db", {
+        alias: "d",
+        describe: "Path to the database",
+
+        // Default to the path in the .wrangler directory
+        default: path.join(
+          process.cwd(),
+          ".wrangler",
+          "state",
+          "d1",
+          "DB.sqlite3"
+        ),
+      });
+
+      // Option to specify the path to the models directory
+      yargs.option("models", {
+        alias: "m",
+        describe: "Path to the models directory",
+
+        // Default to the path in the app directory
+        default: path.join(process.cwd(), "app", "models"),
+      });
+    },
+    async (argv) => {
+      const modelsDirectory = argv.models as string;
+      const dbPath = argv.db as string;
+
+      return createRepl({ modelsDirectory, dbPath });
+    }
+  );
 
   return superflare;
 }
