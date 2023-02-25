@@ -4,9 +4,7 @@ import invariant from "tiny-invariant";
 import { SecondaryButton } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
 import { Article } from "~/models/Article";
-import { ArticleForm } from "./components/article-form";
-
-export { action } from "./components/article-form";
+import { convertToHtml } from "~/utils/markdown.server";
 
 export async function loader({ params }: LoaderArgs) {
   const { slug } = params;
@@ -15,18 +13,29 @@ export async function loader({ params }: LoaderArgs) {
 
   const article = await Article.where("slug", slug).first();
 
-  return json({ article });
+  if (!article) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  return json({ article, html: await convertToHtml(article.content ?? "") });
 }
 
 export default function NewArticle() {
-  const { article } = useLoaderData<typeof loader>();
+  const { html } = useLoaderData<typeof loader>();
 
   return (
     <Page
-      title="Edit Article"
-      action={<SecondaryButton to="./preview">Preview</SecondaryButton>}
+      title="Preview Article"
+      action={
+        <SecondaryButton to="../" relative="path">
+          Edit
+        </SecondaryButton>
+      }
     >
-      <ArticleForm article={article} />
+      <div
+        className="prose dark:prose-invert"
+        dangerouslySetInnerHTML={{ __html: html }}
+      ></div>
     </Page>
   );
 }

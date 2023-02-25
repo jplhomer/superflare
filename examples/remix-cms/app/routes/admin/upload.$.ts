@@ -1,4 +1,4 @@
-import { type ActionArgs } from "@remix-run/cloudflare";
+import { json, type ActionArgs } from "@remix-run/cloudflare";
 import { storage } from "superflare";
 
 export async function action({ request }: ActionArgs) {
@@ -16,5 +16,7 @@ export async function action({ request }: ActionArgs) {
   const file = formData.get("file") as File;
   const object = await storage().put(file);
 
-  return storage().url(object.key);
+  return json({
+    url: storage().url(object.key),
+  });
 }

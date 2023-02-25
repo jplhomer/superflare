@@ -40,7 +40,8 @@ export function SecondaryButton({
   className?: string;
   to?: string;
   as?: React.ElementType;
-} & React.ComponentPropsWithoutRef<"button">) {
+} & React.ComponentPropsWithoutRef<"button"> &
+  React.ComponentPropsWithoutRef<typeof Link>) {
   let Component = to ? Link : as;
 
   return (

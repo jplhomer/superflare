@@ -111,7 +111,7 @@ export function ArticleForm({ article }: { article?: Article }) {
             body: formData,
           });
 
-          const url = await response.text();
+          const { url } = await response.json<{ url: string }>();
 
           return url;
         }}
