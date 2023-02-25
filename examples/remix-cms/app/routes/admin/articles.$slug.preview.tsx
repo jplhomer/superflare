@@ -15,18 +15,21 @@ export async function loader({ params }: LoaderArgs) {
   const article = await Article.where("slug", slug).first();
 
   if (!article) {
-    return new Response("Not found", { status: 404 });
+    throw new Response("Not found", { status: 404 });
   }
 
-  return json({ article, html: await convertToHtml(article.content ?? "") });
+  return json({
+    article,
+    html: await convertToHtml(article.content ?? ""),
+  });
 }
 
 export default function NewArticle() {
-  const { html } = useLoaderData<typeof loader>();
+  const { html, article } = useLoaderData<typeof loader>();
 
   return (
     <Page
-      title="Preview Article"
+      title={"Preview: " + article.title}
       action={
         <SecondaryButton to="../" relative="path">
           <PencilSquareIcon className="w-4 h-4" />
