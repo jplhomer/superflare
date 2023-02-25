@@ -15,7 +15,9 @@
   },
   "superflare": {
     "d1": "DB",
-    "r2": "REMIX_CMS"
+    "r2": [
+      "REMIX_CMS_MEDIA"
+    ]
   },
   "keywords": [],
   "author": "Josh Larson <jplhomer@gmail.com>",

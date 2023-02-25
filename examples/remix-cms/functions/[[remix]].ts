@@ -32,6 +32,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   config({
     database: ctx.env.DB,
+    storage: {
+      default: ctx.env.REMIX_CMS_MEDIA,
+    },
   });
 
   const loadContext: AppLoadContext = {

@@ -171,10 +171,10 @@ function createCLIParser(argv: string[]) {
         logger.info(`Using D1 binding: ${d1Binding}`);
       }
 
-      const r2Binding = config?.r2;
+      const r2Bindings = config?.r2;
 
-      if (r2Binding) {
-        logger.info(`Using R2 binding: ${r2Binding}`);
+      if (r2Bindings && Array.isArray(r2Bindings)) {
+        logger.info(`Using R2 bindings: ${r2Bindings.join(", ")}`);
       }
 
       const args = [
@@ -184,7 +184,8 @@ function createCLIParser(argv: string[]) {
         "public",
         "--compatibility-date=2023-01-18",
         d1Binding && `--d1 ${d1Binding}`,
-        r2Binding && `--r2 ${r2Binding}`,
+        r2Bindings?.length &&
+          r2Bindings.map((r2Binding) => `--r2 ${r2Binding}`).join(" "),
         "--binding",
         "SESSION_SECRET=secret",
         "--local",
@@ -209,7 +210,7 @@ function createCLIParser(argv: string[]) {
 
 interface SuperflarePackageJsonConfig {
   d1?: string;
-  r2?: string;
+  r2?: string[];
 }
 
 export async function getSuperflareConfigFromPackageJson(

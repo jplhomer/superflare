@@ -4,7 +4,7 @@ import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import { Button, SecondaryButton } from "~/components/admin/Button";
-import { TextareaMarkdown } from "textarea-markdown-editor/dist/TextareaMarkdown";
+import MarkdownComposer from "~/components/admin/MarkdownComposer";
 
 interface ActionData {
   title: string | null;
@@ -94,6 +94,27 @@ export async function action({ request, context: { session } }: ActionArgs) {
 export function ArticleForm({ article }: { article?: Article }) {
   const actionData = useActionData<ActionData>();
 
+  const ContentMarkdown = (props: any) => {
+    return (
+      <MarkdownComposer
+        onInsertImage={async (file) => {
+          const response = await fetch(`/admin/upload/${file.name}`, {
+            method: "POST",
+            body: file,
+          });
+
+          const url = await response.text();
+
+          return url;
+        }}
+        id="content"
+        name="content"
+        placeholder="Write your article (in markdown)"
+        {...props}
+      />
+    );
+  };
+
   return (
     <Form method="post">
       {article && <input type="hidden" name="id" value={article.id} />}
@@ -115,7 +136,7 @@ export function ArticleForm({ article }: { article?: Article }) {
             className="font-mono block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700"
             cols={80}
             rows={20}
-            as={TextareaMarkdown}
+            as={ContentMarkdown}
           />
 
           {article && (
