@@ -16,6 +16,10 @@ export async function loader({ params }: LoaderArgs) {
 
   const article = await Article.where("slug", slug).first();
 
+  if (!article) {
+    throw new Response("Not found", { status: 404 });
+  }
+
   return json({ article });
 }
 

@@ -45,7 +45,7 @@ export class QueryBuilder {
       invariant(results.results, `Query failed: ${results.error}`);
 
       if (this.#single) {
-        return new this.model(results.results[0]) || null;
+        return results.results[0] ? new this.model(results.results[0]) : null;
       }
 
       return results.results.map((data: any) => new this.model(data));

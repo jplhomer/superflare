@@ -109,6 +109,9 @@ describe("model", () => {
     expect(posts[0]).toBeInstanceOf(Post);
     expect(posts[0].id).toBe(2);
     expect(posts[0].title).toBe("Hello World 2");
+
+    // It's ok if the where clause is not found
+    expect(await Post.where("title", "Hello World 3").first()).toBeNull();
   });
 
   test("#find", async () => {
