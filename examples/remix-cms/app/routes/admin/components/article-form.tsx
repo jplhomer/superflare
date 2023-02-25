@@ -51,7 +51,11 @@ export async function action({ request, context: { session } }: ActionArgs) {
 
   try {
     if (intent === Intent.Create) {
-      const slug = title!.toLowerCase().replace(/ /g, "-");
+      const slug = title!
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+
       const article = await Article.create({
         // TODO: Use current user
         user_id: 1,
