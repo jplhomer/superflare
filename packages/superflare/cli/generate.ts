@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { Argv } from "yargs";
 import { getSuperflareConfigFromPackageJson } from "../cli";
 import { logger } from "../logger";
@@ -28,7 +28,13 @@ export function generate(yargs: Argv) {
       const db = argv.db as string;
 
       logger.info("Generating migration...");
-      spawn("npx", ["wrangler", "d1", "migrations", "create", db, name]);
+      spawnSync("npx", ["wrangler", "d1", "migrations", "create", db, name], {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          NO_D1_WARNING: "true",
+        },
+      });
       logger.info("Migration generated!");
     }
   );
