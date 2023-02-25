@@ -14,6 +14,11 @@ import { wranglerMigrate } from "./wrangler";
 import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
 import { spawn } from "node:child_process";
+import { generate } from "./cli/generate";
+import type Yargs from "yargs";
+
+const resetColor = "\x1b[0m";
+const fgGreenColor = "\x1b[32m";
 
 export class CommandLineArgsError extends Error {}
 
@@ -35,6 +40,16 @@ function createCLIParser(argv: string[]) {
       }
     }
   );
+
+  // Default help command that supports the subcommands
+  const subHelp: Yargs.CommandModule = {
+    command: ["*"],
+    handler: async (args) => {
+      setImmediate(() =>
+        superflare.parse([...args._.map((a) => `${a}`), "--help"])
+      );
+    },
+  };
 
   // Migrate
   superflare.command(
@@ -206,6 +221,10 @@ function createCLIParser(argv: string[]) {
     }
   );
 
+  superflare.command(["generate", "g"], "🌇 Generate things", (yargs) => {
+    return generate(yargs.command(subHelp));
+  });
+
   return superflare;
 }
 
@@ -227,4 +246,27 @@ export async function getSuperflareConfigFromPackageJson(
   }
 }
 
-createCLIParser(hideBin(process.argv)).parse();
+async function main(argv: string[]): Promise<void> {
+  const superflare = createCLIParser(argv);
+  try {
+    await superflare.parse();
+  } catch (e) {
+    logger.log(""); // Just adds a bit of space
+    if (e instanceof CommandLineArgsError) {
+      logger.error(e.message);
+      // We are not able to ask the `superflare` CLI parser to show help for a subcommand programmatically.
+      // The workaround is to re-run the parsing with an additional `--help` flag, which will result in the correct help message being displayed.
+      // The `superflare` object is "frozen"; we cannot reuse that with different args, so we must create a new CLI parser to generate the help message.
+      await createCLIParser([...argv, "--help"]).parse();
+    } else {
+      logger.error(e instanceof Error ? e.message : e);
+      logger.log(
+        `${fgGreenColor}%s${resetColor}`,
+        "If you think this is a bug then please create an issue at https://github.com/jplhomer/superflare/issues/new"
+      );
+    }
+    throw e;
+  }
+}
+
+main(hideBin(process.argv));
