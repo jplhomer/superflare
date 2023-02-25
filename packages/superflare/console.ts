@@ -4,6 +4,7 @@ import { register } from "esbuild-register/dist/node";
 import { createD1Database } from "./d1-database";
 import Database from "better-sqlite3";
 import { homedir } from "node:os";
+import { inspect } from "node:util";
 
 export async function createRepl({
   modelsDirectory,
@@ -21,12 +22,23 @@ export async function createRepl({
    * Create a REPL server.
    */
   const server = start({
-    prompt: "superflare> ",
+    prompt: ">> ",
     input: process.stdin,
     output: process.stdout,
     terminal:
       process.stdout.isTTY && !parseInt(process.env.NODE_NO_READLINE!, 10),
     useGlobal: true,
+    writer: (output) => {
+      return (
+        inspect(output, {
+          colors: true,
+          showProxy: false,
+        })
+          .split("\n")
+          .map((line, idx) => (idx === 0 ? "=> " + line : "   " + line))
+          .join("\n") + "\n"
+      );
+    },
   });
 
   /**
