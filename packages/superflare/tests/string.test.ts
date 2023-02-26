@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { modelToTableName } from "../string";
+import { modelToTableName } from "../src/string";
 
 it("generates the table name from the model name", () => {
   expect(modelToTableName("Post")).toBe("posts");

@@ -8,15 +8,16 @@ import fs from "node:fs";
 import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
-} from "./d1-types";
-import { Logger, logger } from "./logger";
-import { wranglerMigrate } from "./wrangler";
+} from "./cli/d1-types";
+import { Logger, logger } from "./cli/logger";
+import { wranglerMigrate } from "./cli/wrangler";
 import { register } from "esbuild-register/dist/node";
-import { createD1Database } from "./d1-database";
+import { createD1Database } from "./cli/d1-database";
 import { spawn } from "node:child_process";
 import { generate } from "./cli/generate";
 import type Yargs from "yargs";
-import { createRepl } from "./console";
+import { createRepl } from "./cli/console";
+import { getSuperflareConfigFromPackageJson } from "./cli/config";
 
 const resetColor = "\x1b[0m";
 const fgGreenColor = "\x1b[32m";
@@ -55,7 +56,7 @@ function createCLIParser(argv: string[]) {
   // Migrate
   superflare.command(
     "migrate",
-    "🏗️  migrate your database and update types",
+    "🏗️  Migrate your database and update types",
     (yargs) => {
       // Option to specify the path to the database
       yargs.option("db", {
@@ -165,7 +166,7 @@ function createCLIParser(argv: string[]) {
 
   superflare.command(
     "dev",
-    "🏄 start the development server",
+    "🏄 Start the development server",
     (yargs) => {},
     async (argv) => {
       logger.info('Starting "wrangler pages dev"...');
@@ -222,13 +223,17 @@ function createCLIParser(argv: string[]) {
     }
   );
 
-  superflare.command(["generate", "g"], "🌇 Generate things", (yargs) => {
-    return generate(yargs.command(subHelp));
-  });
+  superflare.command(
+    ["generate", "g"],
+    "🌇 Scaffold useful things",
+    (yargs) => {
+      return generate(yargs.command(subHelp));
+    }
+  );
 
   superflare.command(
     ["console", "c"],
-    "🔮 Open a console",
+    "🔮 Open an interactive developer console",
     (yargs) => {
       // Option to specify the path to the database
       yargs.option("db", {
@@ -263,24 +268,6 @@ function createCLIParser(argv: string[]) {
   );
 
   return superflare;
-}
-
-interface SuperflarePackageJsonConfig {
-  d1?: string[];
-  r2?: string[];
-}
-
-export async function getSuperflareConfigFromPackageJson(
-  workingDir: string,
-  logger?: Logger
-): Promise<SuperflarePackageJsonConfig | null> {
-  try {
-    const pkg = require(path.join(workingDir, "package.json"));
-    return pkg.superflare;
-  } catch (e: any) {
-    logger?.debug(`Error loading package.json: ${e.message}`);
-    return null;
-  }
 }
 
 async function main(argv: string[]): Promise<void> {

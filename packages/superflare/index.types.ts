@@ -3,10 +3,10 @@
  * compose and export types for Model/QueryBuilder.
  **/
 
-export * from "./config";
-export { DatabaseException } from "./query-builder";
-export { seed } from "./seeder";
-export { storage, servePublicPathFromStorage } from "./storage";
+export { config } from "./src/config";
+export { DatabaseException } from "./src/query-builder";
+export { seed } from "./src/seeder";
+export { storage, servePublicPathFromStorage } from "./src/storage";
 
 /**
  * Shape of the model instance.

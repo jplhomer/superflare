@@ -6,7 +6,7 @@ import {
   SuperflareType,
   SUPERFLARE_TYPES_END_MARKER,
   SUPERFLARE_TYPES_START_MARKER,
-} from "../d1-types";
+} from "../cli/d1-types";
 import Database, { type Database as DatabaseType } from "better-sqlite3";
 import path from "path";
 import fs from "fs";

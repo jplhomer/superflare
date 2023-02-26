@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { Argv } from "yargs";
-import { getSuperflareConfigFromPackageJson } from "../cli";
-import { logger } from "../logger";
+import { getSuperflareConfigFromPackageJson } from "./config";
+import { logger } from "./logger";
 
 export function generate(yargs: Argv) {
   return yargs.command(
