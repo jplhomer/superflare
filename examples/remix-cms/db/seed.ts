@@ -1,12 +1,6 @@
 import { seed } from "superflare";
-import { User } from "~/models/User";
+import { UserFactory } from "./factories/UserFactory";
 
-export default seed(() => {
-  // User.factory().create();
-  User.create({
-    name: "John Doe",
-    email: "dev@example.com",
-    // TODO: Inline hashed password
-    password: "password",
-  });
+export default seed(async () => {
+  await UserFactory.create();
 });

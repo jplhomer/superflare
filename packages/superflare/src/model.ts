@@ -42,11 +42,11 @@ export class Model {
       throw new Error("No database connection defined");
     }
 
-    if (!Config.database.connections[this.connection]) {
+    if (!Config.database?.connections?.[this.connection]) {
       throw new Error(`No database connection defined for ${this.connection}`);
     }
 
-    return Config.database.connections[this.connection];
+    return Config.database?.connections?.[this.connection];
   }
 
   static query() {

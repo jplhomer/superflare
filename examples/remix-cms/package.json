@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230215.0",
+    "@faker-js/faker": "^7.6.0",
     "@remix-run/dev": "^1.13.0",
     "@remix-run/eslint-config": "^1.13.0",
     "@remix-run/server-runtime": "^1.13.0",
