@@ -9,6 +9,7 @@ import { consoleHandler, consoleOptions, createRepl } from "./cli/console";
 import { CommonYargsArgv } from "./cli/yargs-types";
 import { migrateHandler, migrateOptions } from "./cli/migrate";
 import { devHandler, devOptions } from "./cli/dev";
+import { db } from "./cli/db";
 
 const resetColor = "\x1b[0m";
 const fgGreenColor = "\x1b[32m";
@@ -84,11 +85,15 @@ function createCLIParser(argv: string[]) {
   superflare.command(
     ["console", "c"],
     "🔮 Open an interactive developer console",
-    // TODO: Why does TypeScript hate this?
-    // @ts-ignore
+    // @ts-expect-error idk
     consoleOptions,
     consoleHandler
   );
+
+  // DB
+  superflare.command("db", "🗄️  Manage your database", (yargs) => {
+    return db(yargs.command(subHelp));
+  });
 
   return superflare;
 }

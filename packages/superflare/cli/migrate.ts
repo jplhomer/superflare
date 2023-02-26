@@ -4,12 +4,11 @@ import fs from "node:fs/promises";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import Database from "better-sqlite3";
-import { register } from "esbuild-register/dist/node";
-import { createD1Database } from "./d1-database";
 import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
 } from "./d1-types";
+import { seedDb } from "./db/seed";
 
 export function migrateOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -83,22 +82,7 @@ export async function migrateHandler(
   const seed = argv.seed;
   const seedPath = argv.seedPath;
   if (seed && seedPath) {
-    logger.info(`Seeding database...`);
-
-    register();
-    try {
-      const seedModule = require(seedPath);
-      const d1Database = createD1Database(db);
-      // TODO: Find out why errors in the seeder are not bubbled to this try/catch
-      if (seedModule.default) {
-        await seedModule.default(d1Database);
-        logger.info(`Seeding complete!`);
-      } else {
-        logger.warn(`Warning: Did not find a default export in ${seedPath}.`);
-      }
-    } catch (e: any) {
-      logger.error(`Error seeding database: ${e.message}`);
-    }
+    await seedDb(dbPath, seedPath);
   }
 
   logger.info("Generating types from database...");
