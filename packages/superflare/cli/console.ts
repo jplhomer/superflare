@@ -5,6 +5,41 @@ import { createD1Database } from "./d1-database";
 import Database from "better-sqlite3";
 import { homedir } from "node:os";
 import { inspect } from "node:util";
+import path from "node:path";
+import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
+
+export function consoleOptions(yargs: CommonYargsArgv) {
+  return yargs
+    .option("db", {
+      alias: "d",
+      describe: "Path to the database",
+
+      // Default to the path in the .wrangler directory
+      default: path.join(
+        process.cwd(),
+        ".wrangler",
+        "state",
+        "d1",
+        "DB.sqlite3"
+      ),
+    })
+    .option("models", {
+      alias: "m",
+      describe: "Path to the models directory",
+
+      // Default to the path in the app directory
+      default: path.join(process.cwd(), "app", "models"),
+    });
+}
+
+export async function consoleHandler(
+  argv: StrictYargsOptionsToInterface<typeof consoleOptions>
+) {
+  const modelsDirectory = argv.models;
+  const dbPath = argv.db;
+
+  return createRepl({ modelsDirectory, dbPath });
+}
 
 export async function createRepl({
   modelsDirectory,
