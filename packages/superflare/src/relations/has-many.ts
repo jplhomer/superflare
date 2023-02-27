@@ -10,7 +10,7 @@ export class HasMany extends Relation {
     public ownerKey: string,
     public relationName: string
   ) {
-    super();
+    super(query);
   }
 
   save(models: any[]) {

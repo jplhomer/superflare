@@ -2,67 +2,80 @@ import invariant from "tiny-invariant";
 import { modelToTableName } from "./string";
 
 export class QueryBuilder {
-  #selects: string[] = [];
-  #from: string;
-  #bindings: any[] = [];
-  #where: string[] = [];
-  #orderBy: string[] = [];
-  #limit: number | null = null;
-  #single: boolean = false;
-  #modelClass: any;
-  #afterHooks: ((results: any) => void)[] = [];
+  private $selects: string[] = [];
+  private $from: string;
+  private $bindings: any[] = [];
+  private $where: string[] = [];
+  private $orderBy: string[] = [];
+  private $limit: number | null = null;
+  private $single: boolean = false;
+  private $modelClass: any;
+  private $afterHooks: ((results: any) => void)[] = [];
 
   constructor(public modelInstance: any) {
-    this.#modelClass = modelInstance.constructor;
-    this.#from =
-      this.#modelClass.table || modelToTableName(this.#modelClass.name);
+    this.$modelClass = modelInstance.constructor;
+    this.$from =
+      this.$modelClass.table || modelToTableName(this.$modelClass.name);
   }
 
   select(...fields: string[]) {
-    this.#selects.push(...fields);
+    this.$selects.push(...fields);
     return this;
   }
 
-  #connection() {
-    return this.#modelClass.getConnection();
+  private connection() {
+    return this.$modelClass.getConnection();
   }
 
-  #buildQuery() {
+  private buildQuery() {
     return [
-      `select ${this.#selects.length ? this.#selects.join(",") : "*"}`,
-      ` from ${this.#from}`,
-      this.#where.length ? " where " + this.#where.join(", ") : "",
-      this.#orderBy.length ? " order by " + this.#orderBy.join(", ") : "",
-      this.#limit ? ` limit ${this.#limit}` : "",
+      `select ${this.$selects.length ? this.$selects.join(",") : "*"}`,
+      ` from ${this.$from}`,
+      this.$where.length ? " where " + this.$where.join(" and ") : "",
+      this.$orderBy.length ? " order by " + this.$orderBy.join(", ") : "",
+      this.$limit ? ` limit ${this.$limit}` : "",
     ].join("");
   }
 
-  async #execute() {
-    const query = this.#buildQuery();
+  public toSQL() {
+    return this.buildQuery();
+  }
+
+  public dump() {
+    console.log({
+      query: this.toSQL(),
+      bindings: this.$bindings,
+    });
+
+    return this;
+  }
+
+  private async execute() {
+    const query = this.toSQL();
 
     try {
-      const dbResults = await this.#connection()
+      const dbResults = await this.connection()
         .prepare(query)
-        .bind(...this.#bindings)
+        .bind(...this.$bindings)
         .all();
 
       invariant(dbResults.results, `Query failed: ${dbResults.error}`);
 
-      if (this.#single) {
+      if (this.$single) {
         const results = dbResults.results[0]
-          ? this.#modelClass.instanceFromDB(dbResults.results[0])
+          ? this.$modelClass.instanceFromDB(dbResults.results[0])
           : null;
 
-        this.#runCallbacks(results);
+        this.runCallbacks(results);
 
         return results;
       }
 
       const results = dbResults.results.map((data: any) =>
-        this.#modelClass.instanceFromDB(data)
+        this.$modelClass.instanceFromDB(data)
       );
 
-      this.#runCallbacks(results);
+      this.runCallbacks(results);
 
       return results;
     } catch (e: any) {
@@ -70,8 +83,8 @@ export class QueryBuilder {
     }
   }
 
-  #runCallbacks(results: any) {
-    return this.#afterHooks.map((callback) => callback(results));
+  private runCallbacks(results: any) {
+    return this.$afterHooks.map((callback) => callback(results));
   }
 
   where(field: string, value: any): this;
@@ -82,35 +95,35 @@ export class QueryBuilder {
       operator = "=";
     }
 
-    this.#where.push(`${field} ${operator} ?`);
-    this.#bindings.push(value);
+    this.$where.push(`${field} ${operator} ?`);
+    this.$bindings.push(value);
     return this;
   }
 
   limit(limit: number) {
-    this.#limit = limit;
+    this.$limit = limit;
     return this;
   }
 
   orderBy(field: string, direction: "asc" | "desc" = "asc") {
-    this.#orderBy.push(`${field} ${direction}`);
+    this.$orderBy.push(`${field} ${direction}`);
     return this;
   }
 
   all(): Promise<any> {
-    return this.#execute();
+    return this.execute();
   }
 
   first(): any {
-    this.#single = true;
+    this.$single = true;
     return this.limit(1);
   }
 
   async insert(attributes: Record<string, any>): Promise<any> {
     try {
-      const results = await this.#connection()
+      const results = await this.connection()
         .prepare(
-          `insert into ${this.#from} (${Object.keys(attributes).join(
+          `insert into ${this.$from} (${Object.keys(attributes).join(
             ","
           )}) values (${Object.keys(attributes)
             .map((_, i) => `?`)
@@ -128,9 +141,9 @@ export class QueryBuilder {
   async update(attributes: Record<string, any>): Promise<boolean> {
     const keysToUpdate = Object.keys(attributes).filter((key) => key !== "id");
     try {
-      const results = await this.#connection()
+      const results = await this.connection()
         .prepare(
-          `update ${this.#from} set ${keysToUpdate
+          `update ${this.$from} set ${keysToUpdate
             .map((key) => `${key} = ?`)
             .join(",")} where id = ?`
         )
@@ -145,17 +158,17 @@ export class QueryBuilder {
 
   async count() {
     this.select("count(*) as count");
-    const query = this.#buildQuery();
-    const results = await this.#connection()
+    const query = this.buildQuery();
+    const results = await this.connection()
       .prepare(query)
-      .bind(...this.#bindings)
+      .bind(...this.$bindings)
       .first();
 
     return results.count;
   }
 
   afterExecute(callback: (results: any) => any) {
-    this.#afterHooks.push(callback);
+    this.$afterHooks.push(callback);
 
     return this;
   }

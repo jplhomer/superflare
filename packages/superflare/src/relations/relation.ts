@@ -1,4 +1,25 @@
+import { QueryBuilder } from "../query-builder";
+
 export abstract class Relation {
+  constructor(public query: QueryBuilder) {
+    /**
+     * Proxy any method calls to the underlying `QueryBuilder` instance.
+     */
+    return new Proxy(this, {
+      get(target, prop) {
+        if (prop in target) {
+          return target[prop as keyof Relation];
+        }
+
+        if (prop in target.query) {
+          return target.query[prop as keyof QueryBuilder];
+        }
+
+        return undefined;
+      },
+    });
+  }
+
   abstract getResults(): Promise<any>;
 
   then(

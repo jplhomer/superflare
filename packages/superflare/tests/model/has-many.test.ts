@@ -106,3 +106,28 @@ it("creates", async () => {
 
   expect(posts[0].userId).toBe(user.id);
 });
+
+it("supports chaining queries", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  const otherUser = await User.create({
+    name: "Jane Doe",
+  });
+  await Post.create({
+    text: "Hello World",
+    userId: user.id,
+  });
+  await Post.create({
+    text: "Hello again",
+    userId: user.id,
+  });
+  await Post.create({
+    text: "Hello again",
+    userId: otherUser.id,
+  });
+
+  const posts = await user.$posts().where("text", "Hello again");
+
+  expect(posts).toHaveLength(1);
+});

@@ -10,7 +10,7 @@ export class BelongsTo extends Relation {
     public ownerKey: string,
     public relationName: string
   ) {
-    super();
+    super(query);
   }
 
   associate(model: any) {

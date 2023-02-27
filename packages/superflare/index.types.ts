@@ -24,24 +24,20 @@ export interface ModelInstance {
   hasMany<M extends BaseModel>(model: M): HasMany<M>;
 }
 
-export interface BelongsTo<M extends BaseModel, R = InstanceType<M>> {
+export interface BelongsTo<M extends BaseModel, R = InstanceType<M>>
+  extends QueryBuilder<M, R> {
   associate(model: any): R;
   dissociate(): R;
-
-  then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
-  catch(onrejected?: (reason: any) => any): Promise<R>;
 }
 
-export interface HasOne<M extends BaseModel, R = InstanceType<M>> {
+export interface HasOne<M extends BaseModel, R = InstanceType<M>>
+  extends QueryBuilder<M, R> {
   save(model: any): Promise<R>;
   create(attributes: any): Promise<R>;
-
-  then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
-  catch(onrejected?: (reason: any) => any): Promise<R>;
 }
 
 export interface HasMany<M extends BaseModel, R = InstanceType<M>[]>
-  extends Promise<R> {
+  extends QueryBuilder<M, R> {
   save(model: any): Promise<R>;
   create(attributes: any): Promise<R>;
 }
