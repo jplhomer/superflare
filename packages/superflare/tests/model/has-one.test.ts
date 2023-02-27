@@ -1,0 +1,137 @@
+import Database, { type Database as DatabaseType } from "better-sqlite3";
+import { beforeEach, expect, it } from "vitest";
+import { config } from "../../src/config";
+import { Model } from "../../src/model";
+import type { BaseModel } from "../../index.types";
+import { createD1Database } from "../../cli/d1-database";
+
+let ModelConstructor = Model as unknown as BaseModel;
+
+class Profile extends ModelConstructor {
+  id!: number;
+  text!: string;
+  createdAt!: string;
+  updatedAt!: string;
+  userId!: number;
+}
+
+class User extends ModelConstructor {
+  id!: number;
+  name!: string;
+  createdAt!: string;
+  updatedAt!: string;
+  profileId?: number;
+
+  profile?: Profile | Promise<Profile>;
+  $profile() {
+    return this.hasOne(Profile);
+  }
+}
+
+function refreshDatabase(database: DatabaseType) {
+  database.exec(`
+    DROP TABLE IF EXISTS profiles;
+    CREATE TABLE profiles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      text TEXT NOT NULL,
+      userId INTEGER NOT NULL,
+      createdAt timestamp not null default current_timestamp,
+      updatedAt timestamp not null default current_timestamp
+    );
+
+    DROP TABLE IF EXISTS users;
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      profileId INTEGER,
+      createdAt timestamp not null default current_timestamp,
+      updatedAt timestamp not null default current_timestamp
+    );
+  `);
+
+  return database;
+}
+
+const sqliteDb = new Database(":memory:");
+const database = createD1Database(sqliteDb);
+
+beforeEach(async () => {
+  refreshDatabase(sqliteDb);
+  config({
+    database: {
+      default: database,
+    },
+  });
+});
+
+it("works", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  await Profile.create({
+    text: "Hello World",
+    userId: user.id,
+  });
+
+  const userFromDB = await User.find(1);
+  const profileFromDB = await userFromDB!.profile;
+
+  expect(profileFromDB).toBeTruthy();
+  expect(profileFromDB!.id).toBe(1);
+  expect(profileFromDB!.text).toBe("Hello World");
+
+  // The second call should be cached:
+  const profileFromDB2 = userFromDB!.profile;
+  expect(profileFromDB2).toBeInstanceOf(Profile);
+});
+
+it("saves", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  const profile = new Profile({
+    text: "Hello World",
+  });
+
+  expect(user.profileId).toBeUndefined();
+
+  const savedProfile = await user.$profile().save(profile);
+
+  expect(savedProfile.id).toBe(1);
+  expect(savedProfile.text).toBe("Hello World");
+
+  const userFromDB = await User.find(1);
+  const profileFromDB = await userFromDB!.profile;
+
+  profileFromDB!.text = "Goodbye World";
+  await profileFromDB!.save();
+
+  const profileFromDB2 = await userFromDB!.profile;
+  expect(profileFromDB2!.text).toBe("Goodbye World");
+
+  // The second call should be cached:
+  const profileFromDB3 = userFromDB!.profile;
+  expect(profileFromDB3).toBeInstanceOf(Profile);
+});
+
+it("creates", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+
+  expect(user.profileId).toBeUndefined();
+
+  const profile = await user.$profile().create({
+    text: "Hello World",
+  });
+
+  expect(profile.id).toBe(1);
+  expect(profile.text).toBe("Hello World");
+
+  const userFromDB = await User.find(1);
+  const profileFromDB = await userFromDB!.profile;
+
+  expect(profileFromDB).toBeTruthy();
+  expect(profileFromDB!.id).toBe(1);
+  expect(profileFromDB!.text).toBe("Hello World");
+});

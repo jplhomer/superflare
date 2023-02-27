@@ -1,6 +1,7 @@
 import { Config } from "./config";
 import { QueryBuilder } from "./query-builder";
 import { BelongsTo } from "./relations/belongs-to";
+import { HasOne } from "./relations/has-one";
 import { lowercaseFirstLetter, modelToForeignKeyId } from "./string";
 
 interface Constructor<T> {
@@ -217,6 +218,19 @@ export class Model {
       ownerKey,
       relationName
     );
+  }
+
+  hasOne(model: any, foreignKey?: string, ownerKey?: string) {
+    foreignKey = foreignKey || modelToForeignKeyId(this.constructor.name);
+    ownerKey = ownerKey || "id";
+
+    /**
+     * We assume the relation name is the lowercase version of the model name.
+     * This might be a bad assumption, but it's a start.
+     */
+    const relationName = lowercaseFirstLetter(model.name);
+
+    return new HasOne(model.query(), this, foreignKey, ownerKey, relationName);
   }
 }
 
