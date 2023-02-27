@@ -68,6 +68,15 @@ export interface BaseModel {
     operator: string,
     value?: string | number
   ): QueryBuilder<T>;
+  whereIn<T extends BaseModel>(
+    this: T,
+    field: string,
+    values: (string | number)[]
+  ): QueryBuilder<T>;
+  with<T extends BaseModel>(
+    this: T,
+    relationName: string | string[]
+  ): QueryBuilder<T>;
   create<T extends BaseModel>(
     this: T,
     attributes: any
@@ -84,8 +93,10 @@ export interface BaseModel {
 interface QueryBuilder<T extends BaseModel, R = InstanceType<T>> {
   where(field: string, value: any): this;
   where(field: string, operator: string, value?: any): this;
+  whereIn(field: string, values: (string | number)[]): this;
+  with(relationName: string | string[]): this;
   limit(limit: number): this;
-  all(): Promise<R[]>;
+  get(): Promise<R[]>;
   first(): Promise<null | R>;
   orderBy<T extends BaseModel>(
     this: T,

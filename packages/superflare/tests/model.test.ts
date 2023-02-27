@@ -137,6 +137,25 @@ describe("model", () => {
     expect(posts[0].title).toBe("Hello World 2");
   });
 
+  test("#whereIn", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const posts = await Post.whereIn("id", [1, 2]);
+
+    expect(posts).toHaveLength(2);
+    expect(posts[0]).toBeInstanceOf(Post);
+    expect(posts[0].id).toBe(1);
+    expect(posts[0].title).toBe("Hello World");
+  });
+
   test("#find", async () => {
     await database
       .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")

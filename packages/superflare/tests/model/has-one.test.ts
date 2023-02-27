@@ -135,3 +135,18 @@ it("creates", async () => {
   expect(profileFromDB!.id).toBe(1);
   expect(profileFromDB!.text).toBe("Hello World");
 });
+
+it("supports eager loading", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  await Profile.create({
+    text: "Hello World",
+    userId: user.id,
+  });
+
+  const userFromDB = await User.query().with("profile").first();
+
+  expect(userFromDB).toBeTruthy();
+  expect(userFromDB!.profile).toBeInstanceOf(Profile);
+});

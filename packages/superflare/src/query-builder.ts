@@ -7,6 +7,7 @@ export class QueryBuilder {
   private $bindings: any[] = [];
   private $where: string[] = [];
   private $orderBy: string[] = [];
+  private $eagerLoad: string[] = [];
   private $limit: number | null = null;
   private $single: boolean = false;
   private $modelClass: any;
@@ -61,23 +62,17 @@ export class QueryBuilder {
 
       invariant(dbResults.results, `Query failed: ${dbResults.error}`);
 
-      if (this.$single) {
-        const results = dbResults.results[0]
-          ? this.$modelClass.instanceFromDB(dbResults.results[0])
-          : null;
-
-        this.runCallbacks(results);
-
-        return results;
-      }
-
-      const results = dbResults.results.map((data: any) =>
+      let results = dbResults.results.map((data: any) =>
         this.$modelClass.instanceFromDB(data)
       );
 
-      this.runCallbacks(results);
+      results = await this.eagerLoadRelations(results);
 
-      return results;
+      let result = this.$single ? results[0] ?? null : results;
+
+      this.runCallbacks(result);
+
+      return result;
     } catch (e: any) {
       throw new DatabaseException(e?.cause || e?.message);
     }
@@ -100,6 +95,22 @@ export class QueryBuilder {
     return this;
   }
 
+  whereIn(field: string, values: any[]) {
+    this.$where.push(`${field} in (${values.map(() => "?").join(",")})`);
+    this.$bindings.push(...values);
+    return this;
+  }
+
+  with(relationName: string | string[]) {
+    if (Array.isArray(relationName)) {
+      this.$eagerLoad.push(...relationName);
+    } else {
+      this.$eagerLoad.push(relationName);
+    }
+
+    return this;
+  }
+
   limit(limit: number) {
     this.$limit = limit;
     return this;
@@ -110,7 +121,7 @@ export class QueryBuilder {
     return this;
   }
 
-  all(): Promise<any> {
+  get(): Promise<any> {
     return this.execute();
   }
 
@@ -173,18 +184,49 @@ export class QueryBuilder {
     return this;
   }
 
+  private async eagerLoadRelations(models: any | any[]) {
+    if (!this.$eagerLoad.length || !models) {
+      return models;
+    }
+
+    let modelArray = Array.isArray(models) ? models : [models];
+
+    for (const relationName of this.$eagerLoad) {
+      modelArray = await this.eagerLoadRelation(relationName, modelArray);
+    }
+
+    return modelArray;
+  }
+
+  private async eagerLoadRelation(relationName: string, models: any[]) {
+    const relation = this.$modelClass.getRelation(relationName);
+
+    if (!relation) {
+      throw new Error(`Relation ${relationName} does not exist`);
+    }
+
+    relation.addEagerConstraints(models);
+
+    return relation.match(
+      models,
+      // Don't set typical constraints on the relation.
+      await relation.getResults(false),
+      relationName
+    );
+  }
+
   then(
     onfulfilled?: ((value: any) => any) | undefined | null,
     onrejected?: ((reason: any) => any) | undefined | null
   ) {
-    const promise = this.all();
+    const promise = this.get();
     return promise.then(onfulfilled, onrejected);
   }
 
   catch<FR = never>(
     onrejected?: ((reason: any) => FR | PromiseLike<FR>) | undefined | null
   ): Promise<any> {
-    const promise = this.all();
+    const promise = this.get();
     return promise.catch(onrejected);
   }
 }

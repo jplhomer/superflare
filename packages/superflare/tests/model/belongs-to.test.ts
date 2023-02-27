@@ -113,3 +113,24 @@ it("associates and dissociates", async () => {
 
   expect(post.userId).toBeNull();
 });
+
+it("supports eager loading", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  await Post.create({
+    title: "Hello World",
+    body: "This is a test post",
+    userId: user.id,
+  });
+
+  const postsFromDB = await Post.with("user").get();
+
+  expect(postsFromDB).toBeTruthy();
+  expect(postsFromDB[0].user).toBeInstanceOf(User);
+
+  // TODO: Test that serialization works
+  // const results = postsFromDB.map((post) => post.toJSON());
+  // expect(results[0].user.id).toBe(1);
+  // expect(results[0].user.name).toBe("John Doe");
+});

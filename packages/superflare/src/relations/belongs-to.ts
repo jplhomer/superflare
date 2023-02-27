@@ -23,17 +23,39 @@ export class BelongsTo extends Relation {
     return this.child;
   }
 
-  getResults() {
-    return (
+  addEagerConstraints(models: any[]): void {
+    this.query.whereIn(
+      this.ownerKey,
+      models.map((model) => model[this.foreignKey as keyof Model])
+    );
+  }
+
+  match(models: any[], results: any[], relationName: string): any {
+    return models.map((model) => {
+      model[relationName] = results.find(
+        (result) => result[this.ownerKey as keyof Model] === model.id
+      );
+
+      return model;
+    });
+  }
+
+  getResults(withConstraints = true) {
+    if (withConstraints) {
       this.query
         .where(this.ownerKey, this.child[this.foreignKey as keyof Model])
+        .first();
+    }
+
+    return (
+      this.query
         /**
          * Cache the results on the child model.
          */
         .afterExecute((results) => {
           this.child[this.relationName as keyof Model] = results;
         })
-        .first()
+        .get()
     );
   }
 }

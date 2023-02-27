@@ -28,17 +28,39 @@ export class HasOne extends Relation {
     return model;
   }
 
-  getResults() {
-    return (
+  addEagerConstraints(models: any[]): void {
+    this.query.whereIn(
+      this.foreignKey,
+      models.map((model) => model[this.ownerKey as keyof Model])
+    );
+  }
+
+  match(models: any[], results: any[], relationName: string): any {
+    return models.map((model) => {
+      model[relationName] = results.find(
+        (result) => result[this.foreignKey as keyof Model] === model.id
+      );
+
+      return model;
+    });
+  }
+
+  getResults(withConstraints = true) {
+    if (withConstraints) {
       this.query
         .where(this.foreignKey, this.parent[this.ownerKey as keyof Model])
+        .first();
+    }
+
+    return (
+      this.query
         /**
          * Cache the results on the parent model.
          */
         .afterExecute((results) => {
           this.parent[this.relationName as keyof Model] = results;
         })
-        .first()
+        .get()
     );
   }
 }

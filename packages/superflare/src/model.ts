@@ -1,3 +1,4 @@
+import pluralize from "pluralize";
 import { Config } from "./config";
 import { QueryBuilder } from "./query-builder";
 import { BelongsTo } from "./relations/belongs-to";
@@ -83,7 +84,7 @@ export class Model {
   }
 
   static all() {
-    return this.query().select("*").all();
+    return this.query().select("*").get();
   }
 
   static first() {
@@ -106,6 +107,18 @@ export class Model {
   static where(field: string, operator: string, value?: string | number): any;
   static where(field: string, operator: string, value?: string | number) {
     return this.query().where(field, operator, value);
+  }
+
+  static whereIn(field: string, values: (string | number)[]) {
+    return this.query().whereIn(field, values);
+  }
+
+  static with(relationName: string | string[]) {
+    return this.query().with(relationName);
+  }
+
+  static getRelation(relationName: string) {
+    return new this()[`$${relationName}` as keyof Model]?.();
   }
 
   /**
@@ -242,7 +255,7 @@ export class Model {
      * We assume the relation name is the lowercase version of the model name.
      * This might be a bad assumption, but it's a start.
      */
-    const relationName = lowercaseFirstLetter(model.name);
+    const relationName = pluralize(lowercaseFirstLetter(model.name));
 
     return new HasMany(model.query(), this, foreignKey, ownerKey, relationName);
   }

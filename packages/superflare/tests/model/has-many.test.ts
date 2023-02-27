@@ -131,3 +131,29 @@ it("supports chaining queries", async () => {
 
   expect(posts).toHaveLength(1);
 });
+
+it("supports eager loading", async () => {
+  const user = await User.create({
+    name: "John Doe",
+  });
+  const otherUser = await User.create({
+    name: "Jane Doe",
+  });
+  await Post.create({
+    text: "Hello World",
+    userId: user.id,
+  });
+  await Post.create({
+    text: "Hello again",
+    userId: user.id,
+  });
+  await Post.create({
+    text: "Hello again",
+    userId: otherUser.id,
+  });
+
+  const users = await User.with("posts").get();
+
+  expect(users[0].posts).toHaveLength(2);
+  expect(users[1].posts).toHaveLength(1);
+});
