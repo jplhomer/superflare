@@ -91,18 +91,14 @@ export interface BaseModel {
 }
 
 interface QueryBuilder<T extends BaseModel, R = InstanceType<T>> {
-  where(field: string, value: any): this;
-  where(field: string, operator: string, value?: any): this;
-  whereIn(field: string, values: (string | number)[]): this;
-  with(relationName: string | string[]): this;
-  limit(limit: number): this;
+  where<T>(this: T, field: string, value: any): this;
+  where<T>(this: T, field: string, operator: string, value?: any): this;
+  whereIn<T>(this: T, field: string, values: (string | number)[]): this;
+  with<T>(this: T, relationName: string | string[]): this;
+  limit<T>(this: T, limit: number): this;
   get(): Promise<R[]>;
   first(): Promise<null | R>;
-  orderBy<T extends BaseModel>(
-    this: T,
-    field: string,
-    direction?: "asc" | "desc"
-  ): this;
+  orderBy<T>(this: T, field: string, direction?: "asc" | "desc"): this;
   then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
   catch(onrejected?: (reason: any) => any): Promise<R[]>;
 }

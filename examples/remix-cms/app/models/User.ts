@@ -1,4 +1,5 @@
-import { Model } from 'superflare';
+import { Model } from "superflare";
+import { Article } from "./Article";
 
 export class User extends Model {
   /* superflare-types-start */
@@ -9,4 +10,9 @@ export class User extends Model {
   createdAt!: string;
   updatedAt!: string;
   /* superflare-types-end */
+
+  articles?: Article[] | Promise<Article[]>;
+  $articles() {
+    return this.hasMany(Article);
+  }
 }
