@@ -129,8 +129,8 @@ it("supports eager loading", async () => {
   expect(postsFromDB).toBeTruthy();
   expect(postsFromDB[0].user).toBeInstanceOf(User);
 
-  // TODO: Test that serialization works
-  // const results = postsFromDB.map((post) => post.toJSON());
-  // expect(results[0].user.id).toBe(1);
-  // expect(results[0].user.name).toBe("John Doe");
+  // Test that serialization works
+  const results = postsFromDB.map((post) => post.toJSON());
+  expect(results[0].user.id).toBe(1);
+  expect(results[0].user.name).toBe("John Doe");
 });

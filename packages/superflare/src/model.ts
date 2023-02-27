@@ -19,6 +19,8 @@ export class Model {
 
   public timestamps = true;
 
+  protected relations: Record<string, any> = {};
+
   constructor(public attributes: any = {}) {
     this.attributes = attributes;
     Object.keys(attributes).forEach((key) => {
@@ -29,6 +31,10 @@ export class Model {
       get(target, prop) {
         if (prop in target) {
           return target[prop as keyof Model];
+        }
+
+        if (prop in target.relations) {
+          return target.relations[prop as keyof Model];
         }
 
         if (prop in target.attributes) {
@@ -157,6 +163,13 @@ export class Model {
     return this.id ? await this.performUpdate() : await this.performInsert();
   }
 
+  serialize() {
+    return {
+      ...this.serializeAttributes(),
+      ...this.serializeRelations(),
+    };
+  }
+
   protected serializeAttributes() {
     return Object.keys(this.attributes).reduce((acc, key) => {
       let value = this.attributes[key];
@@ -184,10 +197,15 @@ export class Model {
     }, {} as Record<string, any>);
   }
 
-  serialize() {
-    return {
-      ...this.serializeAttributes(),
-    };
+  protected serializeRelations() {
+    return Object.keys(this.relations).reduce((acc, key) => {
+      const value = this.relations[key];
+      acc[key] =
+        value instanceof Array
+          ? value.map((model) => model.serialize())
+          : value.serialize();
+      return acc;
+    }, {} as Record<string, any>);
   }
 
   toJSON() {
@@ -214,6 +232,14 @@ export class Model {
   /**
    * Relationships
    */
+
+  setRelation(relationName: string, value: any) {
+    this.relations[relationName] = value;
+  }
+
+  getRelation(relationName: string) {
+    return this.relations[relationName];
+  }
 
   belongsTo(model: any, foreignKey?: string, ownerKey?: string) {
     foreignKey = foreignKey || modelToForeignKeyId(model.name);

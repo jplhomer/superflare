@@ -32,8 +32,11 @@ export class BelongsTo extends Relation {
 
   match(models: any[], results: any[], relationName: string): any {
     return models.map((model) => {
-      model[relationName] = results.find(
-        (result) => result[this.ownerKey as keyof Model] === model.id
+      model.setRelation(
+        relationName,
+        results.find(
+          (result) => result[this.ownerKey as keyof Model] === model.id
+        )
       );
 
       return model;
@@ -53,7 +56,7 @@ export class BelongsTo extends Relation {
          * Cache the results on the child model.
          */
         .afterExecute((results) => {
-          this.child[this.relationName as keyof Model] = results;
+          this.child.setRelation(this.relationName, results);
         })
         .get()
     );

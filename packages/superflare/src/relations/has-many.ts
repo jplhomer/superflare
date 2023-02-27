@@ -45,8 +45,11 @@ export class HasMany extends Relation {
 
   match(models: any[], results: any[], relationName: string): any {
     return models.map((model) => {
-      model[relationName] = results.filter(
-        (result) => result[this.foreignKey as keyof Model] === model.id
+      model.setRelation(
+        relationName,
+        results.filter(
+          (result) => result[this.foreignKey as keyof Model] === model.id
+        )
       );
 
       return model;
@@ -67,7 +70,7 @@ export class HasMany extends Relation {
          * Cache the results on the parent model.
          */
         .afterExecute((results) => {
-          this.parent[this.relationName as keyof Model] = results;
+          this.parent.setRelation(this.relationName, results);
         })
         .get()
     );

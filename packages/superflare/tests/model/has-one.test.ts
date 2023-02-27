@@ -149,4 +149,9 @@ it("supports eager loading", async () => {
 
   expect(userFromDB).toBeTruthy();
   expect(userFromDB!.profile).toBeInstanceOf(Profile);
+
+  // Test serialization:
+  const serialized = userFromDB!.toJSON();
+
+  expect(serialized.profile.text).toBe("Hello World");
 });

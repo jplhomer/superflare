@@ -156,4 +156,11 @@ it("supports eager loading", async () => {
 
   expect(users[0].posts).toHaveLength(2);
   expect(users[1].posts).toHaveLength(1);
+
+  expect((users[0].posts as Post[])[0]).toBeInstanceOf(Post);
+
+  const serialized = users[0].toJSON();
+
+  expect(serialized.posts[0].id).toBe(1);
+  expect(serialized.posts[0].text).toBe("Hello World");
 });
