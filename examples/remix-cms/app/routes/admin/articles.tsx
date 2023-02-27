@@ -44,6 +44,12 @@ export default function Articles() {
                 >
                   Created At
                 </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+                >
+                  Updated At
+                </th>
                 <th scope="col" className="relative py-3 pl-3 pr-6 sm:pr-0">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -63,6 +69,9 @@ export default function Articles() {
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
                     {new Date(article.createdAt).toLocaleTimeString()}
+                  </td>
+                  <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
+                    {new Date(article.updatedAt).toLocaleTimeString()}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">
                     <Link
