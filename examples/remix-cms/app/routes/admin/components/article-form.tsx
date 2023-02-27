@@ -58,7 +58,7 @@ export async function action({ request, context: { session } }: ActionArgs) {
 
       const article = await Article.create({
         // TODO: Use current user
-        user_id: 1,
+        userId: 1,
         title,
         content,
         status: "draft",

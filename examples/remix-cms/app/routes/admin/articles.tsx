@@ -65,7 +65,7 @@ export default function Articles() {
                     {article.status}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
-                    {article.user_id}
+                    {article.userId}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
                     {new Date(article.createdAt).toLocaleTimeString()}

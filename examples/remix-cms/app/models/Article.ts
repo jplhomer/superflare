@@ -1,4 +1,5 @@
 import { Model } from "superflare";
+import { User } from "./User";
 
 export class Article extends Model {
   /* superflare-types-start */
@@ -6,9 +7,14 @@ export class Article extends Model {
   title!: string;
   slug!: string;
   content?: string;
-  user_id!: number;
+  userId!: number;
   status!: string;
   createdAt!: string;
   updatedAt!: string;
   /* superflare-types-end */
+
+  user!: User | Promise<User>;
+  $user() {
+    return this.belongsTo(User);
+  }
 }
