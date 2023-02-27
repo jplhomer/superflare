@@ -9,9 +9,13 @@ export class QueryBuilder {
   #orderBy: string[] = [];
   #limit: number | null = null;
   #single: boolean = false;
+  #modelClass: any;
+  #afterHooks: ((results: any) => void)[] = [];
 
-  constructor(public model: any) {
-    this.#from = model.table || modelToTableName(model.name);
+  constructor(public modelInstance: any) {
+    this.#modelClass = modelInstance.constructor;
+    this.#from =
+      this.#modelClass.table || modelToTableName(this.#modelClass.name);
   }
 
   select(...fields: string[]) {
@@ -20,7 +24,7 @@ export class QueryBuilder {
   }
 
   #connection() {
-    return this.model.getConnection();
+    return this.#modelClass.getConnection();
   }
 
   #buildQuery() {
@@ -37,25 +41,37 @@ export class QueryBuilder {
     const query = this.#buildQuery();
 
     try {
-      const results = await this.#connection()
+      const dbResults = await this.#connection()
         .prepare(query)
         .bind(...this.#bindings)
         .all();
 
-      invariant(results.results, `Query failed: ${results.error}`);
+      invariant(dbResults.results, `Query failed: ${dbResults.error}`);
 
       if (this.#single) {
-        return results.results[0]
-          ? this.model.instanceFromDB(results.results[0])
+        const results = dbResults.results[0]
+          ? this.#modelClass.instanceFromDB(dbResults.results[0])
           : null;
+
+        this.#runCallbacks(results);
+
+        return results;
       }
 
-      return results.results.map((data: any) =>
-        this.model.instanceFromDB(data)
+      const results = dbResults.results.map((data: any) =>
+        this.#modelClass.instanceFromDB(data)
       );
+
+      this.#runCallbacks(results);
+
+      return results;
     } catch (e: any) {
       throw new DatabaseException(e?.cause || e?.message);
     }
+  }
+
+  #runCallbacks(results: any) {
+    return this.#afterHooks.map((callback) => callback(results));
   }
 
   where(field: string, value: any): this;
@@ -136,6 +152,12 @@ export class QueryBuilder {
       .first();
 
     return results.count;
+  }
+
+  afterExecute(callback: (results: any) => any) {
+    this.#afterHooks.push(callback);
+
+    return this;
   }
 
   then(

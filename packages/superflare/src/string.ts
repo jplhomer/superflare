@@ -19,3 +19,11 @@ export function modelToTableName(modelName: string): string {
     .concat(plural(last.toLowerCase()))
     .join("_");
 }
+
+export function modelToForeignKeyId(modelName: string): string {
+  return `${singular(modelToTableName(modelName))}Id`;
+}
+
+export function lowercaseFirstLetter(string: string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}

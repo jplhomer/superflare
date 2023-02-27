@@ -18,6 +18,16 @@ export interface ModelInstance {
   attributes: any;
   save(): Promise<boolean>;
   toJSON(): ModelInstance["attributes"];
+
+  belongsTo<M extends BaseModel>(model: M): BelongsTo<M, M>;
+}
+
+export interface BelongsTo<M extends BaseModel, R = InstanceType<M>> {
+  associate(model: any): M;
+  dissociate(): M;
+
+  then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
+  catch(onrejected?: (reason: any) => any): Promise<R>;
 }
 
 /**

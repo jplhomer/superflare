@@ -1,5 +1,7 @@
 import { Config } from "./config";
 import { QueryBuilder } from "./query-builder";
+import { BelongsTo } from "./relations/belongs-to";
+import { lowercaseFirstLetter, modelToForeignKeyId } from "./string";
 
 interface Constructor<T> {
   new (...args: any): T;
@@ -14,7 +16,7 @@ export class Model {
 
   public timestamps = true;
 
-  constructor(public attributes: any) {
+  constructor(public attributes: any = {}) {
     this.attributes = attributes;
     Object.keys(attributes).forEach((key) => {
       this[key as keyof Model] = attributes[key];
@@ -28,6 +30,11 @@ export class Model {
 
         if (prop in target.attributes) {
           return target.attributes[prop];
+        }
+
+        // If trying to access a relation property, and it hasn't be set yet, call the relation function.
+        if (typeof prop === "string" && target[`$${prop}` as keyof Model]) {
+          return target[`$${prop}` as keyof Model]();
         }
 
         return undefined;
@@ -70,7 +77,7 @@ export class Model {
   }
 
   static query() {
-    return new QueryBuilder(this);
+    return new QueryBuilder(new this());
   }
 
   static all() {
@@ -109,7 +116,7 @@ export class Model {
   }
 
   private async performInsert() {
-    const query = new QueryBuilder(this.constructor);
+    const query = new QueryBuilder(this);
 
     if (this.timestamps) {
       this.updateTimestamps();
@@ -121,7 +128,7 @@ export class Model {
   }
 
   private async performUpdate() {
-    const query = new QueryBuilder(this.constructor);
+    const query = new QueryBuilder(this);
 
     if (this.timestamps) {
       this.updateTimestamps();
@@ -187,6 +194,29 @@ export class Model {
     }
 
     return this;
+  }
+
+  /**
+   * Relationships
+   */
+
+  belongsTo(model: any, foreignKey?: string, ownerKey?: string) {
+    foreignKey = foreignKey || modelToForeignKeyId(model.name);
+    ownerKey = ownerKey || "id";
+
+    /**
+     * We assume the relation name is the lowercase version of the model name.
+     * This might be a bad assumption, but it's a start.
+     */
+    const relationName = lowercaseFirstLetter(model.name);
+
+    return new BelongsTo(
+      model.query(),
+      this,
+      foreignKey,
+      ownerKey,
+      relationName
+    );
   }
 }
 
