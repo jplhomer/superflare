@@ -21,6 +21,7 @@ export interface ModelInstance {
 
   belongsTo<M extends BaseModel>(model: M): BelongsTo<M>;
   hasOne<M extends BaseModel>(model: M): HasOne<M>;
+  hasMany<M extends BaseModel>(model: M): HasMany<M>;
 }
 
 export interface BelongsTo<M extends BaseModel, R = InstanceType<M>> {
@@ -37,6 +38,12 @@ export interface HasOne<M extends BaseModel, R = InstanceType<M>> {
 
   then(onfulfilled?: (value: R[]) => R[] | PromiseLike<R[]>): Promise<R[]>;
   catch(onrejected?: (reason: any) => any): Promise<R>;
+}
+
+export interface HasMany<M extends BaseModel, R = InstanceType<M>[]>
+  extends Promise<R> {
+  save(model: any): Promise<R>;
+  create(attributes: any): Promise<R>;
 }
 
 /**
