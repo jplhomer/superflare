@@ -5,8 +5,8 @@ create table users (
   name text,
   email text not null unique,
   password text not null,
-  created_at timestamp not null default current_timestamp,
-  updated_at timestamp not null default current_timestamp
+  createdAt timestamp not null default current_timestamp,
+  updatedAt timestamp not null default current_timestamp
 );
 
 drop table if exists articles;
@@ -17,6 +17,6 @@ create table articles (
   content text,
   user_id integer not null references users(id),
   status text not null default 'draft',
-  created_at timestamp not null default current_timestamp,
-  updated_at timestamp not null default current_timestamp
+  createdAt timestamp not null default current_timestamp,
+  updatedAt timestamp not null default current_timestamp
 );

@@ -9,6 +9,10 @@ export class Model {
   static connection = "default";
   static table = "";
   id?: number;
+  updatedAt?: Date;
+  createdAt?: Date;
+
+  public timestamps = true;
 
   constructor(public attributes: any) {
     this.attributes = attributes;
@@ -35,6 +39,22 @@ export class Model {
         return true;
       },
     });
+  }
+
+  static instanceFromDB(dbAttributes: any) {
+    let attributes = {} as Record<string, any>;
+    const propertiesWeKnowAreDates = ["createdAt", "updatedAt"];
+
+    Object.keys(dbAttributes).forEach((key) => {
+      // TODO: Support other explicit casts.
+      if (propertiesWeKnowAreDates.includes(key)) {
+        attributes[key] = new Date(dbAttributes[key]);
+      } else {
+        attributes[key] = dbAttributes[key];
+      }
+    });
+
+    return new this(attributes);
   }
 
   static getConnection(): D1Database {
@@ -90,14 +110,24 @@ export class Model {
 
   private async performInsert() {
     const query = new QueryBuilder(this.constructor);
-    const results = await query.insert(this.attributes);
+
+    if (this.timestamps) {
+      this.updateTimestamps();
+    }
+
+    const results = await query.insert(this.serializeAttributes());
     this.id = results.id;
     return true;
   }
 
   private async performUpdate() {
     const query = new QueryBuilder(this.constructor);
-    await query.update(this.attributes);
+
+    if (this.timestamps) {
+      this.updateTimestamps();
+    }
+
+    await query.update(this.serializeAttributes());
     return true;
   }
 
@@ -105,14 +135,58 @@ export class Model {
     return this.id ? await this.performUpdate() : await this.performInsert();
   }
 
+  protected serializeAttributes() {
+    return Object.keys(this.attributes).reduce((acc, key) => {
+      let value = this.attributes[key];
+
+      switch (typeof value) {
+        case "object":
+          value =
+            value instanceof Date ? value.getTime() : JSON.stringify(value);
+          break;
+
+        case "boolean":
+          value = value ? 1 : 0;
+          break;
+
+        case "undefined":
+          value = null;
+          break;
+
+        default:
+          break;
+      }
+
+      acc[key] = value;
+      return acc;
+    }, {} as Record<string, any>);
+  }
+
   serialize() {
     return {
-      ...this.attributes,
+      ...this.serializeAttributes(),
     };
   }
 
   toJSON() {
     return this.serialize();
+  }
+
+  /**
+   * Timestamps
+   */
+
+  updateTimestamps() {
+    const now = new Date();
+
+    // TODO: Only update if the value is not dirty.
+    this.updatedAt = now;
+
+    if (!this.createdAt) {
+      this.createdAt = now;
+    }
+
+    return this;
   }
 }
 

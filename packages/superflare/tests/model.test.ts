@@ -1,5 +1,5 @@
 import Database, { type Database as DatabaseType } from "better-sqlite3";
-import { beforeEach, describe, expect, it, test } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, test, vi } from "vitest";
 import { config } from "../src/config";
 import { Model } from "../src/model";
 import type { BaseModel } from "../index.types";
@@ -11,6 +11,8 @@ class Post extends ModelConstructor {
   id!: number;
   title!: string;
   body?: string;
+  createdAt!: string;
+  updatedAt!: string;
 }
 
 function refreshDatabase(database: DatabaseType) {
@@ -19,7 +21,9 @@ function refreshDatabase(database: DatabaseType) {
     CREATE TABLE posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      body TEXT
+      body TEXT,
+      createdAt timestamp not null default current_timestamp,
+      updatedAt timestamp not null default current_timestamp
     );
   `);
 
@@ -212,7 +216,7 @@ describe("model", () => {
 
       await post.save();
 
-      expect(post.toJSON()).toEqual({
+      expect(post.toJSON()).toMatchObject({
         id: 1,
         title: "Hello World",
         body: "This is a test post",
@@ -232,6 +236,56 @@ describe("model", () => {
       id: 1,
       title: "Hello World",
       body: "This is a test post",
+    });
+  });
+
+  describe("timestamps", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    test("are created on create", async () => {
+      const post = await Post.create({
+        title: "Hello World",
+        body: "This is a test post",
+      });
+
+      expect(post.createdAt).toBeTruthy();
+      expect(post.updatedAt).toBeTruthy();
+
+      expect(post.createdAt).toEqual(post.updatedAt);
+      expect(post.createdAt).toBeInstanceOf(Date);
+
+      const postFromDB = await Post.find(1);
+
+      expect(postFromDB!.createdAt).toBeTruthy();
+      expect(postFromDB!.updatedAt).toBeTruthy();
+
+      expect(postFromDB!.createdAt).toEqual(postFromDB!.updatedAt);
+      expect(postFromDB!.createdAt).toBeInstanceOf(Date);
+    });
+
+    test("are updated on save", async () => {
+      const post = await Post.create({
+        title: "Hello World",
+        body: "This is a test post",
+      });
+
+      const createdAt = post.createdAt;
+      const updatedAt = post.updatedAt;
+
+      expect(createdAt).toEqual(updatedAt);
+
+      vi.advanceTimersByTime(1000);
+
+      post.title = "Hello World 2";
+      await post.save();
+
+      expect(post.createdAt).toEqual(createdAt);
+      expect(post.updatedAt).not.toEqual(updatedAt);
     });
   });
 });

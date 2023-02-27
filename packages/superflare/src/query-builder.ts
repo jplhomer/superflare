@@ -45,10 +45,14 @@ export class QueryBuilder {
       invariant(results.results, `Query failed: ${results.error}`);
 
       if (this.#single) {
-        return results.results[0] ? new this.model(results.results[0]) : null;
+        return results.results[0]
+          ? this.model.instanceFromDB(results.results[0])
+          : null;
       }
 
-      return results.results.map((data: any) => new this.model(data));
+      return results.results.map((data: any) =>
+        this.model.instanceFromDB(data)
+      );
     } catch (e: any) {
       throw new DatabaseException(e?.cause || e?.message);
     }
@@ -88,21 +92,18 @@ export class QueryBuilder {
 
   async insert(attributes: Record<string, any>): Promise<any> {
     try {
-      const id = await this.#connection()
+      const results = await this.#connection()
         .prepare(
           `insert into ${this.#from} (${Object.keys(attributes).join(
             ","
           )}) values (${Object.keys(attributes)
             .map((_, i) => `?`)
-            .join(",")}) returning id`
+            .join(",")}) returning *`
         )
         .bind(...Object.values(attributes))
-        .first("id");
+        .first();
 
-      return {
-        ...attributes,
-        id,
-      };
+      return results;
     } catch (e: any) {
       throw new DatabaseException(e?.cause || e?.message);
     }

@@ -5,7 +5,7 @@ import { Page } from "~/components/admin/Page";
 import { Article } from "~/models/Article";
 
 export async function loader() {
-  const articles = await Article.orderBy("created_at", "desc");
+  const articles = await Article.orderBy("createdAt", "desc");
 
   return json({ articles });
 }
@@ -62,7 +62,7 @@ export default function Articles() {
                     {article.user_id}
                   </td>
                   <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500 dark:text-gray-300">
-                    {article.created_at}
+                    {new Date(article.createdAt).toLocaleTimeString()}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium sm:pr-0">
                     <Link

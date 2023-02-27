@@ -8,7 +8,7 @@ export class Article extends Model {
   content?: string;
   user_id!: number;
   status!: string;
-  created_at!: string;
-  updated_at!: string;
+  createdAt!: string;
+  updatedAt!: string;
   /* superflare-types-end */
 }

@@ -6,7 +6,7 @@ export class User extends Model {
   name?: string;
   email!: string;
   password!: string;
-  created_at!: string;
-  updated_at!: string;
+  createdAt!: string;
+  updatedAt!: string;
   /* superflare-types-end */
 }
