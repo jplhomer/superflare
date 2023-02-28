@@ -269,6 +269,25 @@ describe("model", () => {
     });
   });
 
+  describe("#update", () => {
+    it("updates an existing model", async () => {
+      const post = await Post.create({
+        title: "Hello World",
+        body: "This is a test post",
+      });
+
+      expect(post.id).toBe(1);
+      expect(post.title).toBe("Hello World");
+      expect(post.body).toBe("This is a test post");
+
+      expect(await post.update({ title: "Hello World 2" })).toBeTruthy();
+
+      expect(post.id).toBe(1);
+      expect(post.title).toBe("Hello World 2");
+      expect(post.body).toBe("This is a test post");
+    });
+  });
+
   describe("#toJSON", () => {
     it("returns the attributes", () => {
       const post = new Post({

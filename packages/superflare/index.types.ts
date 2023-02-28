@@ -17,6 +17,7 @@ export interface ModelInstance {
   // TODO: Figure out how to not have this be `any`.
   attributes: any;
   save(): Promise<boolean>;
+  update(attributes: any): Promise<boolean>;
   toJSON(): ModelInstance["attributes"];
 
   belongsTo<M extends BaseModel>(model: M): BelongsTo<M>;

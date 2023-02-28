@@ -163,6 +163,14 @@ export class Model {
     return this.id ? await this.performUpdate() : await this.performInsert();
   }
 
+  async update(attributes: any) {
+    Object.keys(attributes).forEach((key) => {
+      this[key as keyof Model] = attributes[key];
+    });
+
+    return this.save();
+  }
+
   serialize() {
     return {
       ...this.serializeAttributes(),
