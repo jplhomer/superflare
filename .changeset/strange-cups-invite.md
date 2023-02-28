@@ -1,5 +1,0 @@
----
-"superflare": patch
----
-
-Continued improvements
