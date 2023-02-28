@@ -288,6 +288,21 @@ describe("model", () => {
     });
   });
 
+  describe("#delete", () => {
+    it("deletes an existing model", async () => {
+      const post = await Post.create({
+        title: "Hello World",
+        body: "This is a test post",
+      });
+
+      const postId = post.id;
+
+      expect(await post.delete()).toBeTruthy();
+
+      expect(await Post.find(postId)).toBeNull();
+    });
+  });
+
   describe("#toJSON", () => {
     it("returns the attributes", () => {
       const post = new Post({

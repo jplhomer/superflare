@@ -171,6 +171,11 @@ export class Model {
     return this.save();
   }
 
+  delete() {
+    const query = new QueryBuilder(this);
+    return query.delete();
+  }
+
   serialize() {
     return {
       ...this.serializeAttributes(),

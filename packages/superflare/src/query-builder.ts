@@ -175,6 +175,19 @@ export class QueryBuilder {
     }
   }
 
+  async delete() {
+    try {
+      const results = await this.connection()
+        .prepare(`delete from ${this.$from} where id = ?`)
+        .bind(this.modelInstance.id)
+        .run();
+
+      return results.success;
+    } catch (e: any) {
+      throw new DatabaseException(e?.cause || e?.message);
+    }
+  }
+
   async count() {
     this.select("count(*) as count");
     const query = this.buildQuery();
