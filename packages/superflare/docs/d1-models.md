@@ -76,16 +76,26 @@ To find a model by its primary key, use the `find` method:
 const post = await Post.find(1);
 ```
 
+You can also find multiple models by passing an array of primary keys:
+
+```ts
+const posts = await Post.find([1, 2, 3]);
+```
+
 ### Where
 
 To find a model by a specific attribute, use the `where` method:
 
+```ts
+const post = await Post.where("title", "Hello World");
+```
+
 ### Where In
 
-To find a model which mathces one of many specific attribute, use the `whereIn` method:
+To find a model which matches one of many specific attributes, use the `whereIn` method:
 
 ```ts
-const post = await Post.whereIn("title", []"Hello World", "Hello Universe"]);
+const post = await Post.whereIn("title", ["Hello World", "Hello Universe"]);
 ```
 
 ### All
