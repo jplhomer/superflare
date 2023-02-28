@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.6
+
+### Patch Changes
+
+- d5889f3: Add more functionality.
+
 ## 0.0.5
 
 ### Patch Changes
