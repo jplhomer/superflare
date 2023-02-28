@@ -16,7 +16,7 @@ export interface SupercloudUserConfig {
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
 }
 
-export function config(userConfig: SupercloudUserConfig): void {
+export function config(userConfig: SupercloudUserConfig) {
   if (userConfig.database) {
     Config.database = {
       connections: userConfig.database,
@@ -27,6 +27,8 @@ export function config(userConfig: SupercloudUserConfig): void {
       disks: userConfig.storage,
     };
   }
+
+  return userConfig;
 }
 
 export class Config {
@@ -37,4 +39,10 @@ export class Config {
   static storage?: {
     disks: SupercloudUserConfig["storage"];
   };
+}
+
+export function defineConfig<Env = Record<string, any>>(
+  callback: (ctx: Parameters<PagesFunction<Env>>[0]) => SupercloudUserConfig
+) {
+  return (ctx: Parameters<PagesFunction<Env>>[0]) => config(callback(ctx));
 }

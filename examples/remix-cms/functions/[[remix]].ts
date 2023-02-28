@@ -3,7 +3,7 @@ import {
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
 import { type AppLoadContext } from "@remix-run/server-runtime";
-import { config } from "superflare";
+import config from "../superflare.config";
 
 import * as build from "../build";
 
@@ -30,17 +30,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     ctx.request.headers.get("Cookie")
   );
 
-  config({
-    database: {
-      default: ctx.env.DB,
-    },
-    storage: {
-      default: {
-        binding: ctx.env.REMIX_CMS_MEDIA,
-        publicPath: "/storage/media",
-      },
-    },
-  });
+  config(ctx);
 
   const loadContext: AppLoadContext = {
     cf: ctx.request.cf,

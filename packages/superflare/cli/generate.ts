@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { Argv } from "yargs";
-import { getSuperflareConfigFromPackageJson } from "./config";
+import { getSuperflareConfig } from "./config";
 import { logger } from "./logger";
 
 export function generate(yargs: Argv) {
@@ -8,10 +8,7 @@ export function generate(yargs: Argv) {
     "migration <name>",
     "Generate a migration",
     async (yargs) => {
-      const config = await getSuperflareConfigFromPackageJson(
-        process.cwd(),
-        logger
-      );
+      const config = await getSuperflareConfig(process.cwd(), logger);
 
       yargs.positional("name", {
         describe: "The name of the migration",

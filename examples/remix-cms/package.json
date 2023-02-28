@@ -13,14 +13,6 @@
     "start": "cross-env NODE_ENV=production npm run dev:superflare",
     "migrate": "superflare migrate"
   },
-  "superflare": {
-    "d1": [
-      "DB"
-    ],
-    "r2": [
-      "REMIX_CMS_MEDIA"
-    ]
-  },
   "keywords": [],
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",

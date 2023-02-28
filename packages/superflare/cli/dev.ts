@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { getSuperflareConfigFromPackageJson } from "./config";
+import { getSuperflareConfig } from "./config";
 import { logger } from "./logger";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 
@@ -12,13 +12,10 @@ export async function devHandler(
 ) {
   logger.info('Starting "wrangler pages dev"...');
 
-  const config = await getSuperflareConfigFromPackageJson(
-    process.cwd(),
-    logger
-  );
+  const config = await getSuperflareConfig(process.cwd(), logger);
   if (!config) {
     logger.warn(
-      "Warning: Did not find a `superflare` config in your package.json. " +
+      "Warning: Did not find a `superflare.config.ts` in your project. " +
         "You will want to add one in order to specify D1 and R2 bindings for Superflare to use."
     );
   }
