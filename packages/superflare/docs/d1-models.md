@@ -148,6 +148,27 @@ post.title = "Hello World";
 await post.save();
 ```
 
+You can also update multiple model attributes by passing an object to the `update` method:
+
+```ts
+const post = await Post.find(1);
+
+await post.update({
+  title: "Hello World",
+  body: "This is my first post!",
+});
+```
+
+## Deleting Models
+
+To delete a model, use the `delete` method:
+
+```ts
+const post = await Post.find(1);
+
+await post.delete();
+```
+
 ## Relationships
 
 Superflare allows you to define relationships between your models. You can then use these relationships to query related models or add related models to a model.
