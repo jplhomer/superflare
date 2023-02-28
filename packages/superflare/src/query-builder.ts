@@ -82,6 +82,14 @@ export class QueryBuilder {
     return this.$afterHooks.map((callback) => callback(results));
   }
 
+  find(ids: number | number[]) {
+    if (Array.isArray(ids)) {
+      return this.whereIn("id", ids);
+    }
+
+    return this.where("id", ids).first();
+  }
+
   where(field: string, value: any): this;
   where(field: string, operator: string, value?: any): this;
   where(field: string, operator: string, value?: any) {

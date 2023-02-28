@@ -46,6 +46,7 @@ export interface HasMany<M extends BaseModel, R = InstanceType<M>[]>
  * Shape of the model constructor (static properties).
  */
 export interface BaseModel {
+  find<T extends BaseModel>(this: T, ids: number[]): Promise<InstanceType<T>[]>;
   find<T extends BaseModel>(
     this: T,
     id: number
@@ -91,6 +92,8 @@ export interface BaseModel {
 }
 
 interface QueryBuilder<T extends BaseModel, R = InstanceType<T>> {
+  find<T>(this: T, id: number): Promise<null | R>;
+  find<T>(this: T, ids: number[]): Promise<R[]>;
   where<T>(this: T, field: string, value: any): this;
   where<T>(this: T, field: string, operator: string, value?: any): this;
   whereIn<T>(this: T, field: string, values: (string | number)[]): this;

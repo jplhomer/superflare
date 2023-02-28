@@ -174,6 +174,42 @@ describe("model", () => {
     expect(post!.title).toBe("Hello World 2");
   });
 
+  test("#find on query builder", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const post = await Post.query().find(2);
+
+    expect(post).toBeTruthy();
+    expect(post!.id).toBe(2);
+    expect(post!.title).toBe("Hello World 2");
+  });
+
+  test("#find with multiple values", async () => {
+    await database
+      .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
+      .bind(
+        "Hello World",
+        "This is a test post",
+        "Hello World 2",
+        "This is a test post 2"
+      )
+      .run();
+
+    const posts = await Post.find([1, 2]);
+    expect(posts).toHaveLength(2);
+
+    const postsAgain = await Post.query().find([1, 2]);
+    expect(postsAgain).toHaveLength(2);
+  });
+
   test("#orderBy", async () => {
     await database
       .prepare("INSERT INTO posts (title, body) VALUES (?, ?), (?, ?)")
