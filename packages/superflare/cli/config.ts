@@ -32,7 +32,6 @@ export async function getSuperflareConfig(
       {},
       {
         get: (_target, prop: string) => {
-          console.log(`Getting ${prop} from ctx.env...`);
           // Define a new unique key so we can track it
           envProxies[prop] = Symbol(prop);
 

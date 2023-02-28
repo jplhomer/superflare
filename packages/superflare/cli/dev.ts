@@ -4,7 +4,29 @@ import { logger } from "./logger";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 
 export function devOptions(yargs: CommonYargsArgv) {
-  return yargs;
+  return yargs
+    .option("compatibility-date", {
+      type: "string",
+      description:
+        "The date to use for compatibility mode. Defaults to the current date.",
+      default: new Date().toISOString().split("T")[0],
+    })
+    .option("port", {
+      type: "number",
+      description: "The port to run the dev server on. Defaults to 8788.",
+      default: 8788,
+    })
+    .option("binding", {
+      type: "array",
+      description:
+        "A binding to pass to the wrangler pages dev command. Can be specified multiple times.",
+      default: [],
+    })
+    .option("live-reload", {
+      type: "boolean",
+      description: "Whether to enable live reload. Defaults to true.",
+      default: true,
+    });
 }
 
 export async function devHandler(
@@ -37,16 +59,18 @@ export async function devHandler(
     "pages",
     "dev",
     "public",
-    "--compatibility-date=2023-01-18",
+    "--compatibility-date",
+    argv.compatibilityDate,
+    "--port",
+    argv.port,
     d1Bindings?.length &&
       d1Bindings.map((d1Binding) => `--d1 ${d1Binding}`).join(" "),
     r2Bindings?.length &&
       r2Bindings.map((r2Binding) => `--r2 ${r2Binding}`).join(" "),
-    "--binding",
-    "SESSION_SECRET=secret",
+    ...argv.binding.map((binding) => `--binding ${binding}`),
     "--local",
     "--persist",
-    "--live-reload",
+    argv.liveReload && "--live-reload",
   ].filter(Boolean) as string[];
 
   spawn("npx", args, {
