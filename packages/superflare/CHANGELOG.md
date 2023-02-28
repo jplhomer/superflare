@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.5
+
+### Patch Changes
+
+- 73c0fea: Continued improvements
+
 ## 0.0.4
 
 ### Patch Changes
