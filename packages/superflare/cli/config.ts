@@ -53,7 +53,7 @@ export async function getSuperflareConfig(
     );
 
     // D1 configs are stored in the `database` key
-    const d1Bindings = Object.keys(results.database)
+    const d1Bindings = Object.keys(results?.database ?? {})
       .map((key) => {
         const binding = results.database[key];
 
@@ -64,7 +64,7 @@ export async function getSuperflareConfig(
       .filter(Boolean) as string[];
 
     // R2 configs are stored in the `storage` key
-    const r2Bindings = Object.keys(results.storage)
+    const r2Bindings = Object.keys(results?.storage ?? {})
       .map((key) => {
         const binding = results.storage[key].binding;
 
