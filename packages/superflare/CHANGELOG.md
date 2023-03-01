@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.9
+
+### Patch Changes
+
+- 90c8a2c: Be more lenient about missing configs
+
 ## 0.0.8
 
 ### Patch Changes
