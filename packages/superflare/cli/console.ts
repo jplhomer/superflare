@@ -1,12 +1,12 @@
 import { start } from "node:repl";
 import { readdir } from "node:fs/promises";
 import { register } from "esbuild-register/dist/node";
-import { createD1Database } from "./d1-database";
-import Database from "better-sqlite3";
 import { homedir } from "node:os";
 import { inspect } from "node:util";
 import path from "node:path";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
+import { logger } from "./logger";
+import { createD1Database } from "./d1-database";
 
 export function consoleOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -85,7 +85,7 @@ export async function createRepl({
   /**
    * Assign a `db` context with the current database.
    */
-  const db = createD1Database(new Database(dbPath));
+  const db = await createD1Database(dbPath);
   server.context["db"] = db;
 
   /**

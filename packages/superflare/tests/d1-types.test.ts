@@ -7,10 +7,10 @@ import {
   SUPERFLARE_TYPES_END_MARKER,
   SUPERFLARE_TYPES_START_MARKER,
 } from "../cli/d1-types";
-import Database, { type Database as DatabaseType } from "better-sqlite3";
 import path from "path";
 import fs from "fs";
 import os from "os";
+import { createSQLiteDB } from "../cli/d1-database";
 
 describe("addTypesToModelClass", () => {
   it("adds types to a model class", () => {
@@ -111,11 +111,10 @@ describe("generateTypesFromSqlite", () => {
   );
   `;
 
-  const dbPath = ":memory:";
-  let db: DatabaseType;
+  let db: any;
 
-  beforeEach(() => {
-    db = new Database(dbPath);
+  beforeEach(async () => {
+    db = await createSQLiteDB(":memory:");
     db.exec(sql);
   });
 
@@ -162,8 +161,7 @@ describe("addTypesToModelsInDirectory", () => {
   );
   `;
 
-  const dbPath = ":memory:";
-  let db: DatabaseType;
+  let db: any;
   const osTmpDir = os.tmpdir();
   let tmpDir: string;
 
@@ -173,8 +171,8 @@ describe("addTypesToModelsInDirectory", () => {
     });
   }
 
-  beforeEach(() => {
-    db = new Database(dbPath);
+  beforeEach(async () => {
+    db = await createSQLiteDB(":memory:");
     db.exec(sql);
     tmpDir = fs.mkdtempSync(path.join(osTmpDir, "superflare-test-models"));
   });

@@ -1,9 +1,8 @@
-import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, afterEach, describe, expect, it, test, vi } from "vitest";
 import { config } from "../src/config";
 import { Model } from "../src/model";
 import type { BaseModel } from "../index.types";
-import { createD1Database } from "../cli/d1-database";
+import { createTestDatabase } from "../cli/d1-database";
 
 let ModelConstructor = Model as unknown as BaseModel;
 
@@ -15,27 +14,20 @@ class Post extends ModelConstructor {
   updatedAt!: string;
 }
 
-function refreshDatabase(database: DatabaseType) {
-  database.exec(`
-    DROP TABLE IF EXISTS posts;
-    CREATE TABLE posts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      body TEXT,
-      createdAt timestamp not null default current_timestamp,
-      updatedAt timestamp not null default current_timestamp
-    );
-  `);
-
-  return database;
-}
-
-describe("model", () => {
-  const sqliteDb = new Database(":memory:");
-  const database = createD1Database(sqliteDb);
+describe("model", async () => {
+  let database: D1Database;
 
   beforeEach(async () => {
-    refreshDatabase(sqliteDb);
+    database = await createTestDatabase(`
+      DROP TABLE IF EXISTS posts;
+      CREATE TABLE posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        body TEXT,
+        createdAt timestamp not null default current_timestamp,
+        updatedAt timestamp not null default current_timestamp
+      );
+    `);
     config({
       database: {
         default: database,

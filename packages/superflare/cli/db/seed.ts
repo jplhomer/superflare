@@ -1,4 +1,3 @@
-import Database from "better-sqlite3";
 import { register } from "esbuild-register/dist/node";
 import path from "node:path";
 import { createD1Database } from "../d1-database";
@@ -35,15 +34,13 @@ export async function seedHandler(
 }
 
 export async function seedDb(dbPath: string, seedPath: string) {
-  const db = new Database(dbPath);
-
   if (seedPath) {
     logger.info(`Seeding database...`);
 
     register();
     try {
       const seedModule = require(seedPath);
-      const d1Database = createD1Database(db);
+      const d1Database = await createD1Database(dbPath, logger.log);
       // TODO: Find out why errors in the seeder are not bubbled to this try/catch
       if (seedModule.default) {
         await seedModule.default(d1Database);

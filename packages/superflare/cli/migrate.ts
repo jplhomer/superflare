@@ -3,12 +3,12 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
-import Database from "better-sqlite3";
 import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
 } from "./d1-types";
 import { seedDb } from "./db/seed";
+import { createSQLiteDB } from "./d1-database";
 
 export function migrateOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -77,7 +77,7 @@ export async function migrateHandler(
 
   await wranglerMigrate();
 
-  const db = new Database(dbPath);
+  const db = await createSQLiteDB(dbPath, logger.log);
 
   const seed = argv.seed;
   const seedPath = argv.seedPath;

@@ -1,9 +1,8 @@
-import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, expect, it } from "vitest";
 import { config } from "../../src/config";
 import { Model } from "../../src/model";
 import type { BaseModel } from "../../index.types";
-import { createD1Database } from "../../cli/d1-database";
+import { createTestDatabase } from "../../cli/d1-database";
 
 let ModelConstructor = Model as unknown as BaseModel;
 
@@ -28,8 +27,10 @@ class User extends ModelConstructor {
   }
 }
 
-function refreshDatabase(database: DatabaseType) {
-  database.exec(`
+let database: D1Database;
+
+beforeEach(async () => {
+  database = await createTestDatabase(`
     DROP TABLE IF EXISTS profiles;
     CREATE TABLE profiles (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,15 +49,6 @@ function refreshDatabase(database: DatabaseType) {
       updatedAt timestamp not null default current_timestamp
     );
   `);
-
-  return database;
-}
-
-const sqliteDb = new Database(":memory:");
-const database = createD1Database(sqliteDb);
-
-beforeEach(async () => {
-  refreshDatabase(sqliteDb);
   config({
     database: {
       default: database,
