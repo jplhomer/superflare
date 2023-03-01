@@ -1,3 +1,4 @@
+import Database from "better-sqlite3";
 import { D1Database, D1DatabaseAPI } from "../d1js";
 
 export async function createD1Database(
@@ -25,8 +26,12 @@ export async function createSQLiteDB(
   return create(dbPath);
 }
 
+/**
+ * This should only be exported locally for tests, not in places that are used in the package,
+ * because it depends on an installed version of `better-sqlite3`.nvm
+ */
 export async function createTestDatabase(sql: string) {
-  const sqliteDb = await createSQLiteDB(":memory:");
+  const sqliteDb = new Database(":memory:");
 
   /**
    * Migrating at this step because D1 doesn't allow multi-statement execs.
