@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.8
+
+### Patch Changes
+
+- e0bd0d8: Overhaul the way model types are defined using a separate Interface. Add docs about how to accomplish computed properties, hidden properties, and custom casts.
+
 ## 0.0.7
 
 ### Patch Changes
