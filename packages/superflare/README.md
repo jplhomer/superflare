@@ -56,14 +56,22 @@ Behind the scenes, Superflare is using Wrangler to run your migrations against a
 import { Model } from "superflare";
 
 export class User extends Model {
-  /* superflare-types-start */
-  id!: number;
-  name!: string;
-  email!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
-  /* superflare-types-end */
+  toJSON(): UserRow {
+    return super.toJSON();
+  }
 }
+
+/* superflare-types-start */
+interface UserRow {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface User extends UserRow {}
+/* superflare-types-end */
 ```
 
 You can run `npx superflare migrate` any time you'd like to update your local database schema and Model type definitions.

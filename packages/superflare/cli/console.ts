@@ -101,7 +101,10 @@ export async function createRepl({
   /**
    * Get a list of the models in the user's dir.
    */
-  const models = await readdir(modelsDirectory);
+  const models = (await readdir(modelsDirectory)).filter(
+    // Must be a TS file and start with a capital letter
+    (file) => file.endsWith(".ts") && /^[A-Z]/.test(file)
+  );
 
   /**
    * Iterate through the models and import them.

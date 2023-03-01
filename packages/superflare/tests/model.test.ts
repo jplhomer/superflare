@@ -229,7 +229,8 @@ describe("model", async () => {
         body: "This is a test post",
       });
 
-      expect(post.id).toBe(undefined);
+      // We set post.id to null for new models to make TypeScript happy
+      expect(post.id).toBe(null);
       expect(post.title).toBe("Hello World");
       expect(post.body).toBe("This is a test post");
 

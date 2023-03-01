@@ -13,7 +13,7 @@ interface Constructor<T> {
 export class Model {
   static connection = "default";
   static table = "";
-  id?: number;
+  id: number | null;
   updatedAt?: Date;
   createdAt?: Date;
 
@@ -22,6 +22,7 @@ export class Model {
   protected relations: Record<string, any> = {};
 
   constructor(public attributes: any = {}) {
+    this.id = null;
     this.attributes = attributes;
     Object.keys(attributes).forEach((key) => {
       this[key as keyof Model] = attributes[key];

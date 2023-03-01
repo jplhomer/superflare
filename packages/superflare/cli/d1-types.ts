@@ -10,42 +10,41 @@ export interface SuperflareType {
 }
 
 export const SUPERFLARE_TYPES_START_MARKER = "/* superflare-types-start */";
-const ESCAPED_SUPERFLARE_TYPES_START_MARKER =
-  SUPERFLARE_TYPES_START_MARKER.replace(/\*/g, "\\*");
-
 export const SUPERFLARE_TYPES_END_MARKER = "/* superflare-types-end */";
-const ESCAPED_SUPERFLARE_TYPES_END_MARKER = SUPERFLARE_TYPES_END_MARKER.replace(
-  /\*/g,
-  "\\*"
-);
 
 export function addTypesToModelClass(
   source: string,
   modelClass: string,
   types: SuperflareType[]
 ): string {
-  const modelHasTypes = source.includes(SUPERFLARE_TYPES_START_MARKER);
-  const modelClassRegex = modelHasTypes
-    ? new RegExp(
-        `${ESCAPED_SUPERFLARE_TYPES_START_MARKER}.*${ESCAPED_SUPERFLARE_TYPES_END_MARKER}`,
-        "s"
-      )
-    : new RegExp(`export class ${modelClass} extends Model {`);
+  const modelInterfaceStart = source.indexOf(SUPERFLARE_TYPES_START_MARKER);
+  const modelInterfaceEnd = source.indexOf(SUPERFLARE_TYPES_END_MARKER);
+  const modelHasTypes = modelInterfaceStart !== -1 && modelInterfaceEnd !== -1;
 
-  const typesAsString = types.map(
-    (type) => `  ${type.name}${type.nullable ? "?" : "!"}: ${type.type};`
-  );
+  const modelInterface = typesAsInterface(modelClass, types);
 
-  const replacement = modelHasTypes
-    ? wrapWithTypeMarkers(typesAsString.join("\n"))
-    : `export class ${modelClass} extends Model {
-  ${wrapWithTypeMarkers(typesAsString.join("\n"))}`;
-
-  return source.replace(modelClassRegex, replacement);
+  return modelHasTypes
+    ? source.substring(0, modelInterfaceStart) +
+        wrapWithTypeMarkers(modelInterface) +
+        source.substring(modelInterfaceEnd + SUPERFLARE_TYPES_END_MARKER.length)
+    : source + "\n\n" + wrapWithTypeMarkers(modelInterface);
 }
 
-function wrapWithTypeMarkers(source: string): string {
-  return `${SUPERFLARE_TYPES_START_MARKER}\n${source}\n  ${SUPERFLARE_TYPES_END_MARKER}`;
+function typesAsInterface(modelClass: string, types: SuperflareType[]) {
+  const interfaceName = modelClass + "Row";
+  const typesAsString = types.map(
+    (type) => `  ${type.name}${type.nullable ? "?" : ""}: ${type.type};`
+  );
+
+  return `interface ${interfaceName} {
+${typesAsString.join("\n")}
+}
+
+export interface ${modelClass} extends ${interfaceName} {}`;
+}
+
+export function wrapWithTypeMarkers(source: string): string {
+  return `${SUPERFLARE_TYPES_START_MARKER}\n${source}\n${SUPERFLARE_TYPES_END_MARKER}`;
 }
 
 interface SqliteTableListTable {
@@ -160,7 +159,11 @@ export function addTypesToModelsInDirectory(
       };
     } catch (e) {
       if (options?.createIfNotFound) {
-        const oldModelSource = `import { Model } from 'superflare';\n\nexport class ${type.model} extends Model {\n}`;
+        const oldModelSource = `import { Model } from 'superflare';\n\nexport class ${type.model} extends Model {
+  toJSON(): ${type.model}Row {
+    return super.toJSON();
+  }
+}`;
         const newModelSource = addTypesToModelClass(
           oldModelSource,
           type.model,
@@ -184,12 +187,4 @@ export function addTypesToModelsInDirectory(
       };
     }
   });
-}
-
-function readJsOrTsFile(pathWithoutExtension: string) {
-  try {
-    return fs.readFileSync(`${pathWithoutExtension}.ts`, "utf-8");
-  } catch (_e) {
-    return fs.readFileSync(`${pathWithoutExtension}.js`, "utf-8");
-  }
 }

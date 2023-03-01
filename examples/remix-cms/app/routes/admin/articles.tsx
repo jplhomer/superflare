@@ -78,7 +78,7 @@ export default function Articles() {
                       to={`./${article.slug}`}
                       className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
                     >
-                      Edit<span className="sr-only">, {article.name}</span>
+                      Edit<span className="sr-only">, {article.title}</span>
                     </Link>
                   </td>
                 </tr>

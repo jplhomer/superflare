@@ -1,4 +1,9 @@
-import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
+import {
+  json,
+  redirect,
+  type SerializeFrom,
+  type ActionArgs,
+} from "@remix-run/cloudflare";
 import { Form, useActionData } from "@remix-run/react";
 import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
@@ -98,7 +103,7 @@ export function ArticleForm({
   article,
   id,
 }: {
-  article?: Article;
+  article?: SerializeFrom<Article>;
   id?: string;
 }) {
   const actionData = useActionData<ActionData>();

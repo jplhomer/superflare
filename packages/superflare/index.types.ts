@@ -12,14 +12,13 @@ export { Factory } from "./src/factory";
 /**
  * Shape of the model instance.
  */
-export interface ModelInstance {
-  id?: number;
-  // TODO: Figure out how to not have this be `any`.
-  attributes: any;
+export interface ModelInstance<M> {
+  id: number;
+  hidden: string[];
   save(): Promise<boolean>;
   delete(): Promise<boolean>;
   update(attributes: any): Promise<boolean>;
-  toJSON(): ModelInstance["attributes"];
+  toJSON(): any;
 
   belongsTo<M extends BaseModel>(model: M): BelongsTo<M>;
   hasOne<M extends BaseModel>(model: M): HasOne<M>;
@@ -47,7 +46,7 @@ export interface HasMany<M extends BaseModel, R = InstanceType<M>[]>
 /**
  * Shape of the model constructor (static properties).
  */
-export interface BaseModel {
+export interface BaseModel<M = any> {
   find<T extends BaseModel>(this: T, ids: number[]): Promise<InstanceType<T>[]>;
   find<T extends BaseModel>(
     this: T,
@@ -90,7 +89,7 @@ export interface BaseModel {
   tableName: string;
   connection: string;
 
-  new (attributes: any): ModelInstance;
+  new (attributes?: any): ModelInstance<M>;
 }
 
 interface QueryBuilder<T extends BaseModel, R = InstanceType<T>> {

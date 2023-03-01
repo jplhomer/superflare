@@ -16,25 +16,33 @@ create table users (
 );
 ```
 
-Models are defined as TypeScript classes. The class name is the name of the model. The class properties are the attributes of the model.
+Models are defined as TypeScript classes. Model class names correspond directly to the table names in the database. For example, a `users` table would have a corresponding `User` model:
 
 ```typescript
 import { Model } from "superflare";
 
 export class User extends Model {
-  /* superflare-types-start */
+  toJSON(): UserRow {
+    return super.toJSON();
+  }
+}
+
+/* superflare-types-start */
+interface UserRow {
   id!: number;
   name!: string;
   email!: string;
   createdAt!: Date;
   updatedAt!: Date;
-  /* superflare-types-end */
 }
+
+export interface User extends UserRow {}
+/* superflare-types-end */
 ```
 
-Superflare provides utilities to help you keep your models in sync with your database:
+Superflare provides utilities to help you keep your model's type definition in sync with your database. Type definitions are created as an interface below your model class definition. For example, the `User` model will have a corresponding `UserRow` interface defined by Superflare.
 
-When you migrate your database, Superflare will automatically update your models to match the new database schema.
+When you migrate your database, Superflare will automatically update your interfaces to match the new database schema.
 
 ```
 npx superflare migrate
@@ -63,6 +71,93 @@ import { Model } from "superflare";
 
 export class Post extends Model {
   static timestamps = false;
+}
+```
+
+### Serializing Models to JSON
+
+We live in a full-stack framework world, where UI can be written as modular components (like React and Vue) and can be shared and rendered on both the server and the client.
+
+However, we cannot simply send the entire data model over the wire from the server to the client — this would mean huge client bundle sizes and loads of security issues.
+
+Instead, modern frameworks will serialize the output sent (from "loaders" in Remix, or passed as props from server components to client components in Next.js).
+
+Superflare makes it obvious how to serialize your models as JSON by providing the standard `toJSON()` method by on new models.
+
+By default, this method will return all of the model's attributes, in addition to any relations that are loaded on the instance either manually or by using eager-loading.
+
+You can override this method to customize the JSON output:
+
+```ts
+import { Model } from "superflare";
+
+export class Post extends Model {
+  toJSON(): Pick<PostRow, "title" | "body"> {
+    return {
+      title: this.title,
+      body: this.body,
+    };
+  }
+}
+```
+
+Be sure to update the return type of the `toJSON` method to match the return type of your custom implementation. Front-end frameworks will use this type to determine the shape of the serialized data that is consumed in the actual UI layer.
+
+### Hidden Attributes
+
+In some cases, you might want to hide sensitive data from appearing in the serialized versions of your models. For example, you might want to hide a user's `password` from appearing in the serialized version of a `User` model.
+
+While other ORM tools provide a way to define "hidden" attributes at the model level, Superflare assumes that you will update the `toJSON` method to customize the serialized output of your models.
+
+```ts
+import { Model } from "superflare";
+
+export class User extends Model {
+  toJSON(): Omit<UserRow, "password"> {
+    const { password, ...rest } = super.toJSON();
+    return rest;
+  }
+}
+```
+
+### Computed fields
+
+In some cases, you might want to add a field to your model that is not stored in the database. For example, you might want to add a `fullName` field to your `User` model that is the combination of the `firstName` and `lastName` fields.
+
+You can do this by defining a getter method on your model:
+
+```ts
+import { Model } from "superflare";
+
+export class User extends Model {
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  toJSON(): UserRow & { fullName: string } {
+    return {
+      ...super.toJSON(),
+      fullName: this.fullName,
+    };
+  }
+}
+```
+
+### Casting Attributes
+
+Superflare does not provide a mechanism for defining custom attribute cast behavior. By default, it will convert any date fields in the database to JavaScript `Date` objects, and back to their original shape when `toJSON` is called.
+
+If you need to customize the casting behavior for a specific attribute, you can override the `toJSON` method:
+
+```ts
+import { Model } from "superflare";
+
+export class User extends Model {
+  toJSON(): UserRow {
+    const json = super.toJSON();
+    json.createdAt = json.createdAt.toISOString();
+    return json;
+  }
 }
 ```
 
