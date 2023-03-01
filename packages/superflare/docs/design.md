@@ -46,6 +46,23 @@ By leaning into the lock-in, we're suddenly blessed with a much simpler solution
 
 The list goes on and on. _Constraints are good_.
 
+### Not a Framework
+
+Superflare is _not a framework_. It's a full-stack toolkit.
+
+I've had my [fair](https://flareact.com/) [share](https://github.com/shopify/hydrogen-v1) of building React meta-frameworks, and I don't yearn to venture into that land again.
+
+There are some really good solutions today:
+
+- Remix
+- Next.js, especially the `/app` directory with RSC
+- Nuxt.js if you use Vue
+- lots more
+
+There are really smart people working on these solutions, and they're trying to build them really well. I'm not trying to do that — I'm trying to scratch my own itch and have fun.
+
+So, Superflare's happy place is sitting on top of an existing framework as a "full-stack toolkit". It's the "glue" between Cloudlare and your framework of choice. You won't see Superflare dictate routing, controllers, or views. Just certain parts of the full-stack.
+
 ### D1 and a new ORM
 
 Having a solid data model is the foundation of any application. Superflare is built around D1, and it's the first thing you'll interact with when building an application.
@@ -96,8 +113,28 @@ Hey, Prisma exists and kinda dominates this space. Why would you want to learn a
 
 I don't blame ya. Plus, the fact that Superflare has weird commenty-things and colocates computer-generated code with your user-written models is a bit... weird.
 
+### Tension with Wrangler and Cloudflare's official roadmap
+
+I don't work at Cloudflare, so I don't know for sure. But I bet their team is working on building a general "full-stack suite" that will aim to solve many of the same problems Superflare solves today.
+
+This probably means that parts of Superflare will become obsolete. In which case, that's great!
+
+It might also mean that parts of Superflare might stop working. That's unfortunate, but understandable.
+
+Today, Superflare calls out to `npx wrangler` for a lot of its functionality. This is because Wrangler doesn't provide an external API for running a development server, interacting with the Pages API, etc. This is a risky way to develop tooling, so you should probably know that.
+
 ### I'm building this for fun
 
 I'm building this project to have fun and not to be perfect. It's for my personal enjoyment.
 
 You might not want to use it because of this, which is fine. Or do. I don't care. I'm not your dad. (Unless I am, in which case: Hi Kids! Get back to bed!)
+
+## Inspiration
+
+Gosh, I took so much inspiration from other places for how I built Superflare:
+
+- Laravel (framework design, ORM, tons of things)
+- Adonis.js (implementation of a similar ORM, REPL)
+- Jacob Ebey (for his Remix templates and general smartness)
+- Cloudflare Wrangler (for the CLI)
+- OnlineOrNot (for the CLI)
