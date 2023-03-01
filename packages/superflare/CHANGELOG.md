@@ -1,5 +1,12 @@
 # superflare
 
+## 0.0.7
+
+### Patch Changes
+
+- 6ba244a: Provide more optionality in the CLI
+- cefb4c5: Reduce dependency footprint
+
 ## 0.0.6
 
 ### Patch Changes
