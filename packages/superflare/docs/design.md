@@ -1,6 +1,6 @@
 # Superflare's Design Principles
 
-I build Superflare to scratch my own itch. I'm traditionally a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
+I built Superflare to scratch my own itch. I'm traditionally a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
 
 For years, we've heard that JavaScript frameworks can be used as a "full-stack" solution. Yet when folks start out with a Remix or Next.js app, they're left with only _some_ of that solution.
 
