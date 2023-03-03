@@ -14,15 +14,16 @@ import {
 import clsx from "clsx";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Toast } from "~/components/Toast";
-import { json, type LoaderArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
+import { session } from "superflare";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, end: true },
   { name: "Articles", href: "./articles", icon: FolderIcon },
 ];
 
-export async function loader({ context: { session, env } }: LoaderArgs) {
-  const flash = session.get("flash");
+export async function loader() {
+  const flash = session().get("flash");
 
   return json({
     flash,

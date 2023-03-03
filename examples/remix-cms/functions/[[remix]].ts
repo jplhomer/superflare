@@ -2,10 +2,10 @@ import {
   createRequestHandler,
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
-import { type AppLoadContext } from "@remix-run/server-runtime";
 import config from "../superflare.config";
 
 import * as build from "../build";
+import { handleFetch } from "superflare";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -30,23 +30,16 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     ctx.request.headers.get("Cookie")
   );
 
-  config({
-    request: ctx.request,
-    env: ctx.env,
-    ctx,
-  });
-
-  const loadContext: AppLoadContext = {
-    env: ctx.env,
-    DB: ctx.env.DB,
-    session,
-  };
-
-  const response = await remixHandler(ctx.request, loadContext);
-  response.headers.set(
-    "Set-Cookie",
-    await sessionStorage.commitSession(session)
+  return handleFetch(
+    {
+      config: config({
+        request: ctx.request,
+        env: ctx.env,
+        ctx,
+      }),
+      session,
+      getSessionCookie: () => sessionStorage.commitSession(session),
+    },
+    () => remixHandler(ctx.request)
   );
-
-  return response;
 };

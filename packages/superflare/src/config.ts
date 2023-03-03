@@ -1,3 +1,5 @@
+import type { Session } from "./session";
+
 export interface StorageDiskConfig {
   binding: R2Bucket;
   /**
@@ -17,7 +19,9 @@ export interface SuperflareUserConfig {
   queues?: { default: Queue } & Record<string, Queue>;
 }
 
-export function config(userConfig: SuperflareUserConfig) {
+export function config(
+  userConfig: SuperflareUserConfig & { session?: Session }
+) {
   if (userConfig.database) {
     Config.database = {
       connections: userConfig.database,
@@ -32,6 +36,9 @@ export function config(userConfig: SuperflareUserConfig) {
     Config.queues = {
       connections: userConfig.queues,
     };
+  }
+  if (userConfig.session) {
+    Config.session = userConfig.session;
   }
 
   return userConfig;
@@ -61,6 +68,8 @@ export class Config {
   static models?: {
     [name: string]: any;
   };
+
+  static session?: Session;
 }
 
 /**
@@ -79,5 +88,5 @@ type DefineConfigContext<Env = Record<string, any>> = {
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
 ) {
-  return (ctx: DefineConfigContext<Env>) => config(callback(ctx));
+  return (ctx: DefineConfigContext<Env>) => callback(ctx);
 }

@@ -9,6 +9,7 @@ import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import MarkdownComposer from "~/components/admin/MarkdownComposer";
+import { session } from "superflare";
 
 interface ActionData {
   title: string | null;
@@ -29,7 +30,7 @@ const enum Intent {
 
 const badResponse = (data: ActionData) => json(data, { status: 422 });
 
-export async function action({ request, context: { session } }: ActionArgs) {
+export async function action({ request }: ActionArgs) {
   const body = new URLSearchParams(await request.text());
   const title = body.get("title");
   const content = body.get("content");
@@ -70,7 +71,7 @@ export async function action({ request, context: { session } }: ActionArgs) {
         slug,
       });
 
-      session.flash("flash", { success: "Article created!" });
+      session().flash("flash", { success: "Article created!" });
 
       return redirect(`/admin/articles/${article.slug}`);
     } else {
@@ -85,7 +86,7 @@ export async function action({ request, context: { session } }: ActionArgs) {
 
       await article.save();
 
-      session.flash("flash", { success: "Article saved!" });
+      session().flash("flash", { success: "Article saved!" });
 
       return redirect(`/admin/articles/${article.slug}`);
     }

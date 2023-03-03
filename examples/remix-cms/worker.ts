@@ -1,5 +1,4 @@
 import {
-  type AppLoadContext,
   createCookieSessionStorage,
   createRequestHandler,
 } from "@remix-run/cloudflare";
@@ -11,7 +10,7 @@ import {
   MethodNotAllowedError,
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import { handleQueue } from "superflare";
+import { handleFetch, handleQueue } from "superflare";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -63,26 +62,19 @@ export default {
       request.headers.get("Cookie")
     );
 
-    config({
-      request,
-      env,
-      ctx,
-    });
-
-    const loadContext: AppLoadContext = {
-      env: env,
-      DB: env.DB,
-      session,
-    };
-
     try {
-      const response = await remixHandler(request, loadContext);
-      response.headers.set(
-        "Set-Cookie",
-        await sessionStorage.commitSession(session)
+      return handleFetch(
+        {
+          config: config({
+            request,
+            env,
+            ctx,
+          }),
+          session,
+          getSessionCookie: () => sessionStorage.commitSession(session),
+        },
+        () => remixHandler(request)
       );
-
-      return response;
     } catch (reason) {
       console.error(reason);
       return new Response("Internal Server Error", { status: 500 });
