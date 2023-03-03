@@ -11,13 +11,13 @@ export interface StorageDiskConfig {
   publicPath?: string;
 }
 
-export interface SupercloudUserConfig {
+export interface SuperflareUserConfig {
   database?: { default: D1Database } & Record<string, D1Database>;
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
   queues?: { default: Queue } & Record<string, Queue>;
 }
 
-export function config(userConfig: SupercloudUserConfig) {
+export function config(userConfig: SuperflareUserConfig) {
   if (userConfig.database) {
     Config.database = {
       connections: userConfig.database,
@@ -47,15 +47,15 @@ export function registerModel(model: any) {
 
 export class Config {
   static database?: {
-    connections: SupercloudUserConfig["database"];
+    connections: SuperflareUserConfig["database"];
   };
 
   static storage?: {
-    disks: SupercloudUserConfig["storage"];
+    disks: SuperflareUserConfig["storage"];
   };
 
   static queues?: {
-    connections: SupercloudUserConfig["queues"];
+    connections: SuperflareUserConfig["queues"];
   };
 
   static models?: {
@@ -77,7 +77,7 @@ type DefineConfigContext<Env = Record<string, any>> = {
 };
 
 export function defineConfig<Env = Record<string, any>>(
-  callback: (ctx: DefineConfigContext<Env>) => SupercloudUserConfig
+  callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
 ) {
   return (ctx: DefineConfigContext<Env>) => config(callback(ctx));
 }
