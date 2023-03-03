@@ -1,10 +1,21 @@
 import { spawn } from "node:child_process";
-import { getSuperflareConfig } from "./config";
+import { getSuperflareConfig, getWranglerJsonConfig } from "./config";
 import { logger } from "./logger";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 
 export function devOptions(yargs: CommonYargsArgv) {
   return yargs
+    .option("mode", {
+      type: "string",
+      choices: ["workers", "pages"],
+      description:
+        "Whether to run in workers or pages mode. Defaults to workers.",
+      default: "workers",
+    })
+    .positional("entrypoint", {
+      type: "string",
+      description: "The entrypoint to use for the workers dev server.",
+    })
     .option("compatibility-date", {
       type: "string",
       description:
@@ -17,9 +28,10 @@ export function devOptions(yargs: CommonYargsArgv) {
       default: 8788,
     })
     .option("binding", {
+      alias: "b",
       type: "array",
       description:
-        "A binding to pass to the wrangler pages dev command. Can be specified multiple times.",
+        "A binding to pass to the dev command. Can be specified multiple times. Works for both workers and pages.",
       default: [],
     })
     .option("live-reload", {
@@ -32,7 +44,12 @@ export function devOptions(yargs: CommonYargsArgv) {
 export async function devHandler(
   argv: StrictYargsOptionsToInterface<typeof devOptions>
 ) {
-  logger.info('Starting "wrangler pages dev"...');
+  const isPagesMode = argv.mode === "pages";
+  const isWorkersMode = !isPagesMode;
+
+  logger.info(
+    `Starting "wrangler" in ${isPagesMode ? "pages" : "workers"} mode...`
+  );
 
   const config = await getSuperflareConfig(process.cwd(), logger);
   if (!config) {
@@ -44,32 +61,61 @@ export async function devHandler(
 
   const d1Bindings = config?.d1;
 
-  if (d1Bindings && Array.isArray(d1Bindings)) {
+  if (d1Bindings && Array.isArray(d1Bindings) && d1Bindings.length) {
     logger.info(`Using D1 binding: ${d1Bindings.join(", ")}`);
   }
 
   const r2Bindings = config?.r2;
 
-  if (r2Bindings && Array.isArray(r2Bindings)) {
+  if (r2Bindings && Array.isArray(r2Bindings) && r2Bindings.length) {
     logger.info(`Using R2 bindings: ${r2Bindings.join(", ")}`);
   }
 
+  const wranglerJsonConfig = await getWranglerJsonConfig(process.cwd(), logger);
+  const workersEntrypoint = argv.entrypoint ?? wranglerJsonConfig?.main;
+
+  if (isWorkersMode && !workersEntrypoint) {
+    logger.error(
+      "Error: You must set a `main` value pointing to your entrypoint in your `wrangler.json` in order to run in workers mode."
+    );
+    process.exit(1);
+  }
+
+  /**
+   * Normalize bindings. :sigh:
+   * - `workers pages dev` expects bindings in the shape of `binding KEY=VALUE`
+   * - `wrangler dev` expects bindings in the shape of `--var KEY:VALUE`
+   */
+  const normalizedBindings = argv.binding.map((binding) => {
+    if (typeof binding !== "string") return binding;
+
+    const [key, value] = binding.split("=");
+    return isWorkersMode ? `${key}:${value}` : `${key}=${value}`;
+  });
+
   const args = [
     "wrangler",
-    "pages",
+    isPagesMode && "pages",
     "dev",
-    "public",
+    isPagesMode && "public",
+    isWorkersMode && workersEntrypoint,
+    isWorkersMode && "--site public",
     "--compatibility-date",
     argv.compatibilityDate,
     "--port",
     argv.port,
-    d1Bindings?.length &&
+    isPagesMode &&
+      d1Bindings?.length &&
       d1Bindings.map((d1Binding) => `--d1 ${d1Binding}`).join(" "),
-    r2Bindings?.length &&
+    isPagesMode &&
+      r2Bindings?.length &&
       r2Bindings.map((r2Binding) => `--r2 ${r2Binding}`).join(" "),
-    ...argv.binding.map((binding) => `--binding ${binding}`),
+    ...normalizedBindings.map(
+      (binding) => "--" + `${isPagesMode ? "binding" : "var"} ${binding}`
+    ),
     "--local",
     "--persist",
+    "--experimental-json-config",
     argv.liveReload && "--live-reload",
   ].filter(Boolean) as string[];
 

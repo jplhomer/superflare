@@ -30,10 +30,13 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     ctx.request.headers.get("Cookie")
   );
 
-  config(ctx);
+  config({
+    request: ctx.request,
+    env: ctx.env,
+    ctx,
+  });
 
   const loadContext: AppLoadContext = {
-    cf: ctx.request.cf,
     env: ctx.env,
     DB: ctx.env.DB,
     session,

@@ -83,3 +83,16 @@ export async function getSuperflareConfig(
     return null;
   }
 }
+
+export async function getWranglerJsonConfig(
+  workingDir: string,
+  logger?: Logger
+): Promise<any> {
+  try {
+    const config = require(path.join(workingDir, "wrangler.json"));
+    return config;
+  } catch (e: any) {
+    logger?.debug(`Error loading wrangler.json: ${e.message}`);
+    return null;
+  }
+}

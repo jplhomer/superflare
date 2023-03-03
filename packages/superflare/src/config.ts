@@ -41,8 +41,18 @@ export class Config {
   };
 }
 
+/**
+ * Accept a general set of request attributes in order to work
+ * with both Cloudflare Workers and Pages.
+ */
+type DefineConfigContext<Env = Record<string, any>> = {
+  request: Request;
+  env: Env;
+  ctx: ExecutionContext;
+};
+
 export function defineConfig<Env = Record<string, any>>(
-  callback: (ctx: Parameters<PagesFunction<Env>>[0]) => SupercloudUserConfig
+  callback: (ctx: DefineConfigContext<Env>) => SupercloudUserConfig
 ) {
-  return (ctx: Parameters<PagesFunction<Env>>[0]) => config(callback(ctx));
+  return (ctx: DefineConfigContext<Env>) => config(callback(ctx));
 }

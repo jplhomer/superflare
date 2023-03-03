@@ -21,6 +21,7 @@ importers:
 
   examples/remix-cms:
     specifiers:
+      '@cloudflare/kv-asset-handler': ^0.3.0
       '@cloudflare/workers-types': ^4.20230215.0
       '@faker-js/faker': ^7.6.0
       '@headlessui/react': ^1.7.11
@@ -54,6 +55,7 @@ importers:
       typescript: ^4.9.5
       wrangler: ^2.10.0
     dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.0
       '@headlessui/react': 1.7.11_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.16_react@18.2.0
       '@remix-run/cloudflare': 1.13.0_f2nunn3czneiaufanhhmxbuesa
@@ -1629,6 +1631,12 @@ packages:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
     dependencies:
       mime: 3.0.0
+
+  /@cloudflare/kv-asset-handler/0.3.0:
+    resolution: {integrity: sha512-9CB/MKf/wdvbfkUdfrj+OkEwZ5b7rws0eogJ4293h+7b6KX5toPwym+VQKmILafNB9YiehqY0DlNrDcDhdWHSQ==}
+    dependencies:
+      mime: 3.0.0
+    dev: false
 
   /@cloudflare/workers-types/4.20221111.1:
     resolution: {integrity: sha512-BNV2wN8V6Zduvo7UzxcdjBbLQ906D2KhS804PDufLgx/sanGJCHVJMOIaLvS/b61JKtot1U7P/l1fjrjZ7/E3A==}

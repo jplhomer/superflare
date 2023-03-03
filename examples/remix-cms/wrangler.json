@@ -1,0 +1,20 @@
+{
+  "name": "remix-cms",
+  "// TODO": "Figure out how we can generalize or remove this:",
+  "define": {
+    "process.env.REMIX_DEV_SERVER_WS_PORT": "8002"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "41543858-c8b5-4b4b-a204-04edfa9d7fe2"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "REMIX_CMS_MEDIA",
+      "bucket_name": "REMIX_CMS_MEDIA",
+      "preview_bucket_name": "REMIX_CMS_MEDIA"
+    }
+  ]
+}

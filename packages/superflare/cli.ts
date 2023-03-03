@@ -66,7 +66,7 @@ function createCLIParser(argv: string[]) {
 
   // Dev
   superflare.command(
-    "dev",
+    "dev [entrypoint]",
     "🏄 Start the development server",
     devOptions,
     devHandler

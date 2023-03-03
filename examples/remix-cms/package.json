@@ -8,7 +8,7 @@
     "build": "npm run build:remix",
     "build:remix": "remix build",
     "dev:remix": "remix watch",
-    "dev:superflare": "superflare dev --binding SESSION_SECRET=secret",
+    "dev:superflare": "NODE_ENV=development superflare dev worker.ts -b SESSION_SECRET=secret",
     "dev": "concurrently \"npm:dev:*\"",
     "start": "cross-env NODE_ENV=production npm run dev:superflare",
     "migrate": "superflare migrate"
@@ -17,6 +17,7 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
     "@remix-run/cloudflare": "^1.13.0",
