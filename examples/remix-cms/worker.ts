@@ -73,6 +73,7 @@ export default {
     const loadContext: AppLoadContext = {
       env: env,
       DB: env.DB,
+      QUEUE: env.QUEUE,
       session,
     };
 
@@ -87,6 +88,21 @@ export default {
     } catch (reason) {
       console.error(reason);
       return new Response("Internal Server Error", { status: 500 });
+    }
+  },
+
+  async queue(
+    batch: MessageBatch,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<void> {
+    config({
+      env,
+      ctx,
+    });
+
+    for (const message of batch.messages) {
+      console.log("Received", message);
     }
   },
 };

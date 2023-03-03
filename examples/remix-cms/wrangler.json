@@ -16,5 +16,18 @@
       "bucket_name": "REMIX_CMS_MEDIA",
       "preview_bucket_name": "REMIX_CMS_MEDIA"
     }
-  ]
+  ],
+  "queues": {
+    "producers": [
+      {
+        "queue": "remix-cms-queue",
+        "binding": "QUEUE"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "remix-cms-queue"
+      }
+    ]
+  }
 }

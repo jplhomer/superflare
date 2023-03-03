@@ -46,7 +46,10 @@ export class Config {
  * with both Cloudflare Workers and Pages.
  */
 type DefineConfigContext<Env = Record<string, any>> = {
-  request: Request;
+  /**
+   * Request will not always be present, e.g. if the context is a queue worker.
+   */
+  request?: Request;
   env: Env;
   ctx: ExecutionContext;
 };
