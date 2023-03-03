@@ -4,8 +4,6 @@ import {
   addTypesToModelsInDirectory,
   generateTypesFromSqlite,
   SuperflareType,
-  SUPERFLARE_TYPES_END_MARKER,
-  SUPERFLARE_TYPES_START_MARKER,
   wrapWithTypeMarkers,
 } from "../cli/d1-types";
 import path from "path";
@@ -19,7 +17,7 @@ const baseModel = (
   toJSON(): ${modelName}Row {
     return super.toJSON();
   }
-}`;
+}\n\nregisterModel(${modelName});`;
 
 describe("addTypesToModelClass", () => {
   it("adds types and JSON utilities to a model class", () => {
@@ -303,7 +301,7 @@ describe("addTypesToModelsInDirectory", () => {
     // Expect `user.ts` to have been created
     expect(fs.existsSync(path.join(tmpDir, "User.ts"))).toBe(true);
     expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8")).toBe(
-      "import { Model } from 'superflare';\n\n" +
+      "import { Model, registerModel } from 'superflare';\n\n" +
         baseModel("User") +
         "\n\n" +
         wrapWithTypeMarkers(`interface UserRow {

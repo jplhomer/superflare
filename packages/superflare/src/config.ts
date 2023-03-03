@@ -14,6 +14,7 @@ export interface StorageDiskConfig {
 export interface SupercloudUserConfig {
   database?: { default: D1Database } & Record<string, D1Database>;
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
+  queues?: { default: Queue } & Record<string, Queue>;
 }
 
 export function config(userConfig: SupercloudUserConfig) {
@@ -27,8 +28,21 @@ export function config(userConfig: SupercloudUserConfig) {
       disks: userConfig.storage,
     };
   }
+  if (userConfig.queues) {
+    Config.queues = {
+      connections: userConfig.queues,
+    };
+  }
 
   return userConfig;
+}
+
+/**
+ * Register a model into the Superflare config.
+ */
+export function registerModel(model: any) {
+  Config.models = Config.models || {};
+  Config.models[model.name] = model;
 }
 
 export class Config {
@@ -38,6 +52,14 @@ export class Config {
 
   static storage?: {
     disks: SupercloudUserConfig["storage"];
+  };
+
+  static queues?: {
+    connections: SupercloudUserConfig["queues"];
+  };
+
+  static models?: {
+    [name: string]: any;
   };
 }
 

@@ -1,4 +1,4 @@
-import { Model } from "superflare";
+import { Model, registerModel } from "superflare";
 
 export class User extends Model {
   toJSON(): Omit<UserRow, "password"> {
@@ -6,6 +6,8 @@ export class User extends Model {
     return rest;
   }
 }
+
+registerModel(User);
 
 /* superflare-types-start */
 interface UserRow {

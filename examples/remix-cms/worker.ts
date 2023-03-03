@@ -11,6 +11,7 @@ import {
   MethodNotAllowedError,
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+import { handleQueue } from "superflare";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -21,8 +22,6 @@ declare const process: {
     NODE_ENV: "development" | "production";
   };
 };
-
-console.log("env", process.env.NODE_ENV);
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -73,7 +72,6 @@ export default {
     const loadContext: AppLoadContext = {
       env: env,
       DB: env.DB,
-      QUEUE: env.QUEUE,
       session,
     };
 
@@ -102,7 +100,7 @@ export default {
     });
 
     for (const message of batch.messages) {
-      console.log("Received", message);
+      await handleQueue(message, ctx);
     }
   },
 };

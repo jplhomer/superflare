@@ -1,5 +1,5 @@
 import pluralize from "pluralize";
-import { Config } from "./config";
+import { Config, registerModel } from "./config";
 import { QueryBuilder } from "./query-builder";
 import { BelongsTo } from "./relations/belongs-to";
 import { HasMany } from "./relations/has-many";
