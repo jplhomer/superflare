@@ -19,13 +19,15 @@ create table users (
 Models are defined as TypeScript classes. Model class names correspond directly to the table names in the database. For example, a `users` table would have a corresponding `User` model:
 
 ```typescript
-import { Model } from "superflare";
+import { Model, registerModel } from "superflare";
 
 export class User extends Model {
   toJSON(): UserRow {
     return super.toJSON();
   }
 }
+
+registerModel(User);
 
 /* superflare-types-start */
 interface UserRow {
@@ -53,6 +55,8 @@ When you create a new table in a migration, you can run the following command to
 ```
 npx superflare migrate --create
 ```
+
+Note that `registerModel` is required to be called for each model. This is how Superflare knows which models to load when you run [Jobs](#) and other background tasks.
 
 ## Model Attributes
 
