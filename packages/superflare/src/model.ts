@@ -299,6 +299,10 @@ export class Model {
 
     return new HasMany(model.query(), this, foreignKey, ownerKey, relationName);
   }
+
+  static register(model: any) {
+    registerModel(model);
+  }
 }
 
 export interface ModelConstructor<M extends Model> extends Constructor<M> {}

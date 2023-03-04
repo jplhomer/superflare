@@ -1,4 +1,4 @@
-import { Model, registerModel } from "superflare";
+import { Model } from "superflare";
 import { User } from "./User";
 
 export class Article extends Model {
@@ -12,7 +12,7 @@ export class Article extends Model {
   }
 }
 
-registerModel(Article);
+Model.register(Article);
 
 /* superflare-types-start */
 interface ArticleRow {

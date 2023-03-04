@@ -1,9 +1,8 @@
-import Database, { type Database as DatabaseType } from "better-sqlite3";
 import { beforeEach, expect, it } from "vitest";
 import { config } from "../../src/config";
 import { Model } from "../../src/model";
 import type { BaseModel } from "../../index.types";
-import { createD1Database, createTestDatabase } from "../../cli/d1-database";
+import { createTestDatabase } from "../db";
 
 let ModelConstructor = Model as unknown as BaseModel;
 

@@ -53,7 +53,7 @@ npx superflare migrate --create
 Behind the scenes, Superflare is using Wrangler to run your migrations against a local SQLite file. Then, it evaluates the schema of your database to infer the types of your columns. Finally, it generates a TypeScript Model for you in your projects `app/models` directory:
 
 ```typescript
-import { Model, registerModel } from "superflare";
+import { Model } from "superflare";
 
 export class User extends Model {
   toJSON(): UserRow {
@@ -61,7 +61,7 @@ export class User extends Model {
   }
 }
 
-registerModel(User);
+Model.register(User);
 
 /* superflare-types-start */
 interface UserRow {

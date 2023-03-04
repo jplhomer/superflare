@@ -3,7 +3,7 @@
  * compose and export types for Model/QueryBuilder.
  **/
 
-export { config, defineConfig, registerModel, registerJob } from "./src/config";
+export { config, defineConfig, registerJob } from "./src/config";
 export { DatabaseException } from "./src/query-builder";
 export { seed } from "./src/seeder";
 export { storage, servePublicPathFromStorage } from "./src/storage";
@@ -89,6 +89,7 @@ export interface BaseModel<M = any> {
   ): Promise<InstanceType<T>>;
   count<T extends BaseModel>(this: T): Promise<number>;
   query<T extends BaseModel>(this: T): QueryBuilder<T>;
+  register(model: any): void;
 
   tableName: string;
   connection: string;

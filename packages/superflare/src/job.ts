@@ -1,5 +1,5 @@
 import type { BaseModel } from "../index.types";
-import { getJob, getModel, getQueue } from "./config";
+import { getJob, getModel, getQueue, registerJob } from "./config";
 import { Model } from "./model";
 
 export interface JobPayload {
@@ -50,6 +50,10 @@ export abstract class Job {
       job: this.constructor.name,
       payload: convertConstructorArgsToPayload(constructorArgs),
     };
+  }
+
+  static register(job: any) {
+    registerJob(job);
   }
 }
 

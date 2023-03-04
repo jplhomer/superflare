@@ -1,4 +1,4 @@
-import { Job, registerJob } from "superflare";
+import { Job } from "superflare";
 import type { Article } from "~/models/Article";
 
 export class SayHelloJob extends Job {
@@ -11,4 +11,4 @@ export class SayHelloJob extends Job {
   }
 }
 
-registerJob(SayHelloJob);
+Job.register(SayHelloJob);

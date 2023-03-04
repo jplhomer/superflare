@@ -159,11 +159,11 @@ export function addTypesToModelsInDirectory(
       };
     } catch (e) {
       if (options?.createIfNotFound) {
-        const oldModelSource = `import { Model, registerModel } from 'superflare';\n\nexport class ${type.model} extends Model {
+        const oldModelSource = `import { Model } from 'superflare';\n\nexport class ${type.model} extends Model {
   toJSON(): ${type.model}Row {
     return super.toJSON();
   }
-}\n\nregisterModel(${type.model});`;
+}\n\Model.register(${type.model});`;
         const newModelSource = addTypesToModelClass(
           oldModelSource,
           type.model,

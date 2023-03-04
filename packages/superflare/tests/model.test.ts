@@ -2,7 +2,7 @@ import { beforeEach, afterEach, describe, expect, it, test, vi } from "vitest";
 import { config } from "../src/config";
 import { Model } from "../src/model";
 import type { BaseModel } from "../index.types";
-import { createTestDatabase } from "../cli/d1-database";
+import { createTestDatabase } from "./db";
 
 let ModelConstructor = Model as unknown as BaseModel;
 
