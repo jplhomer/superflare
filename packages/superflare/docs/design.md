@@ -50,7 +50,7 @@ The list goes on and on. _Constraints are good_.
 
 Superflare is _not a framework_. It's a full-stack toolkit.
 
-I've had my [fair](https://flareact.com/) [share](https://github.com/shopify/hydrogen-v1) of building React meta-frameworks, and I don't yearn to venture into that land again.
+I've built my [fair](https://flareact.com/) [share](https://github.com/shopify/hydrogen-v1) of React meta-frameworks, and I don't yearn to venture into that land yet again.
 
 There are some really good solutions today:
 
