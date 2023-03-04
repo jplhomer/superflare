@@ -32,7 +32,7 @@ I'm bullish on Cloudflare's future precisely because they've invested so heavily
 
 Superflare is built with the following principles in mind:
 
-### Vendor Lock-in
+### Vendor Lock-in as a Feature
 
 Superflare is built on top of Cloudflare's primitives. This means that you can't use Superflare without using Cloudflare. This can be a _good_ thing.
 
