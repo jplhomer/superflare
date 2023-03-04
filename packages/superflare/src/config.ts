@@ -33,9 +33,7 @@ export function config(
     };
   }
   if (userConfig.queues) {
-    Config.queues = {
-      connections: userConfig.queues,
-    };
+    Config.queues = userConfig.queues;
   }
   if (userConfig.session) {
     Config.session = userConfig.session;
@@ -52,6 +50,26 @@ export function registerModel(model: any) {
   Config.models[model.name] = model;
 }
 
+export function getModel(name: string) {
+  return Config.models?.[name];
+}
+
+/**
+ * Register a job into the Superflare config.
+ */
+export function registerJob(job: any) {
+  Config.jobs = Config.jobs || {};
+  Config.jobs[job.name] = job;
+}
+
+export function getJob(name: string) {
+  return Config.jobs?.[name];
+}
+
+export function getQueue(name: string) {
+  return Config.queues?.[name];
+}
+
 export class Config {
   static database?: {
     connections: SuperflareUserConfig["database"];
@@ -61,11 +79,13 @@ export class Config {
     disks: SuperflareUserConfig["storage"];
   };
 
-  static queues?: {
-    connections: SuperflareUserConfig["queues"];
-  };
+  static queues?: SuperflareUserConfig["queues"];
 
   static models?: {
+    [name: string]: any;
+  };
+
+  static jobs?: {
     [name: string]: any;
   };
 

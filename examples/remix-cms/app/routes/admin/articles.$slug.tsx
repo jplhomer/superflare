@@ -4,6 +4,7 @@ import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Button, SecondaryButton } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
+import { SayHelloJob } from "~/jobs/SayHelloJob";
 import { Article } from "~/models/Article";
 import { ArticleForm } from "./components/article-form";
 
@@ -19,6 +20,8 @@ export async function loader({ params }: LoaderArgs) {
   if (!article) {
     throw new Response("Not found", { status: 404 });
   }
+
+  SayHelloJob.dispatch(article);
 
   return json({ article });
 }

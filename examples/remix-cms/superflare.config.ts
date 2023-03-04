@@ -11,5 +11,8 @@ export default defineConfig<Env>((ctx) => {
         publicPath: "/storage/media",
       },
     },
+    queues: {
+      default: ctx.env.QUEUE,
+    },
   };
 });

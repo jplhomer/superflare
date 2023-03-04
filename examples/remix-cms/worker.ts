@@ -85,14 +85,14 @@ export default {
     batch: MessageBatch,
     env: Env,
     ctx: ExecutionContext
-  ): Promise<void> {
+  ): Promise<void[]> {
     config({
       env,
       ctx,
     });
 
-    for (const message of batch.messages) {
-      await handleQueue(message, ctx);
-    }
+    return Promise.all(
+      batch.messages.map((message) => handleQueue(message, ctx))
+    );
   },
 };
