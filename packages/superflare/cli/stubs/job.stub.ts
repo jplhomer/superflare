@@ -1,5 +1,5 @@
-export function job(name: string) {
-  return `import { Job, registerJob } from "superflare";
+export function jobTemplate(name: string) {
+  return `import { Job } from "superflare";
 
 export class ${name} extends Job {
   constructor() {
@@ -11,6 +11,6 @@ export class ${name} extends Job {
   }
 }
 
-registerJob(${name});
+Job.register(${name});
 `;
 }
