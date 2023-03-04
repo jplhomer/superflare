@@ -86,13 +86,13 @@ export default {
     env: Env,
     ctx: ExecutionContext
   ): Promise<void[]> {
-    config({
-      env,
-      ctx,
-    });
-
-    return Promise.all(
-      batch.messages.map((message) => handleQueue(message, ctx))
+    return handleQueue(
+      config({
+        env,
+        ctx,
+      }),
+      batch,
+      ctx
     );
   },
 };
