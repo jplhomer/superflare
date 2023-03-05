@@ -58,7 +58,7 @@ function Header({ navigation }: { navigation: Manifest }) {
           <Logomark className="h-8 w-9 lg:hidden" />
           <Logo
             className="hidden lg:flex"
-            svgClassName="h-6 w-auto text-slate-700 dark:text-sky-100"
+            svgClassName="h-6 w-auto text-slate-700 dark:text-rose-100"
           />
         </Link>
       </div>
@@ -67,7 +67,11 @@ function Header({ navigation }: { navigation: Manifest }) {
       </div>
       <div className="relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
         <ThemeSelector className="relative z-10" />
-        <a href="https://github.com" className="group" aria-label="GitHub">
+        <a
+          href="https://github.com/jplhomer/superflare"
+          className="group"
+          aria-label="GitHub"
+        >
           <GitHubIcon className="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300" />
         </a>
       </div>
@@ -182,7 +186,7 @@ export function Layout({
             {(title || section) && (
               <header className="mb-9 space-y-1">
                 {section && (
-                  <p className="font-display text-sm font-medium text-sky-500">
+                  <p className="font-display text-sm font-medium text-rose-500">
                     {section.title}
                   </p>
                 )}
@@ -246,7 +250,7 @@ export function Layout({
                           to={`#${section.id}`}
                           className={clsx(
                             isActive(section)
-                              ? "text-sky-500"
+                              ? "text-rose-500"
                               : "font-normal text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                           )}
                         >
@@ -264,7 +268,7 @@ export function Layout({
                                 to={`#${subSection.id}`}
                                 className={
                                   isActive(subSection)
-                                    ? "text-sky-500"
+                                    ? "text-rose-500"
                                     : "hover:text-slate-600 dark:hover:text-slate-300"
                                 }
                               >

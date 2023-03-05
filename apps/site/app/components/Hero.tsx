@@ -8,20 +8,23 @@ import blurCyanImage from "~/images/blur-cyan.png";
 import blurIndigoImage from "~/images/blur-indigo.png";
 
 const codeLanguage = "javascript";
-const code = `export default {
-  strategy: 'predictive',
-  engine: {
-    cpus: 12,
-    backups: ['./storage/cache.wtf'],
-  },
+const code = `export async function action({ params }) {
+  const post = await Post.find(params.postId);
+
+  post.name = "New name";
+  await post.save();
+
+  await NotifyContributorsJob.dispatch(post);
+
+  return json({ post });
 }`;
 
 const tabs = [
-  { name: "cache-advance.config.js", isActive: true },
+  { name: "$postId.edit.ts", isActive: true },
   { name: "package.json", isActive: false },
 ];
 
-function TrafficLightsIcon(props) {
+function TrafficLightsIcon(props: React.ComponentProps<"svg">) {
   return (
     <svg aria-hidden="true" viewBox="0 0 42 10" fill="none" {...props}>
       <circle cx="5" cy="5" r="4.5" />
@@ -45,16 +48,19 @@ export function Hero() {
               height={530}
             />
             <div className="relative">
-              <p className="inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
+              <p className="inline bg-gradient-to-r from-red-200 via-rose-400 to-red-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
                 The missing full-stack toolkit for Cloudflare Workers.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Cache every single thing your app could ever do ahead of time,
-                so your code never even has to run at all.
+                Hit the ground running with the best parts of D1, R2, KV,
+                Queues, Scheduled Jobs, and more—all in one place.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
                 <Button href="/">Get started</Button>
-                <Button href="/" variant="secondary">
+                <Button
+                  href="https://github.com/jplhomer/superflare"
+                  variant="secondary"
+                >
                   View on GitHub
                 </Button>
               </div>
@@ -79,10 +85,10 @@ export function Hero() {
                 width={567}
                 height={567}
               />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg" />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-blue-300 opacity-10 blur-lg" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-blue-300 opacity-10" />
               <div className="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur">
-                <div className="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0" />
+                <div className="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-rose-300/0 via-rose-300/70 to-rose-300/0" />
                 <div className="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0" />
                 <div className="pl-4 pt-4">
                   <TrafficLightsIcon className="h-2.5 w-auto stroke-slate-500/30" />
@@ -93,7 +99,7 @@ export function Hero() {
                         className={clsx(
                           "flex h-6 rounded-full",
                           tab.isActive
-                            ? "bg-gradient-to-r from-sky-400/30 via-sky-400 to-sky-400/30 p-px font-medium text-sky-300"
+                            ? "bg-gradient-to-r from-rose-400/30 via-rose-400 to-rose-400/30 p-px font-medium text-rose-300"
                             : "text-slate-500"
                         )}
                       >
