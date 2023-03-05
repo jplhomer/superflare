@@ -7,7 +7,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { Layout } from "./components/Layout";
 import styles from "./styles/tailwind.css";
 import "focus-visible";
 
@@ -72,9 +71,7 @@ export default function App() {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="bg-white dark:bg-slate-900">
-        <Layout>
-          <Outlet />
-        </Layout>
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

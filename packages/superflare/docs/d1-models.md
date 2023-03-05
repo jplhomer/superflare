@@ -1,4 +1,6 @@
-# D1 Models
+---
+title: D1 Models
+---
 
 ## Introduction
 
