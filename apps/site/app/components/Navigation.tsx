@@ -1,7 +1,14 @@
 import { Link, useLocation } from "@remix-run/react";
 import clsx from "clsx";
+import { Manifest } from "~/docs.server";
 
-export function Navigation({ navigation, className }) {
+export function Navigation({
+  navigation,
+  className,
+}: {
+  navigation: Manifest;
+  className?: string;
+}) {
   let router = useLocation();
 
   return (
@@ -20,6 +27,7 @@ export function Navigation({ navigation, className }) {
                 <li key={link.href} className="relative">
                   <Link
                     to={link.href}
+                    prefetch="intent"
                     className={clsx(
                       "block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
                       link.href === router.pathname
