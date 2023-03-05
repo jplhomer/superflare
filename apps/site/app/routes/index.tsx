@@ -1,17 +1,14 @@
-import Markdoc from "@markdoc/markdoc";
 import { json, LoaderArgs } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import React from "react";
 import { Layout } from "~/components/Layout";
 import { getManifest, getMarkdownForPath, parseMarkdoc } from "~/docs.server";
-
-import { Fence } from "~/components/Fence";
 import { renderMarkdoc } from "~/markdoc";
 
 export async function loader({ params, context: { env } }: LoaderArgs) {
   const path = params["*"] ?? ("index" as string);
 
-  const useGitHub = process.env.NODE_ENV === "production";
+  // const useGitHub = process.env.NODE_ENV === "production";
+  const useGitHub = true;
   const markdown = await getMarkdownForPath(path, env.GITHUB_TOKEN, useGitHub);
 
   if (!markdown) {

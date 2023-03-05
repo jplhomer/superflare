@@ -25,7 +25,7 @@ export async function getDocsForPathFromGitHub(
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${repo}/contents/${docsPath}/${path}.md`,
+      `https://api.github.com/repos/${repo}/contents/${docsPath}/${path}`,
       {
         headers: {
           "User-Agent": "Superflare Docs Site",
