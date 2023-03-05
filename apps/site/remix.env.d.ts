@@ -2,12 +2,14 @@
 /// <reference types="@remix-run/cloudflare" />
 /// <reference types="@cloudflare/workers-types" />
 
-import { type Session } from "@remix-run/server-runtime";
+declare const process: {
+  env: {
+    NODE_ENV: "development" | "production";
+  };
+};
 
 declare module "@remix-run/server-runtime" {
   export interface AppLoadContext {
-    DB: D1Database;
-    session: Session;
     env: Env;
   }
 }

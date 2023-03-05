@@ -1,5 +1,8 @@
-import { Node, RenderableTreeNode } from "@markdoc/markdoc";
+import type { RenderableTreeNode } from "@markdoc/markdoc";
 import { slugifyWithCounter } from "@sindresorhus/slugify";
+import { TableOfContents } from "./components/Layout";
+import yaml from "js-yaml";
+import Markdoc, { nodes as defaultNodes } from "@markdoc/markdoc";
 
 const DOCS_PORT = 3123;
 
@@ -13,14 +16,50 @@ export async function getMarkdownForPathFromLocal(path: string) {
   }
 }
 
-export async function getMarkdownForPath(path: string) {
-  // TODO: Switch on whether we're in production
-  const markdown = await getMarkdownForPathFromLocal(path);
+export async function getMarkdownForPathFromGitHub(
+  path: string,
+  gitHubToken: string
+) {
+  const repo = "jplhomer/superflare";
+  const docsPath = "packages/superflare/docs";
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/contents/${docsPath}/${path}.md`,
+      {
+        headers: {
+          "User-Agent": "Superflare Docs Site",
+          Accept: "application/vnd.github.raw",
+          "X-GitHub-Api-Version": "2022-11-28",
+          Authorization: `Bearer ${gitHubToken}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(`Failed to fetch ${path} from GitHub: ${res.statusText}`);
+    }
+
+    return await res.text();
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+export async function getMarkdownForPath(
+  path: string,
+  gitHubToken: string,
+  useGitHub: boolean
+) {
+  const markdown = useGitHub
+    ? await getMarkdownForPathFromGitHub(path, gitHubToken)
+    : await getMarkdownForPathFromLocal(path);
   return markdown;
 }
 
-function getNodeText(node) {
+function getNodeText(node: RenderableTreeNode) {
   let text = "";
+  if (typeof node === "string" || !node) return text;
   for (let child of node.children ?? []) {
     if (typeof child === "string") {
       text += child;
@@ -33,7 +72,7 @@ function getNodeText(node) {
 export function collectHeadings(
   nodes: RenderableTreeNode[],
   slugify = slugifyWithCounter()
-) {
+): TableOfContents {
   let sections = [];
 
   for (let node of nodes) {
@@ -63,4 +102,50 @@ export function collectHeadings(
   }
 
   return sections;
+}
+
+export interface Frontmatter {
+  title: string;
+}
+
+export function parseMarkdoc(markdown: string) {
+  const ast = Markdoc.parse(markdown);
+  const content = Markdoc.transform(ast, {
+    nodes: {
+      document: {
+        render: undefined,
+      },
+      th: {
+        ...defaultNodes.th,
+        attributes: {
+          ...defaultNodes.th.attributes,
+          scope: {
+            type: String,
+            default: "col",
+          },
+        },
+      },
+      fence: {
+        render: "Fence",
+        attributes: {
+          language: {
+            type: String,
+          },
+        },
+      },
+    },
+  });
+
+  const frontmatter = ast.attributes.frontmatter
+    ? (yaml.load(ast.attributes.frontmatter) as Frontmatter)
+    : ({} as Frontmatter);
+
+  const title = frontmatter.title;
+
+  let tableOfContents =
+    content && typeof content !== "string"
+      ? collectHeadings(Array.isArray(content) ? content : content.children)
+      : [];
+
+  return { content, frontmatter, tableOfContents, title };
 }

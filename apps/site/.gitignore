@@ -39,3 +39,5 @@ node_modules
 /public/build
 .env
 /.wrangler
+
+.dev.vars

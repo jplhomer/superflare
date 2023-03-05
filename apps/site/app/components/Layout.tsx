@@ -18,6 +18,14 @@ interface NavigationSection {
   }[];
 }
 
+interface TableOfContentsEntry {
+  id: string;
+  title: string;
+  children: TableOfContentsEntry[];
+}
+
+export type TableOfContents = TableOfContentsEntry[];
+
 const navigation: NavigationSection[] = [
   {
     title: "Introduction",
@@ -131,10 +139,19 @@ function Header({ navigation }: { navigation: NavigationSection[] }) {
   );
 }
 
-function useTableOfContents(tableOfContents) {
-  let [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id);
+interface Heading {
+  id: string;
+  top: number;
+}
 
-  let getHeadings = useCallback((tableOfContents) => {
+function useTableOfContents(tableOfContents: TableOfContents) {
+  let [currentSection, setCurrentSection] = useState<string | undefined>(
+    tableOfContents[0]?.id
+  );
+
+  let getHeadings = useCallback<
+    (tableOfContents: TableOfContents) => (Heading | undefined)[]
+  >((tableOfContents) => {
     return tableOfContents
       .flatMap((node) => [node.id, ...node.children.map((child) => child.id)])
       .map((id) => {
@@ -154,10 +171,10 @@ function useTableOfContents(tableOfContents) {
     let headings = getHeadings(tableOfContents);
     function onScroll() {
       let top = window.scrollY;
-      let current = headings[0].id;
+      let current = headings[0]?.id;
       for (let heading of headings) {
-        if (top >= heading.top) {
-          current = heading.id;
+        if (top >= (heading?.top ?? 0)) {
+          current = heading?.id;
         } else {
           break;
         }
@@ -181,7 +198,7 @@ export function Layout({
 }: {
   children: React.ReactNode;
   title?: string;
-  tableOfContents?: Array<{ id: string; children: Array<{ id: string }> }>;
+  tableOfContents?: TableOfContents;
 }) {
   let router = useLocation();
   let isHomePage = router.pathname === "/";
@@ -194,7 +211,7 @@ export function Layout({
   );
   let currentSection = useTableOfContents(tableOfContents);
 
-  function isActive(section) {
+  function isActive(section: TableOfContentsEntry) {
     if (section.id === currentSection) {
       return true;
     }
@@ -306,7 +323,7 @@ export function Layout({
                           {section.children.map((subSection) => (
                             <li key={subSection.id}>
                               <Link
-                                href={`#${subSection.id}`}
+                                to={`#${subSection.id}`}
                                 className={
                                   isActive(subSection)
                                     ? "text-sky-500"

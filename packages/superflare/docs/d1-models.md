@@ -285,10 +285,6 @@ import { Model } from "superflare";
 import { Profile } from "./Profile";
 
 export class User extends Model {
-  /* superflare-types-start */
-  profileId?: number;
-  /* superflare-types-end */
-
   profile!: Profile | Promise<Profile>;
   $profile() {
     return this.hasOne(Profile);
@@ -317,10 +313,6 @@ To define the inverse relationship, use the `belongsTo` method:
 import { Model } from "superflare";
 
 export class Profile extends Model {
-  /* superflare-types-start */
-  userId!: number;
-  /* superflare-types-end */
-
   user!: User | Promise<User>;
   $user() {
     return this.belongsTo(User);
@@ -346,10 +338,6 @@ To define a one-to-many relationship, use the `hasMany` method:
 import { Model } from "superflare";
 
 export class User extends Model {
-  /* superflare-types-start */
-  id!: number;
-  /* superflare-types-end */
-
   posts!: Post[] | Promise<Post[]>;
   $posts() {
     return this.hasMany(Post);
@@ -375,10 +363,6 @@ To define the inverse relationship, use the `belongsTo` method:
 import { Model } from "superflare";
 
 export class Post extends Model {
-  /* superflare-types-start */
-  userId!: number;
-  /* superflare-types-end */
-
   user!: User | Promise<User>;
   $user() {
     return this.belongsTo(User);
@@ -427,10 +411,6 @@ To define a many-to-many relationship, use the `belongsToMany` method:
 import { Model } from "superflare";
 
 export class Post extends Model {
-  /* superflare-types-start */
-  id!: number;
-  /* superflare-types-end */
-
   tags!: Tag[] | Promise<Tag[]>;
   $tags() {
     return this.belongsToMany(Tag);
@@ -458,10 +438,6 @@ To define the inverse relationship, use the `belongsToMany` method again:
 import { Model } from "superflare";
 
 export class Tag extends Model {
-  /* superflare-types-start */
-  id!: number;
-  /* superflare-types-end */
-
   posts!: Post[] | Promise<Post[]>;
   $posts() {
     return this.belongsToMany(Post);

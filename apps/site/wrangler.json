@@ -1,5 +1,10 @@
 {
   "name": "superflare-site",
+  "main": "./worker.ts",
+  "site": {
+    "bucket": "public"
+  },
+  "compatibility_date": "2023-03-05",
   "define": {
     "process.env.REMIX_DEV_SERVER_WS_PORT": "8002"
   }

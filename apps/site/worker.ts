@@ -1,24 +1,18 @@
 import {
   createCookieSessionStorage,
   createRequestHandler,
-} from '@remix-run/cloudflare'
-import * as build from './build'
+} from "@remix-run/cloudflare";
+import * as build from "./build";
 import {
   getAssetFromKV,
   NotFoundError,
   MethodNotAllowedError,
-} from '@cloudflare/kv-asset-handler'
-import manifestJSON from '__STATIC_CONTENT_MANIFEST'
+} from "@cloudflare/kv-asset-handler";
+import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 
-let remixHandler: ReturnType<typeof createRequestHandler>
+let remixHandler: ReturnType<typeof createRequestHandler>;
 
-const assetManifest = JSON.parse(manifestJSON)
-
-declare const process: {
-  env: {
-    NODE_ENV: 'development' | 'production'
-  }
-}
+const assetManifest = JSON.parse(manifestJSON);
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -27,44 +21,46 @@ export default {
         {
           request,
           waitUntil(promise) {
-            return ctx.waitUntil(promise)
+            return ctx.waitUntil(promise);
           },
         },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
           ASSET_MANIFEST: assetManifest,
         }
-      )
+      );
     } catch (e) {
       if (e instanceof NotFoundError || e instanceof MethodNotAllowedError) {
         // fall through to the remix handler
       } else {
-        return new Response('An unexpected error occurred', { status: 500 })
+        return new Response("An unexpected error occurred", { status: 500 });
       }
     }
 
     if (!remixHandler) {
-      remixHandler = createRequestHandler(build as any, process.env.NODE_ENV)
+      remixHandler = createRequestHandler(build as any, process.env.NODE_ENV);
     }
 
     const sessionStorage = createCookieSessionStorage({
       cookie: {
         httpOnly: true,
-        path: '/',
+        path: "/",
         secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
         secrets: [env.SESSION_SECRET],
       },
-    })
+    });
 
     const session = await sessionStorage.getSession(
-      request.headers.get('Cookie')
-    )
+      request.headers.get("Cookie")
+    );
 
     try {
-      return await remixHandler(request)
+      return await remixHandler(request, {
+        env,
+      });
     } catch (reason) {
-      console.error(reason)
-      return new Response('Internal Server Error', { status: 500 })
+      console.error(reason);
+      return new Response("Internal Server Error", { status: 500 });
     }
   },
-}
+};
