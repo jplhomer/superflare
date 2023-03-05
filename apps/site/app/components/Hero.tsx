@@ -85,11 +85,11 @@ export function Hero() {
                 width={567}
                 height={567}
               />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-blue-300 opacity-10 blur-lg" />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-blue-300 opacity-10" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-red-300 opacity-10 blur-lg" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-rose-300 via-rose-300/70 to-red-300 opacity-10" />
               <div className="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur">
                 <div className="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-rose-300/0 via-rose-300/70 to-rose-300/0" />
-                <div className="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0" />
+                <div className="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-red-400/0 via-red-400 to-red-400/0" />
                 <div className="pl-4 pt-4">
                   <TrafficLightsIcon className="h-2.5 w-auto stroke-slate-500/30" />
                   <div className="mt-4 flex space-x-2 text-xs">
