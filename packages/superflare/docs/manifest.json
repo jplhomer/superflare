@@ -1,0 +1,45 @@
+[
+  {
+    "title": "Introduction",
+    "links": [
+      {
+        "title": "Getting Started",
+        "href": "/"
+      },
+      {
+        "title": "Design Principles",
+        "href": "/design"
+      }
+    ]
+  },
+  {
+    "title": "Models (D1 ORM)",
+    "links": [
+      {
+        "title": "Getting Started",
+        "href": "/models/getting-started"
+      },
+      {
+        "title": "Relationships",
+        "href": "/models/relationships"
+      }
+    ]
+  },
+  {
+    "title": "Using Superflare",
+    "links": [
+      {
+        "title": "File Storage (R2)",
+        "href": "/file-storage"
+      },
+      {
+        "title": "Sessions",
+        "href": "/sessions"
+      },
+      {
+        "title": "Queues",
+        "href": "/queues"
+      }
+    ]
+  }
+]

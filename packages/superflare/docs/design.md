@@ -1,4 +1,6 @@
-# Superflare's Design Principles
+---
+title: Superflare's Design Principles
+---
 
 I built Superflare to scratch my own itch. I'm traditionally a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
 

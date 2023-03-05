@@ -6,7 +6,7 @@ import Markdoc, { nodes as defaultNodes } from "@markdoc/markdoc";
 
 const DOCS_PORT = 3123;
 
-export async function getMarkdownForPathFromLocal(path: string) {
+export async function getDocsForPathFromLocal(path: string) {
   try {
     const res = await fetch(`http://localhost:${DOCS_PORT}/${path}`);
     return await res.text();
@@ -16,7 +16,7 @@ export async function getMarkdownForPathFromLocal(path: string) {
   }
 }
 
-export async function getMarkdownForPathFromGitHub(
+export async function getDocsForPathFromGitHub(
   path: string,
   gitHubToken: string
 ) {
@@ -51,10 +51,36 @@ export async function getMarkdownForPath(
   gitHubToken: string,
   useGitHub: boolean
 ) {
+  const pathname = path === "/" ? "/index" : path;
+
   const markdown = useGitHub
-    ? await getMarkdownForPathFromGitHub(path, gitHubToken)
-    : await getMarkdownForPathFromLocal(path);
+    ? await getDocsForPathFromGitHub(pathname + ".md", gitHubToken)
+    : await getDocsForPathFromLocal(pathname + ".md");
   return markdown;
+}
+
+export interface ManifestLink {
+  title: string;
+  href: string;
+}
+
+export interface ManifestEntry {
+  title: string;
+  links: ManifestLink[];
+}
+
+export type Manifest = ManifestEntry[];
+
+export async function getManifest(
+  gitHubToken: string,
+  useGitHub: boolean
+): Promise<Manifest> {
+  const manifest = useGitHub
+    ? await getDocsForPathFromGitHub("manifest.json", gitHubToken)
+    : await getDocsForPathFromLocal("manifest.json");
+
+  if (!manifest) return null;
+  return JSON.parse(manifest);
 }
 
 function getNodeText(node: RenderableTreeNode) {

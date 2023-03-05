@@ -17,7 +17,7 @@ const server = createServer(async (req, res) => {
 
   let pathname = url.pathname === "/" ? "/index" : url.pathname;
 
-  const filePath = join(docsPath, pathname + ".md");
+  const filePath = join(docsPath, pathname);
 
   try {
     const file = await readFile(filePath, "utf8");

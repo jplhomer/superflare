@@ -9,14 +9,7 @@ import { Navigation } from "~/components/Navigation";
 import { Prose } from "~/components/Prose";
 import { Search } from "~/components/Search";
 import { ThemeSelector } from "~/components/ThemeSelector";
-
-interface NavigationSection {
-  title: string;
-  links: {
-    title: string;
-    href: string;
-  }[];
-}
+import { Manifest } from "~/docs.server";
 
 interface TableOfContentsEntry {
   id: string;
@@ -26,63 +19,6 @@ interface TableOfContentsEntry {
 
 export type TableOfContents = TableOfContentsEntry[];
 
-const navigation: NavigationSection[] = [
-  {
-    title: "Introduction",
-    links: [
-      { title: "Getting started", href: "/" },
-      { title: "Installation", href: "/docs/installation" },
-    ],
-  },
-  {
-    title: "Core concepts",
-    links: [
-      { title: "Understanding caching", href: "/docs/understanding-caching" },
-      {
-        title: "Predicting user behavior",
-        href: "/docs/predicting-user-behavior",
-      },
-      { title: "Basics of time-travel", href: "/docs/basics-of-time-travel" },
-      {
-        title: "Introduction to string theory",
-        href: "/docs/introduction-to-string-theory",
-      },
-      { title: "The butterfly effect", href: "/docs/the-butterfly-effect" },
-    ],
-  },
-  {
-    title: "Advanced guides",
-    links: [
-      { title: "Writing plugins", href: "/docs/writing-plugins" },
-      { title: "Neuralink integration", href: "/docs/neuralink-integration" },
-      { title: "Temporal paradoxes", href: "/docs/temporal-paradoxes" },
-      { title: "Testing", href: "/docs/testing" },
-      { title: "Compile-time caching", href: "/docs/compile-time-caching" },
-      {
-        title: "Predictive data generation",
-        href: "/docs/predictive-data-generation",
-      },
-    ],
-  },
-  {
-    title: "API reference",
-    links: [
-      { title: "CacheAdvance.predict()", href: "/docs/cacheadvance-predict" },
-      { title: "CacheAdvance.flush()", href: "/docs/cacheadvance-flush" },
-      { title: "CacheAdvance.revert()", href: "/docs/cacheadvance-revert" },
-      { title: "CacheAdvance.regret()", href: "/docs/cacheadvance-regret" },
-    ],
-  },
-  {
-    title: "Contributing",
-    links: [
-      { title: "How to contribute", href: "/docs/how-to-contribute" },
-      { title: "Architecture guide", href: "/docs/architecture-guide" },
-      { title: "Design principles", href: "/docs/design-principles" },
-    ],
-  },
-];
-
 function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg aria-hidden="true" viewBox="0 0 16 16" {...props}>
@@ -91,7 +27,7 @@ function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function Header({ navigation }: { navigation: NavigationSection[] }) {
+function Header({ navigation }: { navigation: Manifest }) {
   let [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -195,18 +131,20 @@ export function Layout({
   children,
   title,
   tableOfContents = [],
+  manifest,
 }: {
   children: React.ReactNode;
   title?: string;
   tableOfContents?: TableOfContents;
+  manifest: Manifest;
 }) {
   let router = useLocation();
   let isHomePage = router.pathname === "/";
-  let allLinks = navigation.flatMap((section) => section.links);
+  let allLinks = manifest.flatMap((section) => section.links);
   let linkIndex = allLinks.findIndex((link) => link.href === router.pathname);
   let previousPage = allLinks[linkIndex - 1];
   let nextPage = allLinks[linkIndex + 1];
-  let section = navigation.find((section) =>
+  let section = manifest.find((section) =>
     section.links.find((link) => link.href === router.pathname)
   );
   let currentSection = useTableOfContents(tableOfContents);
@@ -223,7 +161,7 @@ export function Layout({
 
   return (
     <>
-      <Header navigation={navigation} />
+      <Header navigation={manifest} />
 
       {isHomePage && <Hero />}
 
@@ -234,7 +172,7 @@ export function Layout({
           <div className="absolute top-28 bottom-0 right-0 hidden w-px bg-slate-800 dark:block" />
           <div className="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] overflow-y-auto overflow-x-hidden py-16 pl-0.5">
             <Navigation
-              navigation={navigation}
+              navigation={manifest}
               className="w-64 pr-8 xl:w-72 xl:pr-16"
             />
           </div>
