@@ -31,10 +31,10 @@ By default, Superflare does not load related models. You can load the relation o
 ```ts
 const user = await User.find(1);
 
-await user.profile;
+const profile = await user.profile;
 
 // is the same as:
-await user.$profile();
+const profile = await user.$profile();
 ```
 
 Once you have loaded the profile relation once, it will be cached on the `profile` property for future reference.
@@ -57,7 +57,7 @@ When invoking the `$user()` method or awaiting the `user` property, Superflare w
 ```ts
 const profile = await Profile.find(1);
 
-await profile.user;
+const user = await profile.user;
 ```
 
 ### One to Many
@@ -82,9 +82,9 @@ You can then access the related models by awaiting the relation property:
 ```ts
 const user = await User.find(1);
 
-await user.posts;
+const posts = await user.posts;
 
-for (const post of user.posts) {
+for (const post of posts) {
   console.log(post.title);
 }
 ```
@@ -107,7 +107,7 @@ When invoking the `$user()` method or awaiting the `user` property, Superflare w
 ```ts
 const post = await Post.find(1);
 
-await post.user;
+const user = await post.user;
 ```
 
 ### Many to Many (soon!)
@@ -155,9 +155,9 @@ You can then access the related models by awaiting the relation property:
 ```ts
 const post = await Post.find(1);
 
-await post.tags;
+const tags = await post.tags;
 
-for (const tag of post.tags) {
+for (const tag of tags) {
   console.log(tag.name);
 }
 ```
