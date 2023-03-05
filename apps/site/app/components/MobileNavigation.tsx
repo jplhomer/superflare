@@ -4,8 +4,9 @@ import { Dialog } from "@headlessui/react";
 
 import { Logomark } from "~/components/Logo";
 import { Navigation } from "~/components/Navigation";
+import { Manifest } from "~/docs.server";
 
-function MenuIcon(props) {
+function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       aria-hidden="true"
@@ -20,7 +21,7 @@ function MenuIcon(props) {
   );
 }
 
-function CloseIcon(props) {
+function CloseIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       aria-hidden="true"
@@ -35,7 +36,7 @@ function CloseIcon(props) {
   );
 }
 
-export function MobileNavigation({ navigation }) {
+export function MobileNavigation({ navigation }: { navigation: Manifest }) {
   let router = useNavigation();
   let [isOpen, setIsOpen] = useState(false);
 
@@ -69,7 +70,7 @@ export function MobileNavigation({ navigation }) {
             >
               <CloseIcon className="h-6 w-6 stroke-slate-500" />
             </button>
-            <Link href="/" className="ml-6" aria-label="Home page">
+            <Link to="/" className="ml-6" aria-label="Home page">
               <Logomark className="h-9 w-9" />
             </Link>
           </div>
