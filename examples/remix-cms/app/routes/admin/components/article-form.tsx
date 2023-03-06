@@ -9,7 +9,8 @@ import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import MarkdownComposer from "~/components/admin/MarkdownComposer";
-import { session } from "superflare";
+import { auth, session } from "superflare";
+import { User } from "~/models/User";
 
 interface ActionData {
   title: string | null;
@@ -36,6 +37,7 @@ export async function action({ request }: ActionArgs) {
   const content = body.get("content");
   const status = body.get("status");
   const id = body.get("id");
+  const user = (await auth().user(User)) as User;
 
   const intent = id ? Intent.Update : Intent.Create;
 
@@ -63,8 +65,7 @@ export async function action({ request }: ActionArgs) {
         .replace(/^-|-$/g, "");
 
       const article = await Article.create({
-        // TODO: Use current user
-        userId: 1,
+        userId: user.id,
         title,
         content,
         status: "draft",

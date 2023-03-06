@@ -30,6 +30,7 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
     "esbuild": "^0.17.10",
@@ -45,6 +46,7 @@
     "@miniflare/core": "^2.12.1",
     "@miniflare/d1": "^2.12.1",
     "@miniflare/shared": "^2.12.1",
+    "@types/bcryptjs": "^2.4.2",
     "@types/better-sqlite3": "^7.6.3",
     "@types/node": "^18.14.1",
     "@types/pluralize": "^0.0.29",

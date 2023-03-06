@@ -12,6 +12,8 @@ export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
 export { session, Session } from "./src/session";
 export { Job } from "./src/job";
+export { auth } from "./src/auth";
+export { hash } from "./src/hash";
 
 /**
  * Shape of the model instance.
@@ -98,6 +100,7 @@ export interface BaseModel<M = any> {
 }
 
 interface QueryBuilder<T extends BaseModel, R = InstanceType<T>> {
+  count<T>(this: T): Promise<number>;
   find<T>(this: T, id: number): Promise<null | R>;
   find<T>(this: T, ids: number[]): Promise<R[]>;
   where<T>(this: T, field: string, value: any): this;

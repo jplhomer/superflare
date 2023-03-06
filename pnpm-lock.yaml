@@ -190,10 +190,12 @@ importers:
       '@miniflare/core': ^2.12.1
       '@miniflare/d1': ^2.12.1
       '@miniflare/shared': ^2.12.1
+      '@types/bcryptjs': ^2.4.2
       '@types/better-sqlite3': ^7.6.3
       '@types/node': ^18.14.1
       '@types/pluralize': ^0.0.29
       '@types/yargs': ^17.0.20
+      bcryptjs: ^2.4.3
       better-sqlite3: ^7.6
       chalk: ^4.1.2
       cli-table3: ^0.6.3
@@ -209,6 +211,7 @@ importers:
       wrangler: ^2.12.0
       yargs: ^17.6.2
     dependencies:
+      bcryptjs: 2.4.3
       chalk: 4.1.2
       cli-table3: 0.6.3
       esbuild: 0.17.10
@@ -223,6 +226,7 @@ importers:
       '@miniflare/core': 2.12.1
       '@miniflare/d1': 2.12.1
       '@miniflare/shared': 2.12.1
+      '@types/bcryptjs': 2.4.2
       '@types/better-sqlite3': 7.6.3
       '@types/node': 18.14.1
       '@types/pluralize': 0.0.29
@@ -3313,6 +3317,10 @@ packages:
     resolution: {integrity: sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==}
     dev: true
 
+  /@types/bcryptjs/2.4.2:
+    resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
+    dev: true
+
   /@types/better-sqlite3/7.6.3:
     resolution: {integrity: sha512-YS64N9SNDT/NAvou3QNdzAu3E2om/W/0dhORimtPGLef+zSK5l1vDzfsWb4xgXOgfhtOI5ZDTRxnvRPb22AIVQ==}
     dependencies:
@@ -4186,6 +4194,10 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       safe-buffer: 5.1.2
+
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
+    dev: false
 
   /better-path-resolve/1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}

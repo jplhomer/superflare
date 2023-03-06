@@ -12,10 +12,11 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Toast } from "~/components/Toast";
-import { json } from "@remix-run/cloudflare";
-import { session } from "superflare";
+import { json, redirect } from "@remix-run/cloudflare";
+import { session, auth } from "superflare";
+import { User } from "~/models/User";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, end: true },
@@ -23,15 +24,22 @@ const navigation = [
 ];
 
 export async function loader() {
+  if (!(await auth().check(User))) {
+    return redirect("/auth/login");
+  }
+
   const flash = session().get("flash");
+
+  const user = await auth().user(User);
 
   return json({
     flash,
+    user,
   });
 }
 
 export default function AdminLayout() {
-  const { flash } = useLoaderData<typeof loader>();
+  const { flash, user } = useLoaderData<typeof loader>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -127,7 +135,10 @@ export default function AdminLayout() {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
-                    <a href="#" className="group block flex-shrink-0">
+                    <Link
+                      to="/admin/profile"
+                      className="group block flex-shrink-0"
+                    >
                       <div className="flex items-center">
                         <div>
                           <img
@@ -138,14 +149,14 @@ export default function AdminLayout() {
                         </div>
                         <div className="ml-3">
                           <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                            Tom Cook
+                            {user?.name}
                           </p>
                           <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                             View profile
                           </p>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -196,7 +207,10 @@ export default function AdminLayout() {
               </nav>
             </div>
             <div className="flex flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <Link
+                to="/admin/profile"
+                className="group block w-full flex-shrink-0"
+              >
                 <div className="flex items-center">
                   <div>
                     <img
@@ -207,14 +221,14 @@ export default function AdminLayout() {
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-200">
-                      Tom Cook
+                      {user?.name}
                     </p>
                     <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400">
                       View profile
                     </p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

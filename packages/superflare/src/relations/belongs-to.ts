@@ -35,7 +35,9 @@ export class BelongsTo extends Relation {
       model.setRelation(
         relationName,
         results.find(
-          (result) => result[this.ownerKey as keyof Model] === model.id
+          (result) =>
+            result[this.ownerKey as keyof Model] ===
+            model[this.foreignKey as keyof Model]
         )
       );
 

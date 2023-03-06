@@ -4,6 +4,7 @@ import type { ElementType } from "react";
 export function FormField({
   label,
   name,
+  type = "text",
   as = "input",
   wrapperClassName = "",
   inputClassName = "",
@@ -13,6 +14,7 @@ export function FormField({
   label: string;
   name: string;
   as?: ElementType;
+  type?: string;
   wrapperClassName?: string;
   inputClassName?: string;
   options?: { label: string; value: string }[];
@@ -32,6 +34,7 @@ export function FormField({
         <Component
           id={name}
           name={name}
+          type={type}
           className={clsx(
             "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700",
             inputClassName
