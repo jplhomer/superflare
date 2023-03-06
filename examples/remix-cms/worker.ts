@@ -64,6 +64,6 @@ export default {
   ): Promise<void[]> {
     const config = getConfig({ env, ctx });
 
-    return handleQueue(config.userConfig, batch, ctx);
+    return handleQueue(config, batch);
   },
 };
