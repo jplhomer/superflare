@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import clsx from "clsx";
 import Highlight, { defaultProps } from "prism-react-renderer";
 
@@ -8,7 +8,7 @@ import blurCyanImage from "~/images/blur-cyan.png";
 import blurIndigoImage from "~/images/blur-indigo.png";
 
 const codeLanguage = "javascript";
-const code = `export async function action({ params }) {
+const routeCode = `export async function action({ params }) {
   const post = await Post.find(params.postId);
 
   post.name = "New name";
@@ -18,10 +18,31 @@ const code = `export async function action({ params }) {
 
   return json({ post });
 }`;
+const modelCode = `import { Model } from 'superflare';
+
+export class Post extends Model {
+  contributors!: User[] | Promise<User[]>;
+  $contributors() {
+    return this.hasMany(User);
+  }
+}
+
+Model.register(Post);`;
+const jobCode = `export class NotifyContributorsJob extends Job {
+  constructor(public post: Post) {}
+
+  async perform() {
+    for (const contributor of await this.post.contributors) {
+      await contributor.notify(new PostUpdatedNotification(post));
+    }
+  }
+}
+`;
 
 const tabs = [
-  { name: "$postId.edit.ts", isActive: true },
-  { name: "package.json", isActive: false },
+  { name: "routes/$postId.edit.ts", isActive: true, code: routeCode },
+  { name: "models/Post.ts", isActive: false, code: modelCode },
+  { name: "jobs/NotifyContributorsJob.ts", isActive: false, code: jobCode },
 ];
 
 function TrafficLightsIcon(props: React.ComponentProps<"svg">) {
@@ -35,6 +56,8 @@ function TrafficLightsIcon(props: React.ComponentProps<"svg">) {
 }
 
 export function Hero() {
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
   return (
     <div className="overflow-hidden bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
       <div className="py-16 sm:px-2 lg:relative lg:py-20 lg:px-0">
@@ -98,19 +121,20 @@ export function Hero() {
                         key={tab.name}
                         className={clsx(
                           "flex h-6 rounded-full",
-                          tab.isActive
+                          activeTab.name === tab.name
                             ? "bg-gradient-to-r from-rose-400/30 via-rose-400 to-rose-400/30 p-px font-medium text-rose-300"
                             : "text-slate-500"
                         )}
                       >
-                        <div
+                        <button
+                          onClick={() => setActiveTab(tab)}
                           className={clsx(
                             "flex items-center rounded-full px-2.5",
-                            tab.isActive && "bg-slate-800"
+                            activeTab.name === tab.name && "bg-slate-800"
                           )}
                         >
                           {tab.name}
-                        </div>
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -120,7 +144,7 @@ export function Hero() {
                       className="select-none border-r border-slate-300/5 pr-4 font-mono text-slate-600"
                     >
                       {Array.from({
-                        length: code.split("\n").length,
+                        length: activeTab.code.split("\n").length,
                       }).map((_, index) => (
                         <Fragment key={index}>
                           {(index + 1).toString().padStart(2, "0")}
@@ -130,7 +154,7 @@ export function Hero() {
                     </div>
                     <Highlight
                       {...defaultProps}
-                      code={code}
+                      code={activeTab.code}
                       language={codeLanguage}
                       theme={undefined}
                     >
