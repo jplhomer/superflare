@@ -2,7 +2,7 @@
 title: Introduction to Superflare
 ---
 
-[Superflare](https://superflare.dev) is the missing full-stack toolkit for Cloudflare Workers. It features a relational ORM for [D1 databases](https://developers.cloudflare.com/d1/), utilities for [R2 storage](https://developers.cloudflare.com/workers/runtime-apis/r2), and more.
+[Superflare](https://superflare.dev) is the missing full-stack toolkit for Cloudflare Workers. It features a relational ORM for [D1 databases](/models/getting-started), utilities for [R2 storage](/file-storage), and more.
 
 Superflare is _not_ a full-stack framework. In fact, Superflare works best when combined with [Remix](https://remix.run), [Next.js](https://nextjs.org) (soon!) or [Nuxt.js](https://nuxtjs.com) (soon!).
 

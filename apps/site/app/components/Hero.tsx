@@ -76,7 +76,7 @@ export function Hero() {
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
                 Hit the ground running with the best parts of D1, R2, KV,
-                Queues, Scheduled Jobs, and more—all in one place.
+                queues, scheduled jobs, and more—all in one place.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
                 <Button href="/">Get started</Button>
