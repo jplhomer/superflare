@@ -2,7 +2,7 @@
 title: File Storage
 ---
 
-Superflare provides a simple interface for working with R2 storage. You can use this to store and retrieve files from Cloudflare Workers.
+Superflare provides a simple interface for working with [R2 storage](https://www.cloudflare.com/products/r2/). You can use this to store and retrieve files from Cloudflare Workers.
 
 To interact with R2 storage, import the `storage` utility from Superflare:
 
