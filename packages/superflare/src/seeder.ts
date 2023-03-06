@@ -1,8 +1,8 @@
-import { config } from "./config";
+import { setConfig } from "./config";
 
 export function seed(callback: () => void) {
   return (database: D1Database) => {
-    config({ database: { default: database } });
+    setConfig({ database: { default: database } });
     callback();
   };
 }

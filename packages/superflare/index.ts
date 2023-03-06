@@ -1,4 +1,4 @@
-export { config, defineConfig } from "./src/config";
+export { setConfig, defineConfig } from "./src/config";
 export { Model } from "./src/model";
 export { session } from "./src/session";
 export { DatabaseException } from "./src/query-builder";

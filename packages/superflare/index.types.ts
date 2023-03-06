@@ -4,7 +4,7 @@
  **/
 
 export {
-  config,
+  setConfig,
   defineConfig,
   type SuperflareUserConfig,
   type DefineConfigResult,

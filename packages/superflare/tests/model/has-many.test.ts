@@ -1,5 +1,5 @@
 import { beforeEach, expect, it } from "vitest";
-import { config } from "../../src/config";
+import { setConfig } from "../../src/config";
 import { Model } from "../../src/model";
 import type { BaseModel } from "../../index.types";
 import { createTestDatabase } from "../db";
@@ -47,7 +47,7 @@ beforeEach(async () => {
       updatedAt timestamp not null default current_timestamp
     );
   `);
-  config({
+  setConfig({
     database: {
       default: database,
     },

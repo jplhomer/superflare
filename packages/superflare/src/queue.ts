@@ -1,4 +1,4 @@
-import { config, SuperflareUserConfig } from "./config";
+import { setConfig, SuperflareUserConfig } from "./config";
 import { hydrateJobFromQueuePayload, JobPayload } from "./job";
 
 export async function handleQueue(
@@ -10,7 +10,7 @@ export async function handleQueue(
    * Set the user config into the singleton context.
    * TODO: Replace this with AsyncLocalStorage when available.
    */
-  config(userConfig);
+  setConfig(userConfig);
 
   return await Promise.all(
     batch.messages.map((message) => handleQueueMessage(message, ctx))

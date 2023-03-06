@@ -1,4 +1,4 @@
-import { config, SuperflareUserConfig } from "./config";
+import { setConfig, SuperflareUserConfig } from "./config";
 import { Session } from "./session";
 
 export async function handleFetch(
@@ -17,7 +17,7 @@ export async function handleFetch(
    * Set the user config into the singleton context.
    * TODO: Replace this with AsyncLocalStorage when available.
    */
-  config({ ...userConfig, session });
+  setConfig({ ...userConfig, session });
 
   /**
    * Run the framework code and get a response.

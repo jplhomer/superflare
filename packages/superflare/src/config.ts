@@ -23,7 +23,7 @@ export interface SuperflareUserConfig {
   queues?: { default: Queue } & Record<string, Queue>;
 }
 
-export function config(
+export function setConfig(
   userConfig: SuperflareUserConfig & { session?: Session }
 ) {
   Config.appKey = userConfig.appKey;
