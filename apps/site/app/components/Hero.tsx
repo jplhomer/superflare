@@ -115,7 +115,7 @@ export function Hero() {
                 <div className="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-red-400/0 via-red-400 to-red-400/0" />
                 <div className="pl-4 pt-4">
                   <TrafficLightsIcon className="h-2.5 w-auto stroke-slate-500/30" />
-                  <div className="mt-4 flex space-x-2 text-xs">
+                  <div className="mt-4 flex space-x-2 text-xs overflow-scroll">
                     {tabs.map((tab) => (
                       <div
                         key={tab.name}
