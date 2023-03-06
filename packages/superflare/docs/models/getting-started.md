@@ -2,7 +2,7 @@
 title: Intro to Models
 ---
 
-D1 Models are a representation of the database schema defined in D1. They are used to represent the structure of database objects and the relationships between other database objects.
+Models are a handy way to interact with your [D1 database](https://developers.cloudflare.com/d1/). They provide a layer of abstraction between your database and your application, allowing you to define relationships between models, and to easily query for data.
 
 D1 tables are created using native SQLlite migrations:
 
