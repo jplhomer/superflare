@@ -10,7 +10,7 @@ import { ArticleForm } from "./components/article-form";
 
 export { action } from "./components/article-form";
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, context }: LoaderArgs) {
   const { slug } = params;
 
   invariant(typeof slug === "string", "Missing slug");

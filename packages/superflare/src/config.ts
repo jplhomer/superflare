@@ -14,6 +14,10 @@ export interface StorageDiskConfig {
 }
 
 export interface SuperflareUserConfig {
+  /**
+   * A secret key used to sign cookies and other sensitive data.
+   */
+  appKey?: string;
   database?: { default: D1Database } & Record<string, D1Database>;
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
   queues?: { default: Queue } & Record<string, Queue>;
@@ -22,6 +26,8 @@ export interface SuperflareUserConfig {
 export function config(
   userConfig: SuperflareUserConfig & { session?: Session }
 ) {
+  Config.appKey = userConfig.appKey;
+
   if (userConfig.database) {
     Config.database = {
       connections: userConfig.database,
@@ -71,6 +77,12 @@ export function getQueue(name: string) {
 }
 
 export class Config {
+  static appKey: SuperflareUserConfig["appKey"];
+
+  static env: any;
+
+  static ctx: ExecutionContext;
+
   static database?: {
     connections: SuperflareUserConfig["database"];
   };
@@ -105,8 +117,20 @@ type DefineConfigContext<Env = Record<string, any>> = {
   ctx: ExecutionContext;
 };
 
+/**
+ * Return both the userConfig and the ctx so we can re-use that in the request
+ * handlers without asking the user to pass them again.
+ */
+export type DefineConfigResult<Env> = {
+  userConfig: SuperflareUserConfig;
+  ctx: DefineConfigContext<Env>;
+};
+
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
 ) {
-  return (ctx: DefineConfigContext<Env>) => callback(ctx);
+  return (ctx: DefineConfigContext<Env>) => ({
+    userConfig: callback(ctx),
+    ctx,
+  });
 }

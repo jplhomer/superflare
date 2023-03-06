@@ -3,7 +3,12 @@
  * compose and export types for Model/QueryBuilder.
  **/
 
-export { config, defineConfig } from "./src/config";
+export {
+  config,
+  defineConfig,
+  type SuperflareUserConfig,
+  type DefineConfigResult,
+} from "./src/config";
 export { DatabaseException } from "./src/query-builder";
 export { seed } from "./src/seeder";
 export { storage, servePublicPathFromStorage } from "./src/storage";

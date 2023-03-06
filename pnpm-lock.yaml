@@ -111,6 +111,7 @@ importers:
       '@remix-run/react': ^1.13.0
       '@remix-run/serve': ^1.13.0
       '@remix-run/server-runtime': ^1.13.0
+      '@superflare/remix': workspace:^0.0.1
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/marked': ^4.0.8
@@ -140,6 +141,7 @@ importers:
       '@remix-run/cloudflare': 1.13.0_f2nunn3czneiaufanhhmxbuesa
       '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.13.0
+      '@superflare/remix': link:../../packages/remix
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
       clsx: 1.2.1
       highlight.js: 11.7.0
@@ -183,6 +185,25 @@ importers:
       eslint-plugin-react: 7.31.8_eslint@7.32.0
     devDependencies:
       typescript: 4.9.3
+
+  packages/remix:
+    specifiers:
+      '@cloudflare/kv-asset-handler': ^0.3.0
+      '@remix-run/cloudflare': ^1.14.0
+      '@remix-run/server-runtime': ^1.14.0
+      superflare: workspace:*
+      tsconfig: workspace:*
+      tsup: ^6.6.3
+      typescript: ^4.9.5
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.0
+    devDependencies:
+      '@remix-run/cloudflare': 1.14.0
+      '@remix-run/server-runtime': 1.14.0
+      superflare: link:../superflare
+      tsconfig: link:../tsconfig
+      tsup: 6.6.3_typescript@4.9.5
+      typescript: 4.9.5
 
   packages/superflare:
     specifiers:
@@ -1832,7 +1853,6 @@ packages:
     resolution: {integrity: sha512-FNcunDuTmEfQTLRLtA6zz+buIXUHj1soPvSWzzQFBC+n2lsy+CGf/NIrR3SEPCmsVNQj70/Jx2lViCpq+09YpQ==}
     dependencies:
       mime: 2.6.0
-    dev: false
 
   /@cloudflare/kv-asset-handler/0.2.0:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
@@ -2839,6 +2859,16 @@ packages:
       '@cloudflare/workers-types': 4.20230215.0
       '@remix-run/server-runtime': 1.13.0
     dev: false
+
+  /@remix-run/cloudflare/1.14.0:
+    resolution: {integrity: sha512-EQY0SyMdNvM4Cga7vBUG57MABsRBnRDx36hvhgFlmVbbfp2DFjzY051Qjmg2K3jQUptz9o4PCE0H3XdNMCRWjw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@cloudflare/workers-types': ^2.0.0 || ^3.0.0
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.1.3
+      '@remix-run/server-runtime': 1.14.0
+    dev: true
 
   /@remix-run/cloudflare/1.14.0_f2nunn3czneiaufanhhmxbuesa:
     resolution: {integrity: sha512-EQY0SyMdNvM4Cga7vBUG57MABsRBnRDx36hvhgFlmVbbfp2DFjzY051Qjmg2K3jQUptz9o4PCE0H3XdNMCRWjw==}
@@ -7783,7 +7813,6 @@ packages:
     resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
     engines: {node: '>=4.0.0'}
     hasBin: true
-    dev: false
 
   /mime/3.0.0:
     resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
