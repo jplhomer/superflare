@@ -1,8 +1,7 @@
-import { redirect } from "@remix-run/server-runtime";
-import { auth } from "superflare";
+import { type ActionArgs, redirect } from "@remix-run/server-runtime";
 
-export async function action() {
-  auth().logout();
+export async function action({ context: { auth } }: ActionArgs) {
+  auth.logout();
 
   return redirect("/");
 }

@@ -9,7 +9,6 @@ import { Article } from "~/models/Article";
 import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import MarkdownComposer from "~/components/admin/MarkdownComposer";
-import { auth, session } from "superflare";
 import { User } from "~/models/User";
 
 interface ActionData {
@@ -31,13 +30,16 @@ const enum Intent {
 
 const badResponse = (data: ActionData) => json(data, { status: 422 });
 
-export async function action({ request }: ActionArgs) {
+export async function action({
+  request,
+  context: { auth, session },
+}: ActionArgs) {
   const body = new URLSearchParams(await request.text());
   const title = body.get("title");
   const content = body.get("content");
   const status = body.get("status");
   const id = body.get("id");
-  const user = await auth().user(User);
+  const user = await auth.user(User);
 
   const intent = id ? Intent.Update : Intent.Create;
 
@@ -72,7 +74,7 @@ export async function action({ request }: ActionArgs) {
         slug,
       });
 
-      session().flash("flash", { success: "Article created!" });
+      session.flash("flash", { success: "Article created!" });
 
       return redirect(`/admin/articles/${article.slug}`);
     } else {
@@ -87,7 +89,7 @@ export async function action({ request }: ActionArgs) {
 
       await article.save();
 
-      session().flash("flash", { success: "Article saved!" });
+      session.flash("flash", { success: "Article saved!" });
 
       return redirect(`/admin/articles/${article.slug}`);
     }

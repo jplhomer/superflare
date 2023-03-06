@@ -14,23 +14,23 @@ import {
 import clsx from "clsx";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Toast } from "~/components/Toast";
-import { json, redirect } from "@remix-run/cloudflare";
-import { session, auth } from "superflare";
+import { json, type LoaderArgs, redirect } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
+import { Article } from "~/models/Article";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, end: true },
   { name: "Articles", href: "./articles", icon: FolderIcon },
 ];
 
-export async function loader() {
-  if (!(await auth().check(User))) {
+export async function loader({ context: { auth, session } }: LoaderArgs) {
+  if (!(await auth.check(User))) {
     return redirect("/auth/login");
   }
 
-  const flash = session().get("flash");
+  const flash = session.get("flash");
 
-  const user = await auth().user(User);
+  const user = await auth.user(User);
 
   return json({
     flash,

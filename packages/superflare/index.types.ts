@@ -17,7 +17,7 @@ export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
 export { session, Session } from "./src/session";
 export { Job } from "./src/job";
-export { auth } from "./src/auth";
+export { Auth } from "./src/auth";
 export { hash } from "./src/hash";
 
 /**

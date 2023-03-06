@@ -1,14 +1,15 @@
-import { setConfig, SuperflareUserConfig } from "./config";
-import { Session } from "./session";
+import { DefineConfigResult, setConfig, Config } from "./config";
 
-export async function handleFetch(
+export async function handleFetch<Env>(
   {
-    config: userConfig,
-    session,
+    config,
     getSessionCookie,
   }: {
-    config: SuperflareUserConfig;
-    session: Session;
+    config: DefineConfigResult<Env>;
+    /**
+     * Superflare will commit changes to the session as a Cookie header on the outgoing response.
+     * You must provide a way to get that cookie. This likely comes from your session storage.
+     */
     getSessionCookie: () => Promise<string>;
   },
   getResponse: () => Promise<Response>
@@ -17,7 +18,8 @@ export async function handleFetch(
    * Set the user config into the singleton context.
    * TODO: Replace this with AsyncLocalStorage when available.
    */
-  setConfig({ ...userConfig, session });
+  const { userConfig } = config;
+  setConfig(userConfig);
 
   /**
    * Run the framework code and get a response.

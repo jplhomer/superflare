@@ -2,7 +2,7 @@
 /// <reference types="@remix-run/cloudflare" />
 /// <reference types="@cloudflare/workers-types" />
 
-import { type SuperflareAppLoadContext } from "@superflare/remix";
+import { type SuperflareAppLoadContext } from "../../packages/superflare-remix/dist";
 
 declare module "@remix-run/server-runtime" {
   export interface AppLoadContext extends SuperflareAppLoadContext<Env> {

@@ -3,10 +3,10 @@ import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
 import { Button } from "~/components/admin/Button";
 import { FormField } from "~/components/Form";
 import { User } from "~/models/User";
-import { auth, hash } from "superflare";
+import { hash } from "superflare";
 
-export async function action({ request }: ActionArgs) {
-  if (await auth().check(User)) {
+export async function action({ request, context: { auth } }: ActionArgs) {
+  if (await auth.check(User)) {
     return redirect("/admin");
   }
 
@@ -25,7 +25,7 @@ export async function action({ request }: ActionArgs) {
     password: await hash().make(password),
   });
 
-  auth().login(user);
+  auth.login(user);
 
   return redirect("/admin");
 }

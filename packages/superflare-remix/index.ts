@@ -6,8 +6,14 @@ import {
   type DefineConfigResult,
   handleFetch as superflareHandleFetch,
   type Session,
+  Auth,
+  setConfig,
 } from "superflare";
 
+/**
+ * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
+ * It handles properly injecting things like `session` and `env` into the Remix load context.
+ */
 export async function handleFetch<Env>(
   request: Request,
   config: DefineConfigResult<Env>,
@@ -25,6 +31,8 @@ export async function handleFetch<Env>(
     );
   }
 
+  setConfig(userConfig);
+
   const sessionStorage = createCookieSessionStorage({
     cookie: {
       httpOnly: true,
@@ -38,22 +46,28 @@ export async function handleFetch<Env>(
     request.headers.get("Cookie")
   );
 
-  const loadContext: SuperflareAppLoadContext<Env> = {
-    session,
-    env: ctx.env as Env,
-  };
-
   return await superflareHandleFetch(
     {
-      config: userConfig,
-      session,
+      config,
       getSessionCookie: () => sessionStorage.commitSession(session),
     },
-    async () => remixHandler(request, loadContext)
+    async () => {
+      /**
+       * We inject env and session into the Remix load context.
+       * Someday, we could replace this with AsyncLocalStorage.
+       */
+      const loadContext: SuperflareAppLoadContext<Env> = {
+        session,
+        auth: new Auth(session),
+        env: ctx.env as Env,
+      };
+      return await remixHandler(request, loadContext);
+    }
   );
 }
 
 export interface SuperflareAppLoadContext<Env> extends AppLoadContext {
   session: Session;
+  auth: Auth;
   env: Env;
 }

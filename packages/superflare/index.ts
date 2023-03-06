@@ -8,5 +8,5 @@ export { Factory } from "./src/factory";
 export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
 export { Job } from "./src/job";
-export { auth } from "./src/auth";
+export { Auth } from "./src/auth";
 export { hash } from "./src/hash";
