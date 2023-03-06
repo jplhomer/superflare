@@ -37,7 +37,7 @@ export async function action({ request }: ActionArgs) {
   const content = body.get("content");
   const status = body.get("status");
   const id = body.get("id");
-  const user = (await auth().user(User)) as User;
+  const user = await auth().user(User);
 
   const intent = id ? Intent.Update : Intent.Create;
 
@@ -65,7 +65,7 @@ export async function action({ request }: ActionArgs) {
         .replace(/^-|-$/g, "");
 
       const article = await Article.create({
-        userId: user.id,
+        userId: user!.id,
         title,
         content,
         status: "draft",

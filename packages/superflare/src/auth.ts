@@ -4,9 +4,12 @@ import { session } from "./session";
 
 const SESSION_KEY = "superflare:auth:id";
 
-export function auth<T extends BaseModel>() {
+export function auth() {
   return {
-    async attempt(model: T, credentials: { email: string; password: string }) {
+    async attempt<M extends BaseModel>(
+      model: M,
+      credentials: { email: string; password: string }
+    ) {
       const user = await model.where("email", credentials.email).first();
 
       if (!user) return false;
@@ -24,7 +27,7 @@ export function auth<T extends BaseModel>() {
       return true;
     },
 
-    async check(model: T) {
+    async check<M extends new (args: any) => InstanceType<M>>(model: M) {
       return !!(await this.user(model));
     },
 
@@ -32,11 +35,13 @@ export function auth<T extends BaseModel>() {
       return session().get(SESSION_KEY);
     },
 
-    login(user: InstanceType<T>) {
+    login(user: any) {
       session().set(SESSION_KEY, user.id);
     },
 
-    async user(model: T): Promise<InstanceType<T> | null> {
+    async user<M extends new (args: any) => InstanceType<M>>(
+      model: M
+    ): Promise<InstanceType<M> | null> {
       const id = session().get(SESSION_KEY);
 
       if (!id) return null;
