@@ -75,7 +75,6 @@ export class Model {
   }
 
   static getConnection(): D1Database {
-    console.log(Config);
     if (!Config.database) {
       throw new Error("No database connection defined");
     }
