@@ -139,9 +139,38 @@ export interface Frontmatter {
   title: string;
 }
 
+const tags = {
+  callout: {
+    attributes: {
+      title: { type: String },
+      type: {
+        type: String,
+        default: "note",
+        matches: ["note", "warning"],
+        errorLevel: "critical",
+      },
+    },
+    render: "Callout",
+  },
+  "quick-links": {
+    render: "QuickLinks",
+  },
+  "quick-link": {
+    selfClosing: true,
+    render: "QuickLink",
+    attributes: {
+      title: { type: String },
+      description: { type: String },
+      icon: { type: String },
+      href: { type: String },
+    },
+  },
+};
+
 export function parseMarkdoc(markdown: string) {
   const ast = Markdoc.parse(markdown);
   const content = Markdoc.transform(ast, {
+    tags,
     nodes: {
       document: {
         render: undefined,

@@ -63,11 +63,7 @@ export default {
       await sessionStorage.getSession(request.headers.get("Cookie"))
     );
 
-    const loadContext = {
-      session,
-      auth: new Auth(session),
-      env: env,
-    };
+    const loadContext = { session, auth: new Auth(session), env };
 
     try {
       const config = getConfig({ request, env, ctx });

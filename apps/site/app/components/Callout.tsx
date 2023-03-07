@@ -5,9 +5,9 @@ import { Icon } from "~/components/Icon";
 const styles = {
   note: {
     container:
-      "bg-rose-50 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10",
-    title: "text-rose-900 dark:text-rose-400",
-    body: "text-rose-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-rose-900 prose-code:text-rose-900 dark:text-slate-300 dark:prose-code:text-slate-300",
+      "bg-gray-100 dark:bg-slate-800/60 dark:ring-1 dark:ring-slate-300/10",
+    title: "text-gray-900 dark:text-gray-400",
+    body: "text-gray-800 [--tw-prose-background:theme(colors.rose.50)] prose-a:text-gray-900 prose-code:text-gray-900 dark:text-slate-300 dark:prose-code:text-slate-300",
   },
   warning: {
     container:
@@ -18,11 +18,23 @@ const styles = {
 };
 
 const icons = {
-  note: (props) => <Icon icon="lightbulb" {...props} />,
-  warning: (props) => <Icon icon="warning" color="amber" {...props} />,
+  note: (props: Omit<React.ComponentProps<typeof Icon>, "icon">) => (
+    <Icon icon="lightbulb" {...props} />
+  ),
+  warning: (props: Omit<React.ComponentProps<typeof Icon>, "icon">) => (
+    <Icon icon="warning" color="amber" {...props} />
+  ),
 };
 
-export function Callout({ type = "note", title, children }) {
+export function Callout({
+  type = "note",
+  title,
+  children,
+}: {
+  type?: "note" | "warning";
+  title: string;
+  children: React.ReactNode;
+}) {
   let IconComponent = icons[type];
 
   return (

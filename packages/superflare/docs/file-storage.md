@@ -4,6 +4,8 @@ title: File Storage
 
 Superflare provides a simple interface for working with [R2 storage](https://www.cloudflare.com/products/r2/). You can use this to store and retrieve files from Cloudflare Workers.
 
+## Getting Started
+
 To interact with R2 storage, import the `storage` utility from Superflare:
 
 ```ts
@@ -13,7 +15,7 @@ export async function action() {
   const file = "...";
   const key = "my-file.txt";
 
-  await storage().put(key, file);
+  const r2Object = await storage().put(key, file);
 
   // Later:
 
@@ -55,6 +57,18 @@ export default defineConfig((ctx) => {
 });
 ```
 
+### File URLs
+
+You can use the `storage().url()` method to get a URL to a file in your bucket if you have defined a public path:
+
+```ts
+const url = storage().url("my-file.txt");
+```
+
+If your bucket does not have a public path, the `storage().url()` will return `null`.
+
+### `servePublicPathFromStorage`
+
 Superflare provides a helpful utility `servePublicPathFromStorage` to serve public files from your app by proxying requests to an R2 bucket.
 
 You can import this utility in a route handler and pass it the current pathname to serve:
@@ -75,7 +89,7 @@ Superflare will determine the correct disk to use based on the `publicPath` prop
 
 You can add any authentication or authorization mechanisms to this route to restrict access to your files.
 
-## Serving public files from a public R2 bucket
+### Using a public R2 bucket
 
 You can also serve public files from a R2 bucket's public domain. To do this, you can make the R2 bucket public by [following Cloudflare's instructions](https://developers.cloudflare.com/r2/data-access/public-buckets/).
 
