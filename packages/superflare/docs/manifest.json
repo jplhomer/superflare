@@ -24,6 +24,10 @@
         "href": "/file-storage"
       },
       {
+        "title": "Security",
+        "href": "/security"
+      },
+      {
         "title": "Sessions",
         "href": "/sessions"
       },
@@ -51,6 +55,23 @@
       {
         "title": "Seeding",
         "href": "/database/seeding"
+      }
+    ]
+  },
+  {
+    "title": "Email",
+    "links": [
+      {
+        "title": "Sending Email",
+        "href": "/email/sending-email"
+      },
+      {
+        "title": "Notifications",
+        "href": "/email/notifications"
+      },
+      {
+        "title": "Receiving Mail with Mailboxes",
+        "href": "/email/mailboxes"
       }
     ]
   }
