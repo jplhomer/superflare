@@ -24,10 +24,6 @@
         "href": "/file-storage"
       },
       {
-        "title": "Security",
-        "href": "/security"
-      },
-      {
         "title": "Sessions",
         "href": "/sessions"
       },
@@ -55,6 +51,19 @@
       {
         "title": "Seeding",
         "href": "/database/seeding"
+      }
+    ]
+  },
+  {
+    "title": "Security",
+    "links": [
+      {
+        "title": "Authentication",
+        "href": "/security/authentication"
+      },
+      {
+        "title": "Hashing",
+        "href": "/security/hashing"
       }
     ]
   },
