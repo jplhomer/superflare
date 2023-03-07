@@ -13,21 +13,12 @@
     ]
   },
   {
-    "title": "Models (D1 ORM)",
-    "links": [
-      {
-        "title": "Getting Started",
-        "href": "/models/getting-started"
-      },
-      {
-        "title": "Relationships",
-        "href": "/models/relationships"
-      }
-    ]
-  },
-  {
     "title": "Using Superflare",
     "links": [
+      {
+        "title": "Models (D1)",
+        "href": "/models"
+      },
       {
         "title": "File Storage (R2)",
         "href": "/file-storage"
@@ -39,6 +30,27 @@
       {
         "title": "Queues",
         "href": "/queues"
+      }
+    ]
+  },
+  {
+    "title": "Database",
+    "links": [
+      {
+        "title": "Getting Started",
+        "href": "/database/getting-started"
+      },
+      {
+        "title": "Relationships",
+        "href": "/database/relationships"
+      },
+      {
+        "title": "Migrations",
+        "href": "/database/migrations"
+      },
+      {
+        "title": "Seeding",
+        "href": "/database/seeding"
       }
     ]
   }

@@ -1,64 +1,42 @@
 ---
-title: Intro to Models
+title: Getting Started with D1 Models
 ---
 
-Models are a handy way to interact with your [D1 database](https://developers.cloudflare.com/d1/). They provide a layer of abstraction between your database and your application, allowing you to define relationships between models, and to easily query for data.
+This documentation describes how to use Superflare's [D1 Models](/models).
 
-D1 tables are created using native SQLlite migrations:
+## Model Attributes
 
-```sql
-create table users (
-  id integer primary key,
-  name text not null,
-  email text not null,
-  createdAt timestamp not null default current_timestamp
-  updatedAt timestamp not null default current_timestamp
-);
-```
+Any properties defined on your model are accessible on the model instance:
 
-Models are defined as TypeScript classes. Model class names correspond directly to the table names in the database. For example, a `users` table would have a corresponding `User` model:
-
-```typescript
+```ts
 import { Model } from "superflare";
 
-export class User extends Model {
-  toJSON(): UserRow {
+export class Post extends Model {
+  get upperTitle() {
+    return this.title.toUpperCase();
+  }
+
+  toJSON(): PostRow {
     return super.toJSON();
   }
 }
 
-Model.register(User);
-
 /* superflare-types-start */
-interface UserRow {
+interface PostRow {
   id!: number;
   name!: string;
-  email!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+  title!: string;
 }
-
-export interface User extends UserRow {}
+export interface Post extends PostRow {}
 /* superflare-types-end */
+
+const post = new Post();
+
+post.title = "Hello World";
+
+console.log(post.title); // "Hello World"
+console.log(post.upperTitle); // "HELLO WORLD"
 ```
-
-Superflare provides utilities to help you keep your model's type definition in sync with your database. Type definitions are created as an interface below your model class definition. For example, the `User` model will have a corresponding `UserRow` interface defined by Superflare.
-
-When you migrate your database, Superflare will automatically update your interfaces to match the new database schema.
-
-```
-npx superflare migrate
-```
-
-When you create a new table in a migration, you can run the following command to generate a new corresponding model for the table with types:
-
-```
-npx superflare migrate --create
-```
-
-Note that `Model.register` is required to be called for each model. This is how Superflare knows which models to load when you run [Jobs](#) and other background tasks.
-
-## Model Attributes
 
 ### Primary Key
 
