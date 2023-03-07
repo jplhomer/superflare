@@ -3,7 +3,7 @@
 import type { ArgumentsCamelCase, Argv, CamelCaseKey } from "yargs";
 
 /**
- * Yargs options included in every onlineornot command.
+ * Yargs options included in every superflare command.
  */
 export interface CommonYargsOptions {
   v: boolean | undefined;

@@ -1,6 +1,7 @@
 import { Argv } from "yargs";
 import { jobHandler, jobOptions } from "./generate/job";
 import { migrationHandler, migrationOptions } from "./generate/migration";
+import { modelHandler, modelOptions } from "./generate/model";
 
 export function generate(yargs: Argv) {
   return yargs
@@ -17,5 +18,12 @@ export function generate(yargs: Argv) {
       // @ts-expect-error: IDK
       migrationOptions,
       migrationHandler
+    )
+    .command(
+      "model <name>",
+      "Generate a Model",
+      // @ts-expect-error: IDK
+      modelOptions,
+      modelHandler
     );
 }

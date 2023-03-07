@@ -25,6 +25,11 @@ export async function migrationHandler(
   const db = argv.db || config?.d1?.[0] || "DB";
 
   logger.info("Generating migration...");
+  generateMigration(db, name);
+  logger.info("Migration generated!");
+}
+
+export function generateMigration(db: string, name: string) {
   spawnSync("npx", ["wrangler", "d1", "migrations", "create", db, name, "-j"], {
     stdio: "inherit",
     env: {
@@ -32,5 +37,4 @@ export async function migrationHandler(
       NO_D1_WARNING: "true",
     },
   });
-  logger.info("Migration generated!");
 }
