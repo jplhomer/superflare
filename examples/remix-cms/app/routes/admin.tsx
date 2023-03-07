@@ -16,7 +16,6 @@ import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Toast } from "~/components/Toast";
 import { json, type LoaderArgs, redirect } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
-import { Article } from "~/models/Article";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, end: true },
@@ -28,7 +27,7 @@ export async function loader({ context: { auth, session } }: LoaderArgs) {
     return redirect("/auth/login");
   }
 
-  const flash = session.get("flash");
+  const flash = session.getFlash("flash");
 
   const user = await auth.user(User);
 

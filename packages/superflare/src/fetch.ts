@@ -1,11 +1,14 @@
 import { DefineConfigResult, setConfig, Config } from "./config";
+import { type SuperflareSession } from "./session";
 
 export async function handleFetch<Env>(
   {
     config,
+    session,
     getSessionCookie,
   }: {
     config: DefineConfigResult<Env>;
+    session: SuperflareSession;
     /**
      * Superflare will commit changes to the session as a Cookie header on the outgoing response.
      * You must provide a way to get that cookie. This likely comes from your session storage.
@@ -26,10 +29,12 @@ export async function handleFetch<Env>(
    */
   const response = await getResponse();
 
-  /**
-   * Set the session cookie on the outgoing response's headers.
-   */
-  response.headers.set("Set-Cookie", await getSessionCookie());
+  if (session.isDirty()) {
+    /**
+     * Set the session cookie on the outgoing response's headers.
+     */
+    response.headers.set("Set-Cookie", await getSessionCookie());
+  }
 
   return response;
 }

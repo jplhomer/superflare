@@ -111,7 +111,6 @@ importers:
       '@remix-run/react': ^1.13.0
       '@remix-run/serve': ^1.13.0
       '@remix-run/server-runtime': ^1.13.0
-      '@superflare/remix': workspace:^0.0.1
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/typography': ^0.5.9
       '@types/marked': ^4.0.8
@@ -141,7 +140,6 @@ importers:
       '@remix-run/cloudflare': 1.13.0_f2nunn3czneiaufanhhmxbuesa
       '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.13.0
-      '@superflare/remix': link:../../packages/superflare-remix
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
       clsx: 1.2.1
       highlight.js: 11.7.0

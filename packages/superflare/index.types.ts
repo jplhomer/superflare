@@ -15,7 +15,7 @@ export { storage, servePublicPathFromStorage } from "./src/storage";
 export { Factory } from "./src/factory";
 export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
-export { session, Session } from "./src/session";
+export { SuperflareSession, Session } from "./src/session";
 export { Job } from "./src/job";
 export { Auth } from "./src/auth";
 export { hash } from "./src/hash";

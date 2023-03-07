@@ -11,7 +11,7 @@ import {
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { Auth, handleQueue } from "superflare";
-import { handleFetch } from "superflare";
+import { handleFetch, SuperflareSession } from "superflare";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -59,8 +59,8 @@ export default {
       },
     });
 
-    const session = await sessionStorage.getSession(
-      request.headers.get("Cookie")
+    const session = new SuperflareSession(
+      await sessionStorage.getSession(request.headers.get("Cookie"))
     );
 
     const loadContext = {
@@ -75,7 +75,9 @@ export default {
       return handleFetch(
         {
           config,
-          getSessionCookie: () => sessionStorage.commitSession(session),
+          session,
+          getSessionCookie: () =>
+            sessionStorage.commitSession(session.getSession()),
         },
         () => remixHandler(request, loadContext)
       );

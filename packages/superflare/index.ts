@@ -1,6 +1,6 @@
 export { setConfig, defineConfig } from "./src/config";
 export { Model } from "./src/model";
-export { session } from "./src/session";
+export { SuperflareSession } from "./src/session";
 export { DatabaseException } from "./src/query-builder";
 export { seed } from "./src/seeder";
 export { storage, servePublicPathFromStorage } from "./src/storage";
