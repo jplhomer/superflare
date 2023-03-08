@@ -29,5 +29,13 @@
         "queue": "remix-cms-queue"
       }
     ]
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CHANNELS",
+        "class_name": "Channel"
+      }
+    ]
   }
 }

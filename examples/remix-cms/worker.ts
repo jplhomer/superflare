@@ -13,6 +13,8 @@ import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { Auth, handleQueue } from "superflare";
 import { handleFetch, SuperflareSession } from "superflare";
 
+export { Channel } from "./app/objects/Channel";
+
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
 const assetManifest = JSON.parse(manifestJSON);

@@ -3,6 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
 import { Article } from "~/models/Article";
+import { useChannel } from "~/utils/use-channel";
 
 export async function loader() {
   const articles = await Article.with("user").orderBy("createdAt", "desc");
@@ -12,6 +13,10 @@ export async function loader() {
 
 export default function Articles() {
   const { articles } = useLoaderData<typeof loader>();
+
+  useChannel("foo", (event) => {
+    console.log(event);
+  });
 
   const ArticlesTable = (
     <div className="mt-8 flow-root">

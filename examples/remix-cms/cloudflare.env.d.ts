@@ -18,4 +18,5 @@ interface Env {
   REMIX_CMS_MEDIA: R2Bucket;
   APP_KEY: string;
   QUEUE: Queue;
+  CHANNELS: DurableObjectNamespace;
 }
