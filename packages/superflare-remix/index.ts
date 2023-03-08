@@ -4,7 +4,6 @@ import {
 } from "@remix-run/cloudflare";
 import {
   handleFetch as superflareHandleFetch,
-  type Session,
   Auth,
   SuperflareSession,
 } from "superflare";

@@ -8,6 +8,12 @@ declare module "__STATIC_CONTENT_MANIFEST" {
   export default value;
 }
 
+declare const process: {
+  env: {
+    NODE_ENV: "development" | "production";
+  };
+};
+
 interface Env {
   /**
    * Only used in Workers mode.

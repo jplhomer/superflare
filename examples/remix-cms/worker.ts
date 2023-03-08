@@ -8,7 +8,6 @@ import {
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { handleQueue } from "superflare";
-// import { handleFetch, SuperflareSession } from "superflare";
 import { handleFetch } from "@superflare/remix";
 
 export { Channel } from "./app/objects/Channel";
@@ -16,12 +15,6 @@ export { Channel } from "./app/objects/Channel";
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
 const assetManifest = JSON.parse(manifestJSON);
-
-declare const process: {
-  env: {
-    NODE_ENV: "development" | "production";
-  };
-};
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
