@@ -1,16 +1,17 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { json, type LoaderArgs } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRevalidator } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Button, SecondaryButton } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
 import { SayHelloJob } from "~/jobs/SayHelloJob";
 import { Article } from "~/models/Article";
+import { useChannel } from "~/utils/use-channel";
 import { ArticleForm } from "./components/article-form";
 
 export { action } from "./components/article-form";
 
-export async function loader({ params, context }: LoaderArgs) {
+export async function loader({ params }: LoaderArgs) {
   const { slug } = params;
 
   invariant(typeof slug === "string", "Missing slug");
@@ -28,6 +29,11 @@ export async function loader({ params, context }: LoaderArgs) {
 
 export default function NewArticle() {
   const { article } = useLoaderData<typeof loader>();
+  const { revalidate } = useRevalidator();
+  useChannel(`article.${article.slug}`, (message) => {
+    console.log(message);
+    revalidate();
+  });
 
   return (
     <Page

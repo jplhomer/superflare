@@ -89,6 +89,14 @@ export function registerListener(listener: any, event: any) {
   Config.listeners.set(eventClassName, listeners);
 }
 
+export function setEnv(env: any) {
+  Config.env = env;
+}
+
+export function getEnv() {
+  return Config.env;
+}
+
 export class Config {
   static appKey: SuperflareUserConfig["appKey"];
 
@@ -143,5 +151,8 @@ export type DefineConfigResult = SuperflareUserConfig;
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
 ): (ctx: DefineConfigContext<Env>) => DefineConfigResult {
-  return (ctx: DefineConfigContext<Env>) => setConfig(callback(ctx));
+  return (ctx: DefineConfigContext<Env>) => {
+    setEnv(ctx.env);
+    return setConfig(callback(ctx));
+  };
 }

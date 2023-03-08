@@ -32,6 +32,14 @@ export class Channel implements DurableObject {
         return new Response(null, { status: 101, webSocket: pair[0] });
       }
 
+      // TODO: Limit this to post method
+      case "/post": {
+        const message = await request.json();
+
+        // Broadcast the message to all connected clients.
+        this.broadcast(message);
+      }
+
       default:
         return new Response("Not found", { status: 404 });
     }
