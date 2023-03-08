@@ -1,0 +1,1 @@
+export { LogArticleUpdated } from "./LogArticleUpdated";

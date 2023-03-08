@@ -43,7 +43,7 @@ export async function getSuperflareConfig(
 
   try {
     const config = require(path.join(workingDir, "superflare.config.ts"));
-    const { userConfig: results } = config.default(ctxStub);
+    const results = config.default(ctxStub);
     const flippedEnvProxies = Object.entries(envProxies).reduce(
       (acc, [key, value]) => {
         acc[value as symbol] = key;

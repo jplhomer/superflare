@@ -19,6 +19,8 @@ export { SuperflareSession, Session } from "./src/session";
 export { Job } from "./src/job";
 export { Auth } from "./src/auth";
 export { hash } from "./src/hash";
+export { Event } from "./src/event";
+export { Listener, registerListeners } from "./src/listener";
 
 /**
  * Shape of the model instance.

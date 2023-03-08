@@ -1,3 +1,4 @@
+import { Listener } from "./listener";
 import type { Session } from "./session";
 
 export interface StorageDiskConfig {
@@ -21,11 +22,10 @@ export interface SuperflareUserConfig {
   database?: { default: D1Database } & Record<string, D1Database>;
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
   queues?: { default: Queue } & Record<string, Queue>;
+  listeners?: any[];
 }
 
-export function setConfig(
-  userConfig: SuperflareUserConfig & { session?: Session }
-) {
+export function setConfig(userConfig: SuperflareUserConfig) {
   Config.appKey = userConfig.appKey;
 
   if (userConfig.database) {
@@ -40,9 +40,6 @@ export function setConfig(
   }
   if (userConfig.queues) {
     Config.queues = userConfig.queues;
-  }
-  if (userConfig.session) {
-    Config.session = userConfig.session;
   }
 
   return userConfig;
@@ -76,6 +73,22 @@ export function getQueue(name: string) {
   return Config.queues?.[name];
 }
 
+export function registerEvent(event: any) {
+  Config.events = Config.events || {};
+  Config.events[event.name] = event;
+}
+
+export function getListenersForEventClass(eventClass: any) {
+  return Config.listeners.get(eventClass.name) || [];
+}
+
+export function registerListener(listener: any, event: any) {
+  const eventClassName = event.name;
+  const listeners = Config.listeners.get(eventClassName) || [];
+  listeners.push(listener);
+  Config.listeners.set(eventClassName, listeners);
+}
+
 export class Config {
   static appKey: SuperflareUserConfig["appKey"];
 
@@ -101,7 +114,11 @@ export class Config {
     [name: string]: any;
   };
 
-  static session?: Session;
+  static events?: {
+    [name: string]: any;
+  };
+
+  static listeners: Map<string, any[]> = new Map();
 }
 
 /**
@@ -121,16 +138,10 @@ type DefineConfigContext<Env = Record<string, any>> = {
  * Return both the userConfig and the ctx so we can re-use that in the request
  * handlers without asking the user to pass them again.
  */
-export type DefineConfigResult<Env> = {
-  userConfig: SuperflareUserConfig;
-  ctx: DefineConfigContext<Env>;
-};
+export type DefineConfigResult = SuperflareUserConfig;
 
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
-) {
-  return (ctx: DefineConfigContext<Env>) => ({
-    userConfig: callback(ctx),
-    ctx,
-  });
+): (ctx: DefineConfigContext<Env>) => DefineConfigResult {
+  return (ctx: DefineConfigContext<Env>) => setConfig(callback(ctx));
 }

@@ -3,53 +3,49 @@ import {
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
 import {
-  type DefineConfigResult,
   handleFetch as superflareHandleFetch,
   type Session,
   Auth,
-  setConfig,
+  SuperflareSession,
 } from "superflare";
 
 /**
  * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
  * It handles properly injecting things like `session` and `env` into the Remix load context.
  */
-export async function handleFetch<Env>(
+export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
-  config: DefineConfigResult<Env>,
+  env: Env,
+  ctx: ExecutionContext,
   remixHandler: (
     request: Request,
     loadContext: SuperflareAppLoadContext<Env>
   ) => Promise<Response>
 ) {
-  const { ctx, userConfig } = config;
-  const appKey = userConfig.appKey;
-
-  if (!appKey) {
+  if (!env.APP_KEY) {
     throw new Error(
-      "appKey is required. Please provide it in `superflare.config`"
+      "APP_KEY is required. Please ensure you have defined it as an environment variable."
     );
   }
-
-  setConfig(userConfig);
 
   const sessionStorage = createCookieSessionStorage({
     cookie: {
       httpOnly: true,
       path: "/",
       secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
-      secrets: [appKey],
+      secrets: [env.APP_KEY],
     },
   });
 
-  const session = await sessionStorage.getSession(
-    request.headers.get("Cookie")
+  const session = new SuperflareSession(
+    await sessionStorage.getSession(request.headers.get("Cookie"))
   );
 
   return await superflareHandleFetch(
     {
-      config,
-      getSessionCookie: () => sessionStorage.commitSession(session),
+      session,
+      getSessionCookie: () =>
+        sessionStorage.commitSession(session.getSession()),
     },
     async () => {
       /**
@@ -59,7 +55,8 @@ export async function handleFetch<Env>(
       const loadContext: SuperflareAppLoadContext<Env> = {
         session,
         auth: new Auth(session),
-        env: ctx.env as Env,
+        env,
+        ctx,
       };
       return await remixHandler(request, loadContext);
     }
@@ -67,7 +64,8 @@ export async function handleFetch<Env>(
 }
 
 export interface SuperflareAppLoadContext<Env> extends AppLoadContext {
-  session: Session;
+  session: SuperflareSession;
   auth: Auth;
   env: Env;
+  ctx: ExecutionContext;
 }

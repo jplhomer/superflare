@@ -1,4 +1,5 @@
 import { defineConfig } from "superflare";
+import { LogArticleUpdated } from "~/listeners";
 
 export default defineConfig<Env>((ctx) => {
   return {
@@ -15,5 +16,6 @@ export default defineConfig<Env>((ctx) => {
     queues: {
       default: ctx.env.QUEUE,
     },
+    listeners: [LogArticleUpdated],
   };
 });

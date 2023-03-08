@@ -1,7 +1,4 @@
-import {
-  createCookieSessionStorage,
-  createRequestHandler,
-} from "@remix-run/cloudflare";
+import { createRequestHandler } from "@remix-run/cloudflare";
 import getConfig from "./superflare.config";
 import * as build from "./build";
 import {
@@ -10,8 +7,9 @@ import {
   MethodNotAllowedError,
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import { Auth, handleQueue } from "superflare";
-import { handleFetch, SuperflareSession } from "superflare";
+import { handleQueue } from "superflare";
+// import { handleFetch, SuperflareSession } from "superflare";
+import { handleFetch } from "@superflare/remix";
 
 export { Channel } from "./app/objects/Channel";
 
@@ -52,33 +50,8 @@ export default {
       remixHandler = createRequestHandler(build as any, process.env.NODE_ENV);
     }
 
-    const sessionStorage = createCookieSessionStorage({
-      cookie: {
-        httpOnly: true,
-        path: "/",
-        secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
-        secrets: [env.APP_KEY],
-      },
-    });
-
-    const session = new SuperflareSession(
-      await sessionStorage.getSession(request.headers.get("Cookie"))
-    );
-
-    const loadContext = { session, auth: new Auth(session), env };
-
     try {
-      const config = getConfig({ request, env, ctx });
-
-      return handleFetch(
-        {
-          config,
-          session,
-          getSessionCookie: () =>
-            sessionStorage.commitSession(session.getSession()),
-        },
-        () => remixHandler(request, loadContext)
-      );
+      return handleFetch(request, env, ctx, remixHandler);
     } catch (reason) {
       console.error(reason);
       return new Response("Internal Server Error", { status: 500 });
@@ -92,6 +65,6 @@ export default {
   ): Promise<void[]> {
     const config = getConfig({ env, ctx });
 
-    return handleQueue(config, batch);
+    return handleQueue(config, ctx, batch);
   },
 };

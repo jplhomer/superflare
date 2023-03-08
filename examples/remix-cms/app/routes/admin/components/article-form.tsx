@@ -10,6 +10,7 @@ import invariant from "tiny-invariant";
 import { FormField } from "~/components/Form";
 import MarkdownComposer from "~/components/admin/MarkdownComposer";
 import { User } from "~/models/User";
+import { ArticleUpdated } from "~/events/ArticleUpdated";
 
 interface ActionData {
   title: string | null;
@@ -88,6 +89,8 @@ export async function action({
       article.slug = body.get("slug") as string;
 
       await article.save();
+
+      ArticleUpdated.dispatch(article);
 
       session.flash("flash", { success: "Article saved!" });
 
