@@ -27,3 +27,12 @@ export function modelToForeignKeyId(modelName: string): string {
 export function lowercaseFirstLetter(string: string) {
   return string.charAt(0).toLowerCase() + string.slice(1);
 }
+
+/**
+ * Sometimes, our bundle creates multiple references to the same imported module. This results
+ * in some references with numbers appended to them. We want to remove those numbers to sanitize
+ * the event names in order for client listeners to distinguish which events are being emitted.
+ */
+export function sanitizeModuleName(name: string) {
+  return name.replace(/\d+$/, "");
+}

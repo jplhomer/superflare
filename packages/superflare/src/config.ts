@@ -1,5 +1,6 @@
 import { Listener } from "./listener";
 import type { Session } from "./session";
+import { sanitizeModuleName } from "./string";
 
 export interface StorageDiskConfig {
   binding: R2Bucket;
@@ -61,8 +62,9 @@ export function getModel(name: string) {
  * Register a job into the Superflare config.
  */
 export function registerJob(job: any) {
+  const jobName = sanitizeModuleName(job.name);
   Config.jobs = Config.jobs || {};
-  Config.jobs[job.name] = job;
+  Config.jobs[jobName] = job;
 }
 
 export function getJob(name: string) {
@@ -74,17 +76,25 @@ export function getQueue(name: string) {
 }
 
 export function registerEvent(event: any) {
+  const eventName = sanitizeModuleName(event.name);
   Config.events = Config.events || {};
-  Config.events[event.name] = event;
+  Config.events[eventName] = event;
 }
 
 export function getListenersForEventClass(eventClass: any) {
-  return Config.listeners.get(eventClass.name) || [];
+  const eventName = sanitizeModuleName(eventClass.name);
+  console.log(Config.listeners);
+  return Config.listeners.get(eventName) || [];
 }
 
 export function registerListener(listener: any, event: any) {
-  const eventClassName = event.name;
+  const eventClassName = sanitizeModuleName(event.name);
   const listeners = Config.listeners.get(eventClassName) || [];
+  const sanitizedListenerName = sanitizeModuleName(listener.constructor.name);
+  if (listeners.some((l) => l.constructor.name === sanitizedListenerName)) {
+    return;
+  }
+
   listeners.push(listener);
   Config.listeners.set(eventClassName, listeners);
 }

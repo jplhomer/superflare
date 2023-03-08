@@ -1,4 +1,5 @@
 import { getEnv, getListenersForEventClass, registerEvent } from "./config";
+import { sanitizeModuleName } from "./string";
 
 export class Event {
   public static shouldQueue = false;
@@ -30,7 +31,7 @@ export class Event {
 }
 
 function dispatchEvent(event: Event): void {
-  console.log(`dispatching`, event.constructor.name);
+  console.log(`dispatching`, sanitizeModuleName(event.constructor.name));
   getListenersForEventClass(event.constructor).forEach((listener) => {
     const instance = new listener();
     instance.handle(event);
@@ -38,19 +39,18 @@ function dispatchEvent(event: Event): void {
 }
 
 async function broadcastEvent(event: Event, channelName: String) {
-  console.log(`broadcasting`, event.constructor.name);
+  console.log(`broadcasting`, sanitizeModuleName(event.constructor.name));
 
   const id = getEnv().CHANNELS.idFromName(channelName);
   const channel = getEnv().CHANNELS.get(id);
 
-  // TODO: Serialize any properties
   const data = {
-    event: event.constructor.name,
+    event: sanitizeModuleName(event.constructor.name),
     data: event,
   };
 
   // TODO: Read user-defined channel from config
-  await channel.fetch(new URL(`/post`, "https://example.com"), {
+  await channel.fetch(new URL("https://example.com/"), {
     method: "POST",
     body: JSON.stringify(data),
   });

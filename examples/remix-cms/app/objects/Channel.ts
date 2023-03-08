@@ -16,33 +16,29 @@ export class Channel implements DurableObject {
   }
 
   async fetch(request: Request) {
-    const url = new URL(request.url);
+    if (request.method === "POST") {
+      const message = await request.json();
 
-    switch (url.pathname) {
-      case "/subscribe": {
-        if (request.headers.get("Upgrade") !== "websocket") {
-          return new Response("expected websocket", { status: 400 });
-        }
+      // Broadcast the message to all connected clients.
+      this.broadcast(message);
 
-        const pair = new WebSocketPair();
-
-        await this.handleSession(pair[1]);
-
-        // Now we return the other end of the pair to the client.
-        return new Response(null, { status: 101, webSocket: pair[0] });
-      }
-
-      // TODO: Limit this to post method
-      case "/post": {
-        const message = await request.json();
-
-        // Broadcast the message to all connected clients.
-        this.broadcast(message);
-      }
-
-      default:
-        return new Response("Not found", { status: 404 });
+      return new Response("ok");
     }
+
+    if (request.method !== "GET") {
+      return new Response("Method not allowed", { status: 405 });
+    }
+
+    if (request.headers.get("Upgrade") !== "websocket") {
+      return new Response("expected websocket", { status: 400 });
+    }
+
+    const pair = new WebSocketPair();
+
+    await this.handleSession(pair[1]);
+
+    // Now we return the other end of the pair to the client.
+    return new Response(null, { status: 101, webSocket: pair[0] });
   }
 
   async handleSession(webSocket: WebSocket) {
