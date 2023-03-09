@@ -56,11 +56,10 @@ If you create your app with `npx superflare new`, you will be guided through the
 
 However, if you'd like to get started with broadcasting events manually, you'll need to:
 
-- Create a [Durable Object](https://developers.cloudflare.com/workers/learning/using-durable-objects) for your application. Superflare will guide you through this if you've created your app with `superflare new`, but you can also [copy this reference implementation](#).
-- Define your Durable Object in your `wrangler.json` file.
+- Export the `Channel` [Durable Object](https://developers.cloudflare.com/workers/learning/using-durable-objects) from Superflare in your `worker.ts` entrypoint.
+- Define the Durable Object in your `wrangler.json` file.
 - Add a `binding` to the [`broadcast` settings](#broadcast-settings) in your `superflare.config.ts` which corresponds with the Durable Object you defined above.
 - Create a route in your framework to handle incoming WebSocket connections.
-- Export the Durable Object class from your `worker.ts` entrypoint.
 
 ## Broadcast Settings
 
