@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.10
+
+### Patch Changes
+
+- 0aa44c9: Lots of changes. Please see the docs!
+
 ## 0.0.9
 
 ### Patch Changes
