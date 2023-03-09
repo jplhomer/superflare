@@ -31,13 +31,6 @@ export class Event {
       });
     } else {
       dispatchEvent(event);
-
-      if (event.broadcastTo) {
-        const channelName = event.broadcastTo();
-        if (channelName) {
-          broadcastEvent(event, channelName);
-        }
-      }
     }
   }
 
@@ -55,6 +48,13 @@ export function dispatchEvent(event: any): void {
     const instance = new listener();
     instance.handle(event);
   });
+
+  if (event.broadcastTo) {
+    const channelName = event.broadcastTo();
+    if (channelName) {
+      broadcastEvent(event, channelName);
+    }
+  }
 }
 
 async function broadcastEvent(event: Event, channelName: string) {

@@ -44,6 +44,9 @@ export function useChannel(
 
     return () => {
       socket.current?.removeEventListener("message", onMessage);
+
+      // TODO: Close websocket when we navigate away from the current page.
+      // socket.current?.close();
     };
   }, [channelName, onMessage]);
 }

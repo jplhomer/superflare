@@ -1,6 +1,6 @@
 import { type SuperflareSession } from "./session";
 
-export async function handleFetch<Env>(
+export async function handleFetch(
   {
     session,
     getSessionCookie,
@@ -14,6 +14,14 @@ export async function handleFetch<Env>(
   },
   getResponse: () => Promise<Response>
 ) {
+  /**
+   * Some session storage mechanisms might not assign a proper `id`. No worries!
+   * We will assign our own here as a value in the session itself.
+   */
+  if (!session.has("sessionId")) {
+    session.set("sessionId", crypto.randomUUID());
+  }
+
   /**
    * Run the framework code and get a response.
    */

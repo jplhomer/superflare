@@ -46,15 +46,7 @@ export async function handleWebSockets(
     }
 
     // Get the channel configuration name with asterisks and convert them to real values
-    const inputValues = channelName.split(".");
-    const configValues = configName.split(".");
-    const dynamicValues = configValues
-      .map((value, index) => {
-        if (value === "*") {
-          return inputValues[index];
-        }
-      })
-      .filter(Boolean) as string[];
+    const dynamicValues = getValuesFromChannelName(channelName, configName);
 
     // Call the authorize function with the user + the values as arguments
     const isAuthorized = await config.authorize(user, ...dynamicValues);
@@ -72,8 +64,66 @@ export async function handleWebSockets(
     );
   }
 
+  const userPayload: UserPayload = {
+    /**
+     * This is set in the `handleFetch` function.
+     */
+    sessionId: session?.get("sessionId"),
+  };
+
+  if (config?.presence) {
+    if (!auth) {
+      throw new Error(
+        "You must provide `auth` to `handleWebSockets` in order to use a Presence channel"
+      );
+    }
+
+    if (!userModel) {
+      throw new Error(
+        "You must provide `userModel` to `handleWebSockets` in order to use a Presence channel"
+      );
+    }
+
+    const user = await auth.user(userModel);
+
+    /**
+     * We need a user to execute the `presence` function
+     */
+    if (!user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const dynamicValues = getValuesFromChannelName(channelName, configName);
+
+    userPayload.presenceData = await config.presence(user, ...dynamicValues);
+  }
+
+  /**
+   * Get the Durable Object instance from the namespace by the channelName.
+   */
   const id = binding.idFromName(channelName);
   const channel = binding.get(id);
 
-  return channel.fetch("https://example.com/", request);
+  const newUrl = new URL(url);
+  newUrl.searchParams.set("user", JSON.stringify(userPayload));
+
+  return channel.fetch(newUrl.toString(), request);
+}
+
+interface UserPayload {
+  sessionId?: string;
+  presenceData?: any;
+}
+
+function getValuesFromChannelName(channelName: string, configName: string) {
+  const inputValues = channelName.split(".");
+  const configValues = configName.split(".");
+  const dynamicValues = configValues
+    .map((value, index) => {
+      if (value === "*") {
+        return inputValues[index];
+      }
+    })
+    .filter(Boolean) as string[];
+  return dynamicValues;
 }

@@ -18,9 +18,12 @@ type ChannelAuthorizeFunction = (
   ...args: any
 ) => boolean | Promise<boolean>;
 
+type ChannelPresenceFunction = (user: any, ...args: any) => any | Promise<any>;
+
 export type ChannelConfig = {
   binding?: DurableObjectNamespace;
   authorize?: ChannelAuthorizeFunction;
+  presence?: ChannelPresenceFunction;
 };
 
 interface ChannelsConfig {
@@ -106,7 +109,6 @@ export function getEvent(name: string) {
 
 export function getListenersForEventClass(eventClass: any) {
   const eventName = sanitizeModuleName(eventClass.name);
-  console.log(Config.listeners);
   return Config.listeners.get(eventName) || [];
 }
 

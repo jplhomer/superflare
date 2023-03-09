@@ -1,8 +1,13 @@
 interface Session {
   webSocket: WebSocket;
-  blockedMessages: string[];
-  name?: string;
+  id: string;
   quit?: boolean;
+  user?: UserPayload;
+}
+
+interface UserPayload {
+  sessionId?: string;
+  presenceData?: any;
 }
 
 export class Channel implements DurableObject {
@@ -35,30 +40,35 @@ export class Channel implements DurableObject {
 
     const pair = new WebSocketPair();
 
-    await this.handleSession(pair[1]);
+    const url = new URL(request.url);
+    const user = JSON.parse(url.searchParams.get("user") || "{}");
+
+    await this.handleSession(pair[1], user);
 
     // Now we return the other end of the pair to the client.
     return new Response(null, { status: 101, webSocket: pair[0] });
   }
 
-  async handleSession(webSocket: WebSocket) {
+  async handleSession(webSocket: WebSocket, user?: UserPayload) {
     // @ts-ignore idk?
     webSocket.accept();
 
     // Create our session and add it to the sessions list.
-    // We don't send any messages to the client until it has sent us the initial user info
-    // message. Until then, we will queue messages in `session.blockedMessages`.
-    const session: Session = { webSocket, blockedMessages: [] };
+    const session: Session = {
+      webSocket,
+      user,
+      id: user?.sessionId || "anonymous",
+    };
     this.sessions.push(session);
 
-    // Queue "join" messages for all online users, to populate the client's roster.
-    this.sessions.forEach((otherSession) => {
-      if (otherSession.name) {
-        session.blockedMessages.push(
-          JSON.stringify({ joined: otherSession.name })
-        );
-      }
-    });
+    // TODO: Queue up a `here` message containing all the other members
+    // this.sessions.forEach((otherSession) => {
+    //   if (otherSession.user?.presenceData) {
+    //     session.blockedMessages.push(
+    //       JSON.stringify({ joined: user?.presenceData })
+    //     );
+    //   }
+    // });
 
     let receivedInitialMessage = false;
 
@@ -68,14 +78,10 @@ export class Channel implements DurableObject {
         let data = JSON.parse(message.data);
 
         if (!receivedInitialMessage) {
-          // The first message the client sends is the user info message with their name. Save it
-          // into their session object.
-          session.name = "" + (data.name || "anonymous");
-
           // Broadcast to all other connections that this user has joined.
-          this.broadcast({ joined: session.name });
-
-          webSocket.send(JSON.stringify({ ready: true }));
+          if (session.user?.presenceData) {
+            this.broadcast({ joined: session.user.presenceData });
+          }
 
           receivedInitialMessage = true;
 
@@ -83,14 +89,10 @@ export class Channel implements DurableObject {
         }
 
         // Construct sanitized message for storage and broadcast.
-        data = { name: session.name, message: "" + data.message };
+        data = { message: "" + data.message };
 
         let dataStr = JSON.stringify(data);
         this.broadcast(dataStr);
-
-        // Save message.
-        let key = new Date(data.timestamp).toISOString();
-        await this.storage.put(key, dataStr);
       } catch (e: any) {
         webSocket.send(JSON.stringify({ error: e.message }));
       }
@@ -101,8 +103,8 @@ export class Channel implements DurableObject {
     let closeOrErrorHandler = () => {
       session.quit = true;
       this.sessions = this.sessions.filter((member) => member !== session);
-      if (session.name) {
-        this.broadcast({ quit: session.name });
+      if (session.user?.presenceData) {
+        this.broadcast({ quit: session.user.presenceData });
       }
     };
     webSocket.addEventListener("close", closeOrErrorHandler);
@@ -117,28 +119,21 @@ export class Channel implements DurableObject {
     // Iterate over all the sessions sending them messages.
     let quitters: Session[] = [];
     this.sessions = this.sessions.filter((session) => {
-      if (session.name) {
-        try {
-          session.webSocket.send(message);
-          return true;
-        } catch (err) {
-          // Whoops, this connection is dead. Remove it from the list and arrange to notify
-          // everyone below.
-          session.quit = true;
-          quitters.push(session);
-          return false;
-        }
-      } else {
-        // This session hasn't sent the initial user info message yet, so we're not sending them
-        // messages yet (no secret lurking!). Queue the message to be sent later.
-        session.blockedMessages.push(message);
+      try {
+        session.webSocket.send(message);
         return true;
+      } catch (err) {
+        // Whoops, this connection is dead. Remove it from the list and arrange to notify
+        // everyone below.
+        session.quit = true;
+        quitters.push(session);
+        return false;
       }
     });
 
     quitters.forEach((quitter) => {
-      if (quitter.name) {
-        this.broadcast({ quit: quitter.name });
+      if (quitter.user?.presenceData) {
+        this.broadcast({ quit: quitter.user.presenceData });
       }
     });
   }

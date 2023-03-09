@@ -37,6 +37,7 @@ async function handleQueueMessage(message: Message, ctx: ExecutionContext) {
 
   if (instance instanceof Event) {
     dispatchEvent(instance);
+
     return;
   }
 
