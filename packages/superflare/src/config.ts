@@ -1,5 +1,3 @@
-import { Listener } from "./listener";
-import type { Session } from "./session";
 import { sanitizeModuleName } from "./string";
 
 export interface StorageDiskConfig {
@@ -15,6 +13,21 @@ export interface StorageDiskConfig {
   publicPath?: string;
 }
 
+type ChannelAuthorizeFunction = (
+  user: any,
+  ...args: any
+) => boolean | Promise<boolean>;
+
+interface ChannelsConfig {
+  default: {
+    binding: DurableObjectNamespace;
+  };
+  [name: string]: {
+    binding?: DurableObjectNamespace;
+    authorize?: ChannelAuthorizeFunction;
+  };
+}
+
 export interface SuperflareUserConfig {
   /**
    * A secret key used to sign cookies and other sensitive data.
@@ -24,6 +37,7 @@ export interface SuperflareUserConfig {
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
   queues?: { default: Queue } & Record<string, Queue>;
   listeners?: any[];
+  channels?: ChannelsConfig;
 }
 
 export function setConfig(userConfig: SuperflareUserConfig) {
@@ -41,6 +55,9 @@ export function setConfig(userConfig: SuperflareUserConfig) {
   }
   if (userConfig.queues) {
     Config.queues = userConfig.queues;
+  }
+  if (userConfig.channels) {
+    Config.channels = userConfig.channels;
   }
 
   return userConfig;
@@ -107,6 +124,14 @@ export function getEnv() {
   return Config.env;
 }
 
+export function getChannelNames() {
+  return Object.keys(Config.channels || {});
+}
+
+export function getChannel(name: string) {
+  return Config.channels?.[name as keyof typeof Config.channels];
+}
+
 export class Config {
   static appKey: SuperflareUserConfig["appKey"];
 
@@ -137,6 +162,8 @@ export class Config {
   };
 
   static listeners: Map<string, any[]> = new Map();
+
+  static channels: SuperflareUserConfig["channels"];
 }
 
 /**

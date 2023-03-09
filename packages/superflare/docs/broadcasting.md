@@ -64,7 +64,7 @@ However, if you'd like to get started with broadcasting events manually, you'll 
 
 ## Broadcast Settings
 
-To configure broadcasting, add a `broadcast` key to your `superflare.config.ts` file.
+To configure broadcasting, add a `channels` key to your `superflare.config.ts` file.
 
 The only required setting is to define a default Durable Object binding for your channels:
 
@@ -74,7 +74,7 @@ import { defineConfig } from "superflare";
 export default defineConfig((ctx) => {
   return {
     // ...
-    broadcast: {
+    channels: {
       default: {
         binding: ctx.env.CHANNEL,
       },
@@ -93,18 +93,16 @@ import { Post } from "~/app/models/Post";
 export default defineConfig((ctx) => {
   return {
     // ...
-    broadcast: {
+    channels: {
       default: {
         binding: ctx.env.CHANNEL,
       },
-      channels: {
-        "posts.*": {
-          binding: ctx.env.POSTS_CHANNEL,
-          async authorize(user: User, postId: number) {
-            const post = await Post.find(postId);
+      "posts.*": {
+        binding: ctx.env.POSTS_CHANNEL,
+        async authorize(user: User, postId: number) {
+          const post = await Post.find(postId);
 
-            return user.id === post.userId;
-          },
+          return user.id === post.userId;
         },
       },
     },
