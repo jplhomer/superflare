@@ -5,7 +5,6 @@ import { homedir } from "node:os";
 import { inspect } from "node:util";
 import path from "node:path";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
-import { logger } from "./logger";
 import { createD1Database } from "./d1-database";
 
 export function consoleOptions(yargs: CommonYargsArgv) {
@@ -92,7 +91,7 @@ export async function createRepl({
    * Run the Superflare `config` to ensure Models have access to the database.
    */
   server.eval(
-    `const {config} = require('superflare'); config({database: { default: db }});`,
+    `const {setConfig} = require('superflare'); setConfig({database: { default: db }});`,
     server.context,
     "repl",
     () => {}
