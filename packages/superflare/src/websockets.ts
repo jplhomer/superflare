@@ -9,14 +9,18 @@ export async function handleWebSockets(
     auth,
     session,
     userModel,
+    channelName: specifiedChannelName,
   }: {
     auth?: Auth;
     session?: SuperflareSession;
     userModel?: any;
+    channelName?: string;
   } = {}
 ) {
   const url = new URL(request.url);
-  const channelName = url.pathname.split("/").pop();
+  const channelNameFrompath = url.pathname.split("/").pop();
+
+  const channelName = specifiedChannelName || channelNameFrompath;
 
   invariant(channelName, "Channel name is required");
 
@@ -64,7 +68,7 @@ export async function handleWebSockets(
 
   if (!binding) {
     throw new Error(
-      `No channel binding found for ${channelName}. Please update your superflare.config.`
+      `No channel binding found for "${channelName}". Please update your superflare.config.`
     );
   }
 
