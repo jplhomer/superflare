@@ -116,6 +116,14 @@ Channels are a way to group users together, and broadcast events to them. You ca
 
 Unique channel names correspond to unique instances of a given Durable Object class.
 
+When you define channel configurations, you can use asterisks `*` separated by periods `.` to denote dynamic fields within channel names. For example, if you wanted to broadcast events to a specific post, you could define a channel name like `posts.*`.
+
+When you broadcast an event to a channel, you can pass any number of arguments to the event's `broadcastTo` method. These arguments will be passed to the `authorize` method on the channel configuration, if one is defined.
+
+For example, a `broadcastTo` function returning a channel name of `posts.123` would match the channel name configuration for `posts.*`.
+
+If multiple channels match an event being broadcast, the channel with the most specific match will be used.
+
 ### Public Channels
 
 By default, all channels are public, and any user can subscribe to them. You can restrict access to a channel by defining an `authorize` method in your `superflare.config.ts` file.
