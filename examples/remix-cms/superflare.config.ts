@@ -16,7 +16,9 @@ export default defineConfig<Env>((ctx) => {
     queues: {
       default: ctx.env.QUEUE,
     },
-    listeners: [LogArticleUpdated],
+    listeners: {
+      ArticleUpdated: [LogArticleUpdated],
+    },
     channels: {
       default: {
         binding: ctx.env.CHANNELS,

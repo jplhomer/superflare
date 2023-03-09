@@ -41,7 +41,9 @@ export interface SuperflareUserConfig {
   database?: { default: D1Database } & Record<string, D1Database>;
   storage?: { default: StorageDiskConfig } & Record<string, StorageDiskConfig>;
   queues?: { default: Queue } & Record<string, Queue>;
-  listeners?: any[];
+  listeners?: {
+    [name: string]: any[];
+  };
   channels?: ChannelsConfig;
 }
 
@@ -63,6 +65,9 @@ export function setConfig(userConfig: SuperflareUserConfig) {
   }
   if (userConfig.channels) {
     Config.channels = userConfig.channels;
+  }
+  if (userConfig.listeners) {
+    Config.listeners = new Map(Object.entries(userConfig.listeners));
   }
 
   return userConfig;
@@ -110,18 +115,6 @@ export function getEvent(name: string) {
 export function getListenersForEventClass(eventClass: any) {
   const eventName = sanitizeModuleName(eventClass.name);
   return Config.listeners.get(eventName) || [];
-}
-
-export function registerListener(listener: any, event: any) {
-  const eventClassName = sanitizeModuleName(event.name);
-  const listeners = Config.listeners.get(eventClassName) || [];
-  const sanitizedListenerName = sanitizeModuleName(listener.constructor.name);
-  if (listeners.some((l) => l.constructor.name === sanitizedListenerName)) {
-    return;
-  }
-
-  listeners.push(listener);
-  Config.listeners.set(eventClassName, listeners);
 }
 
 export function setEnv(env: any) {
