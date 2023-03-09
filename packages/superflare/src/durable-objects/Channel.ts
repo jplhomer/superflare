@@ -10,6 +10,8 @@ interface UserPayload {
   presenceData?: any;
 }
 
+type Env = unknown;
+
 export class Channel implements DurableObject {
   storage: DurableObjectStorage;
   sessions: Session[] = [];

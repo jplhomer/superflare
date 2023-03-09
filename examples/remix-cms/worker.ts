@@ -10,7 +10,7 @@ import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { handleQueue } from "superflare";
 import { handleFetch } from "@superflare/remix";
 
-export { Channel } from "./app/objects/Channel";
+export { Channel } from "superflare";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 

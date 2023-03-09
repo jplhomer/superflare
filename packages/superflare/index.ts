@@ -13,3 +13,4 @@ export { hash } from "./src/hash";
 export { Event } from "./src/event";
 export { Listener, registerListeners } from "./src/listener";
 export { handleWebSockets } from "./src/websockets";
+export { Channel } from "./src/durable-objects/Channel";
