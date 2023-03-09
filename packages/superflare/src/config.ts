@@ -18,14 +18,16 @@ type ChannelAuthorizeFunction = (
   ...args: any
 ) => boolean | Promise<boolean>;
 
+export type ChannelConfig = {
+  binding?: DurableObjectNamespace;
+  authorize?: ChannelAuthorizeFunction;
+};
+
 interface ChannelsConfig {
   default: {
     binding: DurableObjectNamespace;
   };
-  [name: string]: {
-    binding?: DurableObjectNamespace;
-    authorize?: ChannelAuthorizeFunction;
-  };
+  [name: string]: ChannelConfig;
 }
 
 export interface SuperflareUserConfig {

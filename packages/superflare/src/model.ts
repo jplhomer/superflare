@@ -4,7 +4,11 @@ import { QueryBuilder } from "./query-builder";
 import { BelongsTo } from "./relations/belongs-to";
 import { HasMany } from "./relations/has-many";
 import { HasOne } from "./relations/has-one";
-import { lowercaseFirstLetter, modelToForeignKeyId } from "./string";
+import {
+  lowercaseFirstLetter,
+  modelToForeignKeyId,
+  sanitizeModuleName,
+} from "./string";
 
 interface Constructor<T> {
   new (...args: any): T;
@@ -256,14 +260,15 @@ export class Model {
   }
 
   belongsTo(model: any, foreignKey?: string, ownerKey?: string) {
-    foreignKey = foreignKey || modelToForeignKeyId(model.name);
+    const modelName = sanitizeModuleName(model.name);
+    foreignKey = foreignKey || modelToForeignKeyId(modelName);
     ownerKey = ownerKey || "id";
 
     /**
      * We assume the relation name is the lowercase version of the model name.
      * This might be a bad assumption, but it's a start.
      */
-    const relationName = lowercaseFirstLetter(model.name);
+    const relationName = lowercaseFirstLetter(modelName);
 
     return new BelongsTo(
       model.query(),
@@ -275,27 +280,32 @@ export class Model {
   }
 
   hasOne(model: any, foreignKey?: string, ownerKey?: string) {
-    foreignKey = foreignKey || modelToForeignKeyId(this.constructor.name);
+    const constructorName = sanitizeModuleName(this.constructor.name);
+    const modelName = sanitizeModuleName(model.name);
+    foreignKey = foreignKey || modelToForeignKeyId(constructorName);
     ownerKey = ownerKey || "id";
 
     /**
      * We assume the relation name is the lowercase version of the model name.
      * This might be a bad assumption, but it's a start.
      */
-    const relationName = lowercaseFirstLetter(model.name);
+    const relationName = lowercaseFirstLetter(modelName);
 
     return new HasOne(model.query(), this, foreignKey, ownerKey, relationName);
   }
 
   hasMany(model: any, foreignKey?: string, ownerKey?: string) {
-    foreignKey = foreignKey || modelToForeignKeyId(this.constructor.name);
+    const constructorName = sanitizeModuleName(this.constructor.name);
+    const modelName = sanitizeModuleName(model.name);
+
+    foreignKey = foreignKey || modelToForeignKeyId(constructorName);
     ownerKey = ownerKey || "id";
 
     /**
      * We assume the relation name is the lowercase version of the model name.
      * This might be a bad assumption, but it's a start.
      */
-    const relationName = pluralize(lowercaseFirstLetter(model.name));
+    const relationName = pluralize(lowercaseFirstLetter(modelName));
 
     return new HasMany(model.query(), this, foreignKey, ownerKey, relationName);
   }

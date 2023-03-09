@@ -21,6 +21,7 @@ export { Auth } from "./src/auth";
 export { hash } from "./src/hash";
 export { Event } from "./src/event";
 export { Listener, registerListeners } from "./src/listener";
+export { handleWebSockets } from "./src/websockets";
 
 /**
  * Shape of the model instance.

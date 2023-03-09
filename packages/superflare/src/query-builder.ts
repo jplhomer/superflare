@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { modelToTableName } from "./string";
+import { modelToTableName, sanitizeModuleName } from "./string";
 
 export class QueryBuilder {
   private $selects: string[] = [];
@@ -16,7 +16,8 @@ export class QueryBuilder {
   constructor(public modelInstance: any) {
     this.$modelClass = modelInstance.constructor;
     this.$from =
-      this.$modelClass.table || modelToTableName(this.$modelClass.name);
+      this.$modelClass.table ||
+      modelToTableName(sanitizeModuleName(this.$modelClass.name));
   }
 
   select(...fields: string[]) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { channelNameToConfigName } from "../src/event";
+import { channelNameToConfigName } from "../src/channels";
 
 describe("channelNameToConfigName", () => {
   it("works with a single replacement", () => {

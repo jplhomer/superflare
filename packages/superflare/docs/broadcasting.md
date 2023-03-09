@@ -134,14 +134,14 @@ You will need to define a route in your framework to send WebSocket connections 
 
 Superflare provides a `handleWebSockets` method to handle the WebSocket connections as well as handling any authorization for channels you have defined within your `superflare.config.ts` file.
 
-You must provide the `Request` as well as the `SuperflareAuth` and `SuperflareSession` instances to the helper function in order to support authorization.
+You must provide the incoming `Request`. If you plan to authorize channels, you must pass the `SuperflareAuth` and `SuperflareSession` instances as well as your `User` model to the helper function.
 
 ```ts
 // app/routes/channels.$.ts
 import { handleWebSockets } from "superflare";
 
 export async loader({request, context: { auth, session }}) {
-  return handleWebSockets(request, auth, session);
+  return handleWebSockets(request, { auth, session, userModel: User });
 }
 ```
 
@@ -150,7 +150,10 @@ Any GET requests to `/channels/{channelName}` will be handled by the WebSocket h
 Superflare assumes the last part of the Request URL pathname separated by `/` will be the name of your channel. If you'd like to customize this behavior, you can pass a custom `channelName` to the `handleWebSockets` method.
 
 ```ts
-return handleWebSockets(request, auth, session, {
+return handleWebSockets(request, {
+  auth,
+  session,
+  userModel: User,
   channelName: "my-custom-channel",
 });
 ```
