@@ -100,6 +100,10 @@ export function registerEvent(event: any) {
   Config.events[eventName] = event;
 }
 
+export function getEvent(name: string) {
+  return Config.events?.[name];
+}
+
 export function getListenersForEventClass(eventClass: any) {
   const eventName = sanitizeModuleName(eventClass.name);
   console.log(Config.listeners);

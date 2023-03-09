@@ -1,23 +1,35 @@
 import { getBindingForChannelName } from "./channels";
-import {
-  getChannel,
-  getChannelNames,
-  getListenersForEventClass,
-  registerEvent,
-} from "./config";
+import { getListenersForEventClass, getQueue, registerEvent } from "./config";
+import { serializeArguments } from "./serialize";
 import { sanitizeModuleName } from "./string";
 
 export class Event {
   public static shouldQueue = false;
+  public static queue = "default";
 
-  public static dispatch<T extends Event>(
-    this: { new (...arg: any[]): T; shouldQueue: boolean },
+  public static async dispatch<T extends Event>(
+    this: { new (...arg: any[]): T; shouldQueue: boolean; queue: string },
     ...args: any[]
-  ): void {
+  ): Promise<void> {
+    const event = new this(...args);
     if (this.shouldQueue) {
-      // TODO: Queue the event.
+      /**
+       * We can't use an internal Job for this, because that creates circular reference issues between
+       * `job.ts` and `event.ts`. Instead, we stick it directly on the queue.
+       */
+      const queueName = this.queue ?? "default";
+      const queue = getQueue(queueName);
+
+      if (!queue) {
+        throw new Error(`Queue ${queueName} not found.`);
+      }
+
+      // TODO: Wrap this in ctx.waitUntil
+      queue.send({
+        event: sanitizeModuleName(this.name),
+        payload: serializeArguments(args),
+      });
     } else {
-      const event = new this(...args);
       dispatchEvent(event);
 
       if (event.broadcastTo) {
@@ -36,8 +48,9 @@ export class Event {
   }
 }
 
-function dispatchEvent(event: Event): void {
-  console.log(`dispatching`, sanitizeModuleName(event.constructor.name));
+export function dispatchEvent(event: any): void {
+  // console.log(`dispatching`, sanitizeModuleName(event.constructor.name));
+
   getListenersForEventClass(event.constructor).forEach((listener) => {
     const instance = new listener();
     instance.handle(event);
@@ -45,7 +58,7 @@ function dispatchEvent(event: Event): void {
 }
 
 async function broadcastEvent(event: Event, channelName: string) {
-  console.log(`broadcasting`, sanitizeModuleName(event.constructor.name));
+  // console.log(`broadcasting`, sanitizeModuleName(event.constructor.name));
 
   const binding = getBindingForChannelName(channelName);
 

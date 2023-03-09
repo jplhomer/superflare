@@ -90,7 +90,7 @@ export async function action({
 
       await article.save();
 
-      ArticleUpdated.dispatch(article);
+      await ArticleUpdated.dispatch(article);
 
       session.flash("flash", { success: "Article saved!" });
 

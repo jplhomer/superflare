@@ -1,5 +1,13 @@
-import { DefineConfigResult, setConfig, SuperflareUserConfig } from "./config";
-import { hydrateJobFromQueuePayload, JobPayload } from "./job";
+import { DefineConfigResult, getEvent, getJob, setConfig } from "./config";
+import { dispatchEvent, Event } from "./event";
+import { Job } from "./job";
+import { hydrateArguments } from "./serialize";
+
+export interface MessagePayload {
+  job?: string;
+  event?: string;
+  payload: any;
+}
 
 export async function handleQueue<Env>(
   config: DefineConfigResult,
@@ -18,7 +26,44 @@ export async function handleQueue<Env>(
 }
 
 async function handleQueueMessage(message: Message, ctx: ExecutionContext) {
-  const job = await hydrateJobFromQueuePayload(message.body as JobPayload);
+  const instance = await hydrateInstanceFromQueuePayload(
+    message.body as MessagePayload
+  );
 
-  await job.handle();
+  if (instance instanceof Job) {
+    await instance.handle();
+    return;
+  }
+
+  if (instance instanceof Event) {
+    dispatchEvent(instance);
+    return;
+  }
+
+  throw new Error(`Could not hydrate instance from queue payload.`);
 }
+
+/**
+ * Create an instance of a Job or Event class from a Queue message payload.
+ */
+async function hydrateInstanceFromQueuePayload(payload: MessagePayload) {
+  if (payload.event) {
+    const eventClass = getEvent(payload.event) as Constructor<Event>;
+    const constructorArgs = await hydrateArguments(payload.payload);
+    const event = new eventClass(...constructorArgs);
+
+    return event;
+  }
+
+  if (payload.job) {
+    const jobClass = getJob(payload.job) as Constructor<Job>;
+    const constructorArgs = await hydrateArguments(payload.payload);
+    const job = new jobClass(...constructorArgs);
+
+    return job;
+  }
+
+  throw new Error(`Job payload does not contain a job or event.`);
+}
+
+type Constructor<T> = new (...args: any[]) => T;
