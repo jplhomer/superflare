@@ -1,0 +1,26 @@
+diff --git a/dist/compiler/compilerServer.js b/dist/compiler/compilerServer.js
+index bcc095347b4a8ccf553be660dfc26512c3107793..2b56fc2b84873061e53d0319f04081ba9eda2524 100644
+--- a/dist/compiler/compilerServer.js
++++ b/dist/compiler/compilerServer.js
+@@ -89,6 +89,21 @@ const createEsbuildConfig = (config, assetsManifestChannel, options) => {
+   if (config.serverPlatform !== "node") {
+     plugins.unshift(nodeModulesPolyfill.NodeModulesPolyfillPlugin());
+   }
++  /**
++   * PATCH: Preserve `node:` imports to support Workers Node Compat mode.
++   */
++  const nodejsCompatPlugin = {
++    name: "nodejs_compat Plugin",
++    setup(pluginBuild) {
++      pluginBuild.onResolve({ filter: /node:.*/ }, () => {
++        return { external: true };
++      });
++    },
++  };
++  /**
++   * ENDPATCH.
++   */
++  plugins.push(nodejsCompatPlugin);
+   return {
+     absWorkingDir: config.rootDirectory,
+     stdin,
