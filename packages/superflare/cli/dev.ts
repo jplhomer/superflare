@@ -102,6 +102,8 @@ export async function devHandler(
     isWorkersMode && "--site public",
     "--compatibility-date",
     argv.compatibilityDate,
+    "---compatibility-flag",
+    "nodejs_compat",
     "--port",
     argv.port,
     isPagesMode &&

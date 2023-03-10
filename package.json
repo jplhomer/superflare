@@ -26,5 +26,10 @@
   "dependencies": {
     "@changesets/changelog-git": "^0.1.14",
     "@changesets/cli": "^2.26.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@remix-run/dev@1.14.1": "patches/@remix-run__dev@1.14.1.patch"
+    }
   }
 }

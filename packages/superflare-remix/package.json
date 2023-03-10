@@ -7,12 +7,20 @@
   "bugs": {
     "url": "https://github.com/jplhomer/superflare/issues"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup index.ts --dts",
-    "dev": "tsup index.ts --dts --watch"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepack": "pnpm build"
   },
   "keywords": [
     "remix",
