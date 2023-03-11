@@ -23,6 +23,7 @@ export { Event } from "./src/event";
 export { Listener } from "./src/listener";
 export { handleWebSockets } from "./src/websockets";
 export { Channel } from "./src/durable-objects/Channel";
+export { Schema } from "./src/schema";
 
 /**
  * Shape of the model instance.

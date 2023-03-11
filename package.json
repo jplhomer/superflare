@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter='./packages/*' --parallel",
     "dev": "turbo run dev --parallel",
     "test": "NODE_OPTIONS=--no-warnings npx vitest",
     "lint": "turbo run lint",
