@@ -1,6 +1,9 @@
-import { DefineConfigResult, getEvent, getJob, setConfig } from "./config";
+import { asyncLocalStorage, runWithContext } from "./context";
+import { defineConfig } from "./config";
+import { getContextFromUserConfig } from "./context";
 import { dispatchEvent, Event } from "./event";
 import { Job } from "./job";
+import { getEvent, getJob } from "./registry";
 import { hydrateArguments } from "./serialize";
 
 export interface MessagePayload {
@@ -10,19 +13,19 @@ export interface MessagePayload {
 }
 
 export async function handleQueue<Env>(
-  config: DefineConfigResult,
+  batch: MessageBatch,
+  env: Env,
   ctx: ExecutionContext,
-  batch: MessageBatch
+  config: ReturnType<typeof defineConfig<Env>>
 ) {
-  /**
-   * Set the user config into the singleton context.
-   * TODO: Replace this with AsyncLocalStorage when available.
-   */
-  setConfig(config);
+  const context = getContextFromUserConfig(config({ env, ctx }));
+  context.env = env;
 
-  return await Promise.all(
-    batch.messages.map((message) => handleQueueMessage(message, ctx))
-  );
+  return await runWithContext(context, async () => {
+    return await Promise.all(
+      batch.messages.map((message) => handleQueueMessage(message, ctx))
+    );
+  });
 }
 
 async function handleQueueMessage(message: Message, ctx: ExecutionContext) {

@@ -1,6 +1,7 @@
 import pluralize from "pluralize";
-import { Config, registerModel } from "./config";
+import { getDatabase } from "./context";
 import { QueryBuilder } from "./query-builder";
+import { registerModel } from "./registry";
 import { BelongsTo } from "./relations/belongs-to";
 import { HasMany } from "./relations/has-many";
 import { HasOne } from "./relations/has-one";
@@ -79,15 +80,17 @@ export class Model {
   }
 
   static getConnection(): D1Database {
-    if (!Config.database) {
+    const databaseConfig = getDatabase();
+
+    if (!databaseConfig) {
       throw new Error("No database connection defined");
     }
 
-    if (!Config.database?.connections?.[this.connection]) {
+    if (!databaseConfig?.connections?.[this.connection]) {
       throw new Error(`No database connection defined for ${this.connection}`);
     }
 
-    return Config.database?.connections?.[this.connection];
+    return databaseConfig?.connections?.[this.connection];
   }
 
   static query() {

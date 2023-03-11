@@ -1,6 +1,7 @@
-import { getQueue, registerJob } from "./config";
+import { registerJob } from "./registry";
 import { MessagePayload } from "./queue";
 import { serializeArguments } from "./serialize";
+import { getQueue } from "./context";
 
 export abstract class Job {
   /**

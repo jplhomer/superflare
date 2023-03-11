@@ -4,7 +4,6 @@
  **/
 
 export {
-  setConfig,
   defineConfig,
   type SuperflareUserConfig,
   type DefineConfigResult,
@@ -23,6 +22,14 @@ export { Event } from "./src/event";
 export { Listener } from "./src/listener";
 export { handleWebSockets } from "./src/websockets";
 export { Channel } from "./src/durable-objects/Channel";
+export {
+  getContext,
+
+  // Internal use only:
+  enterWithConfig,
+  getContextFromUserConfig,
+  runWithContext,
+} from "./src/context";
 
 /**
  * Shape of the model instance.

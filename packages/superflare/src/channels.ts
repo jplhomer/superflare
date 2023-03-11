@@ -1,4 +1,5 @@
-import { ChannelConfig, getChannel, getChannelNames } from "./config";
+import { ChannelConfig } from "./config";
+import { getChannel, getChannelNames } from "./context";
 
 export function getConfigForChannelName(
   channelName: string

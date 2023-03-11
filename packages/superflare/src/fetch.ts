@@ -1,10 +1,20 @@
+import { defineConfig } from "./config";
+import { getContextFromUserConfig, runWithContext } from "./context";
 import { type SuperflareSession } from "./session";
 
-export async function handleFetch(
+export async function handleFetch<Env>(
   {
+    request,
+    env,
+    ctx,
+    config,
     session,
     getSessionCookie,
   }: {
+    request: Request;
+    env: Env;
+    ctx: ExecutionContext;
+    config: ReturnType<typeof defineConfig<Env>>;
     session: SuperflareSession;
     /**
      * Superflare will commit changes to the session as a Cookie header on the outgoing response.
@@ -23,9 +33,12 @@ export async function handleFetch(
   }
 
   /**
-   * Run the framework code and get a response.
+   * Build up the local context object, which will be attached to the AsyncLocalStorage store.
    */
-  const response = await getResponse();
+  const context = getContextFromUserConfig(config({ request, env, ctx }));
+  context.env = env;
+
+  const response = await runWithContext(context, getResponse);
 
   if (session.isDirty()) {
     /**

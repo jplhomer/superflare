@@ -6,6 +6,7 @@ import { inspect } from "node:util";
 import path from "node:path";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import { createD1Database } from "./d1-database";
+import { Script } from "node:vm";
 
 export function consoleOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -88,14 +89,35 @@ export async function createRepl({
   server.context["db"] = db;
 
   /**
-   * Run the Superflare `config` to ensure Models have access to the database.
+   * Define a custom `eval` function to wrap the code in a `runWithContext` call.
    */
-  server.eval(
-    `const {setConfig} = require('superflare'); setConfig({database: { default: db }});`,
-    server.context,
-    "repl",
-    () => {}
-  );
+  const customEval = (
+    cmd: string,
+    _: any,
+    filename: string,
+    callback: (err: Error | null, result: any) => void
+  ) => {
+    const wrappedCmd = `
+      const { getContextFromUserConfig, runWithContext } = require('superflare');
+      const context = getContextFromUserConfig({database: { default: db }});
+      runWithContext(context, async () => {
+        return ${cmd}
+      });
+    `;
+
+    const response = new Script(wrappedCmd, { filename }).runInThisContext();
+
+    if (response instanceof Promise) {
+      response
+        .then((result) => callback(null, result))
+        .catch((err) => callback(err, null));
+    } else {
+      callback(null, response);
+    }
+  };
+
+  // @ts-ignore
+  server["eval"] = customEval;
 
   /**
    * Get a list of the models in the user's dir.

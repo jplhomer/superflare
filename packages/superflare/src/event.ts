@@ -1,5 +1,6 @@
 import { getBindingForChannelName } from "./channels";
-import { getListenersForEventClass, getQueue, registerEvent } from "./config";
+import { getQueue, getListenersForEventClass } from "./context";
+import { registerEvent } from "./registry";
 import { serializeArguments } from "./serialize";
 import { sanitizeModuleName } from "./string";
 
