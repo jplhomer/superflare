@@ -1,5 +1,3 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-
 export { setConfig, defineConfig } from "./src/config";
 export { Model } from "./src/model";
 export { SuperflareSession } from "./src/session";
@@ -16,5 +14,3 @@ export { Event } from "./src/event";
 export { Listener } from "./src/listener";
 export { handleWebSockets } from "./src/websockets";
 export { Channel } from "./src/durable-objects/Channel";
-
-export const asyncLocalStorage = new AsyncLocalStorage();
