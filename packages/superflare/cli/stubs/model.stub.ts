@@ -9,10 +9,6 @@ export class ${name} extends Model {
 
 Model.register(${name});
 
-/* superflare-types-start */
-interface ${name}Row {
-}
 export interface ${name} extends ${name}Row {}
-/* superflare-types-end */
 `;
 }

@@ -63,17 +63,7 @@ export class User extends Model {
 
 Model.register(User);
 
-/* superflare-types-start */
-interface UserRow {
-  id: number;
-  name: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface User extends UserRow {}
-/* superflare-types-end */
 ```
 
 You can run `npx superflare migrate` any time you'd like to update your local database schema and Model type definitions.

@@ -6,18 +6,6 @@ export class User extends Model {
     return rest;
   }
 }
-
 Model.register(User);
 
-/* superflare-types-start */
-interface UserRow {
-  id: number;
-  name?: string;
-  email: string;
-  password: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface User extends UserRow {}
-/* superflare-types-end */

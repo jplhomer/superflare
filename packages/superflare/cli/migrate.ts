@@ -3,10 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
-import {
-  addTypesToModelsInDirectory,
-  generateTypesFromSqlite,
-} from "./d1-types";
+import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
 import { seedDb } from "./db/seed";
 import { createSQLiteDB } from "./d1-database";
 
@@ -87,7 +84,7 @@ export async function migrateHandler(
 
   logger.info("Generating types from database...");
   const types = generateTypesFromSqlite(db);
-  const results = addTypesToModelsInDirectory(modelsDirectory, types, {
+  const results = syncSuperflareTypes(process.cwd(), modelsDirectory, types, {
     createIfNotFound: argv.create as boolean,
   });
 

@@ -8,7 +8,7 @@
     "dev:remix": "remix watch",
     "dev:superflare": "NODE_ENV=development wrangler dev worker.ts --site public --var SESSION_SECRET:secret --local --persist -j",
     "dev:docs": "node ./scripts/serve-local-docs.mjs",
-    "dev": "npm run build && concurrently \"npm:dev:*\""
+    "dev": "concurrently \"npm:dev:*\""
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {

@@ -21,14 +21,7 @@ export class Post extends Model {
   }
 }
 
-/* superflare-types-start */
-interface PostRow {
-  id!: number;
-  name!: string;
-  title!: string;
-}
 export interface Post extends PostRow {}
-/* superflare-types-end */
 
 const post = new Post();
 
