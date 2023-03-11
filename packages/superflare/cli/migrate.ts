@@ -131,7 +131,7 @@ export async function compileMigrations(
 
       return {
         filename,
-        schema: migration.default() as Schema,
+        schema: migration.default() as Schema | Schema[],
       };
     });
 
@@ -139,7 +139,9 @@ export async function compileMigrations(
   await mkdir(pathToWranglerMigrations, { recursive: true });
 
   for (const migration of migrations) {
-    const sql = migration.schema.toSql();
+    const sql = Array.isArray(migration.schema)
+      ? migration.schema.map((s) => s.toSql()).join("\n\n")
+      : migration.schema.toSql();
     const migrationNumber = migration.filename.split(/_/)[0];
     const timestamp = new Date().toISOString();
     let banner = `-- Migration number: ${migrationNumber} 	 ${timestamp}\n`;
