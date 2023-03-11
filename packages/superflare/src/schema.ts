@@ -117,6 +117,11 @@ export class SchemaBuilder {
     return this.addColumn(columnName, "TEXT");
   }
 
+  timestamps() {
+    this.dateTime("created_at");
+    this.dateTime("updated_at");
+  }
+
   protected addCommand(command: string) {
     this.commands.push(command);
     return this;
@@ -139,6 +144,7 @@ interface ColumnDefinitionOptions {
 
 class ColumnDefinition {
   #nullable = false;
+  #unique = false;
 
   constructor(
     public columnName: string,
@@ -161,11 +167,20 @@ class ColumnDefinition {
       }
     }
 
+    if (this.#unique) {
+      parts.push("UNIQUE");
+    }
+
     return parts.join(" ");
   }
 
   nullable() {
     this.#nullable = true;
+    return this;
+  }
+
+  unique() {
+    this.#unique = true;
     return this;
   }
 }

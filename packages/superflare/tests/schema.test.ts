@@ -51,8 +51,34 @@ it("supports all common data types", () => {
   );
 });
 
-// TODO: Test timestamps
-// TODO: Test unique constraints
+it("supports timestamps", () => {
+  const schema = Schema.create("articles", (builder: SchemaBuilder) => {
+    builder.increments("id");
+    builder.timestamps();
+  });
+
+  expect(schema.toSql()).toEqual(
+    `CREATE TABLE articles (
+  id INTEGER PRIMARY KEY,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL
+);`
+  );
+});
+
+it("supports a unique constraint", () => {
+  const schema = Schema.create("articles", (builder: SchemaBuilder) => {
+    builder.increments("id");
+    builder.string("title").unique();
+  });
+
+  expect(schema.toSql()).toEqual(
+    `CREATE TABLE articles (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL UNIQUE
+);`
+  );
+});
 
 it("supports adding a column to a table", () => {
   const schema = Schema.update("articles", (builder: SchemaBuilder) => {
