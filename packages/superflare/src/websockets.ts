@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { Auth } from "./auth";
+import { SuperflareAuth } from "./auth";
 import { getBindingForChannelName, getConfigForChannelName } from "./channels";
 import { SuperflareSession } from "./session";
 
@@ -11,7 +11,7 @@ export async function handleWebSockets(
     userModel,
     channelName: specifiedChannelName,
   }: {
-    auth?: Auth;
+    auth?: SuperflareAuth;
     session?: SuperflareSession;
     userModel?: any;
     channelName?: string;

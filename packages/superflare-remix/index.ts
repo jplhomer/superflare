@@ -4,7 +4,7 @@ import {
 } from "@remix-run/cloudflare";
 import {
   handleFetch as superflareHandleFetch,
-  Auth,
+  SuperflareAuth,
   SuperflareSession,
 } from "superflare";
 
@@ -53,7 +53,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
        */
       const loadContext: SuperflareAppLoadContext<Env> = {
         session,
-        auth: new Auth(session),
+        auth: new SuperflareAuth(session),
         env,
         ctx,
       };
@@ -64,7 +64,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
 
 export interface SuperflareAppLoadContext<Env> extends AppLoadContext {
   session: SuperflareSession;
-  auth: Auth;
+  auth: SuperflareAuth;
   env: Env;
   ctx: ExecutionContext;
 }
