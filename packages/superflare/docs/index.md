@@ -1,25 +1,19 @@
 ---
-title: Introduction to Superflare
+title: Hello, Superflare
 ---
 
-[Superflare](https://superflare.dev) is the missing full-stack toolkit for Cloudflare Workers. It features a relational ORM for [D1 databases](/models/getting-started), utilities for [R2 storage](/file-storage), and more.
+[Superflare](https://superflare.dev) is an experimental full-stack toolkit for Cloudflare Workers. It features a relational ORM for [D1 databases](/models/getting-started), utilities for [R2 storage](/file-storage), and lots more.
 
 Superflare is _not_ a full-stack framework. In fact, Superflare works best when combined with [Remix](https://remix.run), [Next.js](https://nextjs.org) (soon!) or [Nuxt.js](https://nuxtjs.com) (soon!).
 
-Check out various Superflare [example apps](https://github.com/jplhomer/superflare/tree/main/examples/) to get a feel for what you can build next, or get started with a new Superflare application below.
+Check out various Superflare [example apps](https://github.com/jplhomer/superflare/tree/main/examples/) to get a feel for what you can build next, or [get started](/getting-started) with a new Superflare application.
 
-## Installation
-
-(soon!) Spin up a brand-new Superflare project with the following command:
+Check it out on [GitHub](https://github.com/jplhomer/superflare), or create a new app right now:
 
 ```bash
-npx superflare init
+npx superflare new
 ```
 
-Superflare will ask you which bindings you'd like to use for D1, R2 and KV. It will also offer to create the bindings if you haven't already!
+Superflare is a project created by me, [Josh Larson](https://jplhomer.org).
 
-Once you get your project created, you can start a local development server with:
-
-```bash
-npx superflare dev
-```
+I'm doing this to have fun and not to support all of your production apps for $0. If you're curious, [read more about my design principles](/design).
