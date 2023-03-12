@@ -36,3 +36,11 @@ export function lowercaseFirstLetter(string: string) {
 export function sanitizeModuleName(name: string) {
   return name.replace(/\d+$/, "");
 }
+
+export function toSnakeCase(string: string) {
+  return string
+    .replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`)
+    .replace(/ /g, "_")
+    .toLowerCase()
+    .replace(/^_/, "");
+}

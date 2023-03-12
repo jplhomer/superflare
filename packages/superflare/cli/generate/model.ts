@@ -42,12 +42,9 @@ export async function modelHandler(
   logger.log(`Generated Job ${name} at ${modelPath}`);
 
   if (argv.migration) {
-    const config = await getSuperflareConfig(process.cwd(), logger);
-
-    const db = config?.d1?.[0] || "DB";
     const tableName = modelToTableName(name);
     const migrationName = `create_${tableName}`;
 
-    generateMigration(db, migrationName);
+    generateMigration(migrationName);
   }
 }
