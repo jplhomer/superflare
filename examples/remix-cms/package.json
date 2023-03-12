@@ -8,7 +8,7 @@
     "build": "npm run build:remix",
     "build:remix": "remix build",
     "dev:remix": "remix watch",
-    "dev:superflare": "NODE_ENV=development superflare dev worker.ts -b APP_KEY=secret",
+    "dev:superflare": "NODE_ENV=development superflare dev -b APP_KEY=secret",
     "dev": "pnpm build && concurrently \"npm:dev:*\"",
     "start": "cross-env NODE_ENV=production npm run dev:superflare",
     "migrate": "superflare migrate"
