@@ -13,7 +13,7 @@ export async function handleFetch<Env>(
     request: Request;
     env: Env;
     ctx: ExecutionContext;
-    config: typeof defineConfig<Env>;
+    config: ReturnType<typeof defineConfig<Env>>;
     session: SuperflareSession;
     /**
      * Superflare will commit changes to the session as a Cookie header on the outgoing response.

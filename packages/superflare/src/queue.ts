@@ -19,7 +19,7 @@ export async function handleQueue<Env>(
   batch: MessageBatch,
   env: Env,
   ctx: ExecutionContext,
-  config: typeof defineConfig<Env>
+  config: ReturnType<typeof defineConfig<Env>>
 ) {
   /**
    * Set the user config into the singleton context.

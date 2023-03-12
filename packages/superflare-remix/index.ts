@@ -17,7 +17,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
-  config: typeof defineConfig<Env>,
+  config: ReturnType<typeof defineConfig<Env>>,
   remixHandler: (
     request: Request,
     loadContext: SuperflareAppLoadContext<Env>
