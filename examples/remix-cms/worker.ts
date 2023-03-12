@@ -1,5 +1,5 @@
 import { createRequestHandler } from "@remix-run/cloudflare";
-import getConfig from "./superflare.config";
+import config from "./superflare.config";
 import * as build from "./build";
 import {
   getAssetFromKV,
@@ -44,7 +44,7 @@ export default {
     }
 
     try {
-      return handleFetch(request, env, ctx, remixHandler);
+      return handleFetch(request, env, ctx, config, remixHandler);
     } catch (reason) {
       console.error(reason);
       return new Response("Internal Server Error", { status: 500 });
@@ -56,8 +56,6 @@ export default {
     env: Env,
     ctx: ExecutionContext
   ): Promise<void[]> {
-    const config = getConfig({ env, ctx });
-
-    return handleQueue(config, ctx, batch);
+    return handleQueue(batch, env, ctx, config);
   },
 };

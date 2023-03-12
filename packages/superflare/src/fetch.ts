@@ -1,10 +1,19 @@
+import { defineConfig } from "./config";
 import { type SuperflareSession } from "./session";
 
-export async function handleFetch(
+export async function handleFetch<Env>(
   {
+    request,
+    env,
+    ctx,
+    config,
     session,
     getSessionCookie,
   }: {
+    request: Request;
+    env: Env;
+    ctx: ExecutionContext;
+    config: typeof defineConfig<Env>;
     session: SuperflareSession;
     /**
      * Superflare will commit changes to the session as a Cookie header on the outgoing response.
@@ -14,6 +23,8 @@ export async function handleFetch(
   },
   getResponse: () => Promise<Response>
 ) {
+  config({ request, env, ctx });
+
   /**
    * Some session storage mechanisms might not assign a proper `id`. No worries!
    * We will assign our own here as a value in the session itself.

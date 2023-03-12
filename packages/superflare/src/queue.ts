@@ -1,4 +1,10 @@
-import { DefineConfigResult, getEvent, getJob, setConfig } from "./config";
+import {
+  defineConfig,
+  DefineConfigResult,
+  getEvent,
+  getJob,
+  setConfig,
+} from "./config";
 import { dispatchEvent, Event } from "./event";
 import { Job } from "./job";
 import { hydrateArguments } from "./serialize";
@@ -10,15 +16,16 @@ export interface MessagePayload {
 }
 
 export async function handleQueue<Env>(
-  config: DefineConfigResult,
+  batch: MessageBatch,
+  env: Env,
   ctx: ExecutionContext,
-  batch: MessageBatch
+  config: typeof defineConfig<Env>
 ) {
   /**
    * Set the user config into the singleton context.
    * TODO: Replace this with AsyncLocalStorage when available.
    */
-  setConfig(config);
+  config({ env, ctx });
 
   return await Promise.all(
     batch.messages.map((message) => handleQueueMessage(message, ctx))

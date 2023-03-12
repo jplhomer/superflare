@@ -3,6 +3,7 @@ import {
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
 import {
+  defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
@@ -16,6 +17,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
+  config: typeof defineConfig<Env>,
   remixHandler: (
     request: Request,
     loadContext: SuperflareAppLoadContext<Env>
@@ -40,8 +42,12 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     await sessionStorage.getSession(request.headers.get("Cookie"))
   );
 
-  return await superflareHandleFetch(
+  return await superflareHandleFetch<Env>(
     {
+      request,
+      env,
+      ctx,
+      config,
       session,
       getSessionCookie: () =>
         sessionStorage.commitSession(session.getSession()),
