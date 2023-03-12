@@ -9,6 +9,10 @@ import { createSQLiteDB } from "./d1-database";
 import { Schema } from "../src/schema";
 import { register } from "esbuild-register/dist/node";
 
+export function defaultSuperflareMigrationsPath() {
+  return path.join(process.cwd(), "db", "migrations");
+}
+
 export function migrateOptions(yargs: CommonYargsArgv) {
   return yargs
     .option("db", {
@@ -35,7 +39,7 @@ export function migrateOptions(yargs: CommonYargsArgv) {
       describe: "Path to the Superflare migrations directory",
 
       // Default to the path in the app directory
-      default: path.join(process.cwd(), "app", "migrations"),
+      default: defaultSuperflareMigrationsPath(),
     })
     .option("wrangler-migrations", {
       describe: "Path to the Wrangler migrations directory",
@@ -120,6 +124,9 @@ export async function compileMigrations(
   pathToWranglerMigrations: string
 ) {
   const { unregister } = register({});
+
+  // Make it if it doesn't exist
+  await mkdir(pathToSuperflareMigrations, { recursive: true });
 
   const migrations = (await readdir(pathToSuperflareMigrations))
     .filter((filename) => filename.endsWith(".ts"))

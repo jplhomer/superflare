@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { toSnakeCase } from "../../src/string";
 import { getSuperflareConfig } from "../config";
 import { logger } from "../logger";
+import { defaultSuperflareMigrationsPath } from "../migrate";
 import { blankMigration } from "../stubs/migration.stub";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "../yargs-types";
 
@@ -21,11 +22,7 @@ export function migrationOptions(yargs: CommonYargsArgv) {
 export async function migrationHandler(
   argv: StrictYargsOptionsToInterface<typeof migrationOptions>
 ) {
-  // Tried including this in the options function but then TS failure :(
-  const config = await getSuperflareConfig(process.cwd(), logger);
-
   const name = argv.name as string;
-  const db = argv.db || config?.d1?.[0] || "DB";
 
   generateMigration(name);
 }
@@ -50,7 +47,7 @@ export async function generateMigration(
     .toString()
     .padStart(4, "0");
   const migrationName = `${nextMigrationNumber}_${toSnakeCase(name)}`;
-  const migrationsPath = join(rootPath, "app", "migrations");
+  const migrationsPath = defaultSuperflareMigrationsPath();
   await mkdir(migrationsPath, { recursive: true });
 
   const migrationPath = join(migrationsPath, `${migrationName}.ts`);
