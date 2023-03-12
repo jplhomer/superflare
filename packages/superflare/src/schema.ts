@@ -85,6 +85,10 @@ export class SchemaBuilder {
     return this.addColumn(columnName, "DATE");
   }
 
+  dropColumn(columnName: string) {
+    return this.addCommand(`DROP COLUMN ${columnName}`);
+  }
+
   dateTime(columnName: string) {
     // sqlite doesn't have a DATETIME type, but it's smart enough to cast.
     return this.addColumn(columnName, "DATETIME");

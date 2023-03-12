@@ -47,7 +47,7 @@ export async function generateMigration(
     .toString()
     .padStart(4, "0");
   const migrationName = `${nextMigrationNumber}_${toSnakeCase(name)}`;
-  const migrationsPath = defaultSuperflareMigrationsPath();
+  const migrationsPath = defaultSuperflareMigrationsPath(rootPath);
   await mkdir(migrationsPath, { recursive: true });
 
   const migrationPath = join(migrationsPath, `${migrationName}.ts`);
