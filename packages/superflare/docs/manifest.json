@@ -78,22 +78,5 @@
         "href": "/security/hashing"
       }
     ]
-  },
-  {
-    "title": "Email",
-    "links": [
-      {
-        "title": "Sending Email",
-        "href": "/email/sending-email"
-      },
-      {
-        "title": "Notifications",
-        "href": "/email/notifications"
-      },
-      {
-        "title": "Receiving Mail with Mailboxes",
-        "href": "/email/mailboxes"
-      }
-    ]
   }
 ]
