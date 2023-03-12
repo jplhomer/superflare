@@ -2,7 +2,7 @@
 title: Superflare's Design Principles
 ---
 
-I built Superflare to scratch my own itch. I'm traditionally a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
+I built Superflare to scratch my own itch. Traditionally, I'm a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
 
 For years, we've heard that JavaScript frameworks can be used as a "full-stack" solution. Yet when folks start out with a Remix or Next.js app, they're left with only _some_ of that solution.
 
@@ -20,7 +20,9 @@ Then they introduced Workers. Cool, a way to run JavaScript on the edge for chea
 
 Then they introduced KV Storage. Neat, and powerful—but still limited and not even close to a typical relational database solution.
 
-Then came Durable Objects. R2 Storage. Scheduled Workers. Queues. Email. _Getting closer_.
+Then came Durable Objects. R2 Storage. Scheduled Workers. Queues. Email.
+
+_Getting closer_.
 
 **Finally: D1**.
 
@@ -45,21 +47,25 @@ By leaning into the lock-in, we're suddenly blessed with a much simpler solution
 - Need storage? R2.
 - Need database? D1.
 - Need queues? Queues.
+- Realtime stuff? Durable Objects.
+- Recurring things? Scheduled jobs.
 
-The list goes on and on. _Constraints are good_.
+The list goes on and on.
+
+_Constraints are good_.
 
 ### Not a Framework
 
 Superflare is _not a framework_. It's a full-stack toolkit.
 
-I've built my [fair](https://flareact.com/) [share](https://github.com/shopify/hydrogen-v1) of React meta-frameworks, and I don't yearn to venture into that land yet again.
+I've built my [fair](https://flareact.com/) [share](https://github.com/shopify/hydrogen-v1) of React meta-frameworks. I'm taking a break for a bit.
 
-There are some really good solutions today:
+Plus, there are some really good solutions today:
 
 - Remix
 - Next.js, especially the `/app` directory with RSC
 - Nuxt.js if you use Vue
-- lots more
+- ...lots more
 
 There are really smart people working on these solutions, and they're trying to build them really well. I'm not trying to do that — I'm trying to scratch my own itch and have fun.
 
@@ -113,7 +119,7 @@ I think this is pretty obvious.
 
 Hey, Prisma exists and kinda dominates this space. Why would you want to learn a new ORM just to use Superflare?
 
-I don't blame ya. Plus, the fact that Superflare has weird commenty-things and colocates computer-generated code with your user-written models is a bit... weird.
+I don't blame ya. Plus, the fact that Superflare has weird conventions around migrations and types. So, yeah.
 
 ### Tension with Wrangler and Cloudflare's official roadmap
 
@@ -135,8 +141,8 @@ You might not want to use it because of this, which is fine. Or do. I don't care
 
 Gosh, I took so much inspiration from other places for how I built Superflare:
 
-- Laravel (framework design, ORM, tons of things)
-- Adonis.js (implementation of a similar ORM, REPL)
-- Jacob Ebey (for his Remix templates and general smartness)
-- Cloudflare Wrangler (for the CLI)
-- OnlineOrNot (for the CLI)
+- [Laravel](https://laravel.com) (framework design, ORM, tons of things)
+- [Adonis.js](https://adonisjs.com/) (implementation of a similar ORM, REPL)
+- [Jacob Ebey](https://github.com/jacob-ebey) (for his Remix templates and general smartness)
+- [Cloudflare Wrangler](https://github.com/cloudflare/workers-sdk) (for the CLI)
+- [OnlineOrNot](https://github.com/OnlineOrNot/onlineornot) (for the CLI)
