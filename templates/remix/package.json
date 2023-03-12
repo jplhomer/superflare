@@ -1,0 +1,43 @@
+{
+  "name": "superflare-remix-remplate",
+  "version": "1.0.0",
+  "description": "A Superflare template for Remix",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build:remix",
+    "build:remix": "remix build",
+    "dev:remix": "remix watch",
+    "dev:superflare": "NODE_ENV=development superflare dev -b APP_KEY=secret",
+    "dev": "npm run build && concurrently \"npm:dev:*\"",
+    "start": "cross-env NODE_ENV=production npm run dev:superflare"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0",
+    "@remix-run/cloudflare": "^1.14.1",
+    "@remix-run/react": "^1.14.1",
+    "@remix-run/serve": "^1.14.1",
+    "@superflare/remix": "workspace:*",
+    "isbot": "^3.6.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "superflare": "workspace:*",
+    "tiny-invariant": "^1.3.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230307.0",
+    "@remix-run/dev": "^1.14.1",
+    "@remix-run/server-runtime": "^1.14.1",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "concurrently": "^7.6.0",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.5",
+    "wrangler": "^2.12.2"
+  },
+  "engines": {
+    "node": ">=16.13"
+  }
+}

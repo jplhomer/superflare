@@ -122,8 +122,8 @@ export class SchemaBuilder {
   }
 
   timestamps() {
-    this.dateTime("created_at");
-    this.dateTime("updated_at");
+    this.dateTime("createdAt");
+    this.dateTime("updatedAt");
   }
 
   protected addCommand(command: string) {

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { modelToTableName } from "../../src/string";
 import { SUPERFLARE_TYPES_FILE } from "../d1-types";
@@ -37,6 +37,7 @@ export async function modelHandler(
   const output = modelTemplate(name);
 
   const modelPath = path.join(argv.path, `${name}.ts`);
+  await mkdir(path.dirname(modelPath), { recursive: true });
   await writeFile(modelPath, output);
 
   // Update the superflare types to ensure the {Model}Row exists, even if it's empty.
