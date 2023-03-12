@@ -98,6 +98,14 @@ it("supports renaming a column on a table", () => {
   );
 });
 
+it("supports dropping a column on a table", () => {
+  const schema = Schema.update("articles", (builder: SchemaBuilder) => {
+    builder.dropColumn("slug");
+  });
+
+  expect(schema.toSql()).toEqual(`ALTER TABLE articles\nDROP COLUMN slug;`);
+});
+
 it("supports renaming a column and adding a column on a table", () => {
   const schema = Schema.update("articles", (builder: SchemaBuilder) => {
     builder.renameColumn("slug", "handle");

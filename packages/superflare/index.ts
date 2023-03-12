@@ -8,7 +8,7 @@ export { Factory } from "./src/factory";
 export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
 export { Job } from "./src/job";
-export { Auth } from "./src/auth";
+export { SuperflareAuth } from "./src/auth";
 export { hash } from "./src/hash";
 export { Event } from "./src/event";
 export { Listener } from "./src/listener";

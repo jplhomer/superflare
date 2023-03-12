@@ -9,8 +9,8 @@ import { createSQLiteDB } from "./d1-database";
 import { Schema } from "../src/schema";
 import { register } from "esbuild-register/dist/node";
 
-export function defaultSuperflareMigrationsPath() {
-  return path.join(process.cwd(), "db", "migrations");
+export function defaultSuperflareMigrationsPath(rootPath = process.cwd()) {
+  return path.join(rootPath, "db", "migrations");
 }
 
 export function migrateOptions(yargs: CommonYargsArgv) {

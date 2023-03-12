@@ -4,7 +4,7 @@ import { Session } from "./session";
 
 const SESSION_KEY = "superflare:auth:id";
 
-export class Auth {
+export class SuperflareAuth {
   constructor(public session: Session) {}
 
   async attempt<M extends BaseModel>(

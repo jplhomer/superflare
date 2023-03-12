@@ -3,8 +3,12 @@
     "title": "Introduction",
     "links": [
       {
-        "title": "Getting Started",
+        "title": "Hello, Superflare",
         "href": "/"
+      },
+      {
+        "title": "Getting Started",
+        "href": "/getting-started"
       },
       {
         "title": "Design Principles",
