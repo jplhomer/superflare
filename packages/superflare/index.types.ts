@@ -30,6 +30,7 @@ export {
   getContextFromUserConfig,
   runWithContext,
 } from "./src/context";
+export { Schema } from "./src/schema";
 
 /**
  * Shape of the model instance.

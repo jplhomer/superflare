@@ -6,3 +6,4 @@ node_modules
 /public/build
 .env
 /.wrangler
+superflare.env.d.ts

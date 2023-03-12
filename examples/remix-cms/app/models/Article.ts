@@ -14,17 +14,4 @@ export class Article extends Model {
 
 Model.register(Article);
 
-/* superflare-types-start */
-interface ArticleRow {
-  id: number;
-  title: string;
-  slug: string;
-  content?: string;
-  userId: number;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Article extends ArticleRow {}
-/* superflare-types-end */

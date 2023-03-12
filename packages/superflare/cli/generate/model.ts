@@ -1,7 +1,7 @@
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { modelToTableName } from "../../src/string";
-import { getSuperflareConfig } from "../config";
+import { SUPERFLARE_TYPES_FILE } from "../d1-types";
 import { logger } from "../logger";
 import { modelTemplate } from "../stubs/model.stub";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "../yargs-types";
@@ -32,22 +32,33 @@ export async function modelHandler(
 ) {
   const { name } = argv;
 
-  logger.log(`Generating Model ${name}`);
+  logger.log(`Generating model ${name}`);
 
   const output = modelTemplate(name);
 
   const modelPath = path.join(argv.path, `${name}.ts`);
   await writeFile(modelPath, output);
 
-  logger.log(`Generated Job ${name} at ${modelPath}`);
+  // Update the superflare types to ensure the {Model}Row exists, even if it's empty.
+  const typeFilePath = path.join(process.cwd(), SUPERFLARE_TYPES_FILE);
+
+  try {
+    let contents = await readFile(typeFilePath, "utf-8");
+    contents += `\n\interface ${name}Row {};`;
+
+    await writeFile(typeFilePath, contents);
+  } catch (_e) {
+    const contents = `interface ${name}Row {};`;
+
+    await writeFile(typeFilePath, contents);
+  }
+
+  logger.log(`Generated model ${name} at ${modelPath}`);
 
   if (argv.migration) {
-    const config = await getSuperflareConfig(process.cwd(), logger);
-
-    const db = config?.d1?.[0] || "DB";
     const tableName = modelToTableName(name);
     const migrationName = `create_${tableName}`;
 
-    generateMigration(db, migrationName);
+    generateMigration(migrationName);
   }
 }

@@ -1,10 +1,8 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import {
-  addTypesToModelClass,
-  addTypesToModelsInDirectory,
+  syncSuperflareTypes,
   generateTypesFromSqlite,
-  SuperflareType,
-  wrapWithTypeMarkers,
+  SUPERFLARE_TYPES_FILE,
 } from "../cli/d1-types";
 import path from "path";
 import fs from "fs";
@@ -18,87 +16,6 @@ const baseModel = (
     return super.toJSON();
   }
 }\n\Model.register(${modelName});`;
-
-describe("addTypesToModelClass", () => {
-  it("adds types and JSON utilities to a model class", () => {
-    const modelClass = "User";
-    const modelContents = baseModel(modelClass);
-    const source = modelContents;
-    const types: SuperflareType[] = [
-      { name: "id", type: "string", nullable: false },
-      { name: "name", type: "string", nullable: false },
-      { name: "email", type: "string", nullable: false },
-      { name: "password", type: "string", nullable: false },
-    ];
-
-    const result = addTypesToModelClass(source, modelClass, types);
-
-    expect(result).toBe(
-      `${modelContents}\n\n` +
-        wrapWithTypeMarkers(`interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}\n\nexport interface User extends UserRow {}`)
-    );
-  });
-
-  it("takes nullable into account", () => {
-    const modelClass = "User";
-    const modelContents = baseModel(modelClass);
-    const source = modelContents;
-    const types: SuperflareType[] = [
-      { name: "id", type: "string", nullable: false },
-      { name: "name", type: "string", nullable: false },
-      { name: "email", type: "string", nullable: false },
-      { name: "password", type: "string", nullable: true },
-    ];
-
-    const result = addTypesToModelClass(source, modelClass, types);
-
-    expect(result).toBe(
-      `${modelContents}\n\n` +
-        wrapWithTypeMarkers(`interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-}\n\nexport interface User extends UserRow {}`)
-    );
-  });
-
-  it("replaces existing types if they exist", () => {
-    const modelClass = "User";
-    const modelContents = baseModel(modelClass);
-    const source =
-      `${modelContents}\n\n` +
-      wrapWithTypeMarkers(`interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-}\n\nexport interface User extends UserRow {}`);
-
-    const types: SuperflareType[] = [
-      { name: "id", type: "string", nullable: false },
-      { name: "name", type: "string", nullable: false },
-      { name: "email", type: "string", nullable: false },
-      { name: "password", type: "string", nullable: false },
-    ];
-
-    const result = addTypesToModelClass(source, modelClass, types);
-
-    expect(result).toBe(
-      `${modelContents}\n\n` +
-        wrapWithTypeMarkers(`interface UserRow {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}\n\nexport interface User extends UserRow {}`)
-    );
-  });
-});
 
 describe("generateTypesFromSqlite", () => {
   const sql = `
@@ -154,7 +71,7 @@ describe("generateTypesFromSqlite", () => {
   });
 });
 
-describe("addTypesToModelsInDirectory", () => {
+describe("syncSuperflareTypes", () => {
   const sql = `
     CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -174,10 +91,14 @@ describe("addTypesToModelsInDirectory", () => {
   let db: any;
   const osTmpDir = os.tmpdir();
   let tmpDir: string;
+  let modelsDir: string;
 
   function populateDirectoryWithFiles(files: Record<string, string>) {
+    fs.mkdirSync(path.join(tmpDir, "app", "models"), {
+      recursive: true,
+    });
     Object.entries(files).forEach(([filename, file]) => {
-      fs.writeFileSync(path.join(tmpDir, filename), file);
+      fs.writeFileSync(path.join(modelsDir, filename), file);
     });
   }
 
@@ -185,6 +106,7 @@ describe("addTypesToModelsInDirectory", () => {
     db = await createSQLiteDB(":memory:");
     db.exec(sql);
     tmpDir = fs.mkdtempSync(path.join(osTmpDir, "superflare-test-models"));
+    modelsDir = path.join(tmpDir, "app", "models");
   });
 
   afterEach(() => {
@@ -198,62 +120,24 @@ describe("addTypesToModelsInDirectory", () => {
     });
 
     const types = generateTypesFromSqlite(db);
-    addTypesToModelsInDirectory(tmpDir, types);
+    syncSuperflareTypes(tmpDir, modelsDir, types);
+    const generated = fs.readFileSync(
+      path.join(tmpDir, SUPERFLARE_TYPES_FILE),
+      "utf8"
+    );
 
-    expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8")).toBe(
-      baseModel("User") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface UserRow {
+    expect(generated).toContain(`interface UserRow {
   id: number;
   email: string;
   name: string;
-}\n\nexport interface User extends UserRow {}`)
-    );
+}`);
 
-    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8")).toBe(
-      baseModel("Post") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface PostRow {
+    expect(generated).toContain(`interface PostRow {
   id: number;
   title: string;
   description?: string;
   user_id: number;
-}\n\nexport interface Post extends PostRow {}`)
-    );
-  });
-
-  it("ignores javascript models models in a directory", () => {
-    populateDirectoryWithFiles({
-      "User.js": `import { Model } from 'superflare';\n\nexport class User extends Model {\n}`,
-      "Post.ts": baseModel("Post"),
-    });
-
-    const types = generateTypesFromSqlite(db);
-    const results = addTypesToModelsInDirectory(tmpDir, types);
-
-    expect(fs.readFileSync(path.join(tmpDir, "User.js"), "utf8")).toBe(
-      `import { Model } from 'superflare';\n\nexport class User extends Model {\n}`
-    );
-
-    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8")).toBe(
-      baseModel("Post") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface PostRow {
-  id: number;
-  title: string;
-  description?: string;
-  user_id: number;
-}\n\nexport interface Post extends PostRow {}`)
-    );
-
-    expect(results.find((r) => r.model === "User")).toEqual({
-      model: "User",
-      status: "not-found",
-    });
-    expect(results.find((r) => r.model === "Post")).toEqual({
-      model: "Post",
-      status: "updated",
-    });
+}`);
   });
 
   it("does not create new files by default", () => {
@@ -262,20 +146,13 @@ describe("addTypesToModelsInDirectory", () => {
     });
 
     const types = generateTypesFromSqlite(db);
-    const results = addTypesToModelsInDirectory(tmpDir, types);
+    const results = syncSuperflareTypes(tmpDir, modelsDir, types);
 
     // Expect `user.ts` to not exist
     expect(fs.existsSync(path.join(tmpDir, "User.ts"))).toBe(false);
 
-    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8")).toBe(
-      baseModel("Post") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface PostRow {
-  id: number;
-  title: string;
-  description?: string;
-  user_id: number;
-}\n\nexport interface Post extends PostRow {}`)
+    expect(fs.readFileSync(path.join(modelsDir, "Post.ts"), "utf8")).toBe(
+      baseModel("Post")
     );
 
     expect(results.find((r) => r.model === "User")).toEqual({
@@ -284,7 +161,7 @@ describe("addTypesToModelsInDirectory", () => {
     });
     expect(results.find((r) => r.model === "Post")).toEqual({
       model: "Post",
-      status: "updated",
+      status: "synced",
     });
   });
 
@@ -294,32 +171,20 @@ describe("addTypesToModelsInDirectory", () => {
     });
 
     const types = generateTypesFromSqlite(db);
-    const results = addTypesToModelsInDirectory(tmpDir, types, {
+    const results = syncSuperflareTypes(tmpDir, modelsDir, types, {
       createIfNotFound: true,
     });
 
     // Expect `user.ts` to have been created
-    expect(fs.existsSync(path.join(tmpDir, "User.ts"))).toBe(true);
-    expect(fs.readFileSync(path.join(tmpDir, "User.ts"), "utf8")).toBe(
+    expect(fs.existsSync(path.join(modelsDir, "User.ts"))).toBe(true);
+    expect(fs.readFileSync(path.join(modelsDir, "User.ts"), "utf8")).toBe(
       "import { Model } from 'superflare';\n\n" +
         baseModel("User") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface UserRow {
-  id: number;
-  email: string;
-  name: string;
-}\n\nexport interface User extends UserRow {}`)
+        `\n\nexport interface User extends UserRow {};`
     );
 
-    expect(fs.readFileSync(path.join(tmpDir, "Post.ts"), "utf8")).toBe(
-      baseModel("Post") +
-        "\n\n" +
-        wrapWithTypeMarkers(`interface PostRow {
-  id: number;
-  title: string;
-  description?: string;
-  user_id: number;
-}\n\nexport interface Post extends PostRow {}`)
+    expect(fs.readFileSync(path.join(modelsDir, "Post.ts"), "utf8")).toBe(
+      baseModel("Post")
     );
 
     expect(results.find((r) => r.model === "User")).toEqual({
@@ -328,7 +193,7 @@ describe("addTypesToModelsInDirectory", () => {
     });
     expect(results.find((r) => r.model === "Post")).toEqual({
       model: "Post",
-      status: "updated",
+      status: "synced",
     });
   });
 });

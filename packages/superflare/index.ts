@@ -1,4 +1,4 @@
-export { defineConfig } from "./src/config";
+export { setConfig, defineConfig } from "./src/config";
 export { Model } from "./src/model";
 export { SuperflareSession } from "./src/session";
 export { DatabaseException } from "./src/query-builder";
@@ -22,3 +22,4 @@ export {
   enterWithConfig,
   getContextFromUserConfig,
 } from "./src/context";
+export { Schema } from "./src/schema";
