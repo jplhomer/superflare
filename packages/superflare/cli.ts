@@ -10,6 +10,7 @@ import { CommonYargsArgv } from "./cli/yargs-types";
 import { migrateHandler, migrateOptions } from "./cli/migrate";
 import { devHandler, devOptions } from "./cli/dev";
 import { db } from "./cli/db";
+import { newHandler, newOptions } from "./cli/new";
 
 const resetColor = "\x1b[0m";
 const fgGreenColor = "\x1b[32m";
@@ -79,6 +80,14 @@ function createCLIParser(argv: string[]) {
     (yargs) => {
       return generate(yargs.command(subHelp));
     }
+  );
+
+  // New
+  superflare.command(
+    "new [name]",
+    "🎸 Create a new Superflare project",
+    newOptions,
+    newHandler
   );
 
   // Console

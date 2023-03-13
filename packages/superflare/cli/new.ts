@@ -1,0 +1,567 @@
+import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
+import {
+  confirm,
+  cancel,
+  intro,
+  isCancel,
+  multiselect,
+  outro,
+  spinner,
+  text,
+} from "@clack/prompts";
+import { cp, mkdtemp, readFile, rmdir, writeFile } from "fs/promises";
+import { join, normalize } from "path";
+import { tmpdir } from "os";
+import { pipeline } from "stream/promises";
+import gunzipMaybe from "gunzip-maybe";
+import { extract } from "tar-fs";
+import { spawn } from "child_process";
+import { logger } from "./logger";
+import { randomBytes } from "crypto";
+
+export function newOptions(yargs: CommonYargsArgv) {
+  return yargs
+    .option("template", {
+      alias: "t",
+      type: "string",
+      description: "The template to use",
+      default: "remix",
+    })
+    .positional("name", {
+      type: "string",
+      description: "The name of the app to create",
+    });
+}
+
+interface Plan {
+  d1?: string;
+  r2?: string;
+  queue?: string;
+  durableOject?: string;
+}
+
+export async function newHandler(
+  argv: StrictYargsOptionsToInterface<typeof newOptions>
+) {
+  intro(`Create a new Superflare app`);
+
+  if (!(await ensureWranglerAuthenticated())) {
+    const wantsToLogIn = await confirm({
+      message:
+        "You need to be logged into Wrangler to create a Superflare app. Log in now?",
+    });
+
+    if (isCancel(wantsToLogIn) || !wantsToLogIn) {
+      cancel(
+        "You need to be logged into Wrangler to be able to create a Superflare app."
+      );
+      process.exit(0);
+    }
+
+    await wranglerLogin();
+  }
+
+  let path = "";
+
+  if (!argv.name) {
+    const defaultPath = "./my-superflare-app";
+
+    const pathResponse = await text({
+      message: "Where would you like to create your app?",
+      placeholder: defaultPath,
+    });
+
+    if (isCancel(pathResponse)) {
+      cancel("Never mind!");
+      process.exit(0);
+    }
+
+    path = pathResponse || defaultPath;
+  } else {
+    path = `./${argv.name}`;
+  }
+
+  const appName = path.split("/").pop();
+
+  if (!appName) {
+    throw new Error("Invalid path");
+  }
+
+  const s = spinner();
+
+  s.start(`Creating a new Remix Superflare app in ${path}...`);
+
+  await generateTemplate(path, appName, argv.template || "remix");
+
+  s.stop(`App created!`);
+
+  async function buildPlan(): Promise<Plan> {
+    const selections = await multiselect({
+      message: `What features of Superflare do you plan to use? We'll create the resources for you.`,
+      options: [
+        {
+          value: "database",
+          label: "Database Models",
+          hint: "We'll create D1 a database for you",
+        },
+        {
+          value: "storage",
+          label: "Storage",
+          hint: "We'll create a R2 bucket for you",
+        },
+        {
+          value: "queue",
+          label: "Queues",
+          hint: "We'll create a Queue consumer and producer for you",
+        },
+        {
+          value: "broadcasting",
+          label: "Broadcasting",
+          hint: "We'll set up a Durable Object for you",
+        },
+      ],
+      initialValues: ["database", "storage", "queue"],
+    });
+
+    if (isCancel(selections)) {
+      cancel("Never mind!");
+      process.exit(0);
+    }
+
+    const plan: Plan = {};
+
+    selections.forEach((selection) => {
+      switch (selection) {
+        case "database":
+          plan.d1 = `${appName}-db`;
+          break;
+        case "storage":
+          plan.r2 = `${appName}-bucket`;
+          break;
+        case "queue":
+          plan.queue = `${appName}-queue`;
+          break;
+        case "broadcasting":
+          plan.durableOject = `Channel`;
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    const confirmMessage = `We'll create the following resources for you:
+
+${plan.d1 ? `  - D1 Database: ${plan.d1} (bound as DB)` : ""}
+${plan.r2 ? `  - R2 Bucket: ${plan.r2} (bound as BUCKET)` : ""}
+${plan.queue ? `  - Queue: ${plan.queue} (bound as QUEUE)` : ""}
+${plan.durableOject ? `  - Durable Object: Channel (bound as CHANNEL)` : ""}
+
+Do you want to continue?`;
+
+    const confirmation = await confirm({
+      message: confirmMessage,
+    });
+
+    if (!confirmation) {
+      return await buildPlan();
+    }
+
+    return plan;
+  }
+
+  const plan = await buildPlan();
+
+  s.start("Creating resources...");
+
+  const promises: TaskResult[] = [];
+
+  if (plan.d1) {
+    promises.push(createD1Database(plan.d1));
+  }
+
+  if (plan.r2) {
+    promises.push(createR2Bucket(plan.r2));
+  }
+
+  if (plan.queue) {
+    promises.push(createQueue(plan.queue));
+  }
+
+  if (plan.durableOject) {
+    promises.push(setUpDurableObject(path));
+  }
+
+  const results = await Promise.all(promises);
+
+  let wranglerConfig = {
+    name: appName,
+  };
+
+  results.forEach((result) => {
+    if (result.wranglerConfig) {
+      wranglerConfig = {
+        ...wranglerConfig,
+        ...result.wranglerConfig,
+      };
+    }
+  });
+
+  await addToWranglerConfig(wranglerConfig, path);
+  await writeSuperflareConfig(
+    results.map((r) => r.superflareConfig).filter(Boolean),
+    path
+  );
+
+  // Set an APP_KEY secret.
+  const appKey = randomBytes(256).toString("base64");
+  await setSecret("APP_KEY", appKey, path);
+
+  s.stop("Done creating resources:");
+
+  results.forEach((result) => logger.log(result.message));
+
+  outro(
+    `You're all set! \`cd ${path}\`, run \`npm install\`, and then \`npx superflare migrate\` to get started.`
+  );
+}
+
+async function generateTemplate(
+  path: string,
+  appName: string,
+  template: string
+) {
+  const gitHubRepo = `jplhomer/superflare`;
+  const templatePath = `templates/${template}`;
+
+  // Download tarball to a temp directory
+  const tempDir = await downloadGitHubTarball(gitHubRepo);
+
+  // Copy the templatePath to the path
+  await cp(join(tempDir, templatePath), path, { recursive: true });
+
+  // Clean up
+  await rmdir(tempDir, { recursive: true });
+
+  // Update name in package.json
+  const pkgJsonPath = join(path, "package.json");
+  const pkgJson = JSON.parse(await readFile(pkgJsonPath, "utf-8"));
+  pkgJson.name = appName;
+  await writeFile(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
+}
+
+async function downloadGitHubTarball(gitHubRepo: string) {
+  const tempDir = await mkdtemp(join(tmpdir(), "superflare-"));
+
+  const downloadUrl = `
+    https://api.github.com/repos/${gitHubRepo}/tarball
+  `.trim();
+
+  const response = await fetch(downloadUrl, {
+    headers: {
+      "user-agent": "Superflare CLI",
+    },
+  });
+
+  await pipeline(
+    // Download
+    // @ts-ignore
+    response.body!,
+    // Decompress
+    gunzipMaybe(),
+    // Unpack
+    extract(tempDir, {
+      strip: 1,
+      filter: (name) => {
+        name = name.replace(tempDir, "");
+        return !name.startsWith(normalize("/templates/"));
+      },
+    })
+  );
+
+  return tempDir;
+}
+
+type WranglerCommandResponse = { code: number; stdout: string; stderr: string };
+
+/**
+ * Run a wrangler command. It would be great to replace this with a real exported API instead
+ * of spawning a child process every time.
+ */
+async function runWranglerCommand(
+  command: string[]
+): Promise<WranglerCommandResponse> {
+  let stdout = "";
+  let stderr = "";
+
+  const child = spawn("npx", ["wrangler", ...command]);
+
+  child.stderr.on("data", (data) => {
+    stderr += data;
+  });
+  child.stdout.on("data", (data) => {
+    stdout += data;
+  });
+
+  return new Promise((resolve, reject) => {
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve({ code, stdout, stderr });
+        return;
+      }
+
+      reject({ code, stdout, stderr });
+    });
+  });
+}
+
+type TaskResult = Promise<{
+  success: boolean;
+  message: string;
+  wranglerConfig?: any;
+  superflareConfig?: any;
+}>;
+
+async function createD1Database(name: string): TaskResult {
+  try {
+    const result = await runWranglerCommand(["d1", "create", name]);
+
+    // Parse the ID out of the stdout:
+    // database_id = "79da141d-acd3-4d64-adb1-9a50f8ed7e2b"
+    const databaseId = result.stdout
+      .split("\n")
+      .find((line) => line.startsWith("database_id"))
+      ?.split("=")[1]
+      ?.trim()
+      .replace(/"/g, "");
+
+    if (!databaseId) {
+      return {
+        success: false,
+        message: `🤔 D1 Database: ${name} created, but we couldn't parse the ID. Check your Cloudflare Dashboard to find it.`,
+      };
+    }
+
+    return {
+      success: true,
+      message: `✅ D1 Database: ${name} created!`,
+      wranglerConfig: {
+        d1_databases: [
+          {
+            binding: "DB",
+            name,
+            database_id: databaseId,
+          },
+        ],
+      },
+      superflareConfig: `database: {\n  default: ctx.env.DB,\n},`,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      message: `❌ D1 Database: ${e.stderr}`,
+    };
+  }
+}
+
+async function createR2Bucket(name: string): TaskResult {
+  try {
+    await runWranglerCommand(["r2", "bucket", "create", name]);
+
+    return {
+      success: true,
+      message: `✅ R2 Bucket: ${name} created!`,
+      wranglerConfig: {
+        r2_buckets: [
+          {
+            binding: "BUCKET",
+            bucket_name: name,
+            preview_bucket_name: "BUCKET",
+          },
+        ],
+      },
+      superflareConfig: `storage: {
+  default: {
+    binding: ctx.env.BUCKET,
+  },
+},`,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      message: `❌ R2 Bucket: ${e.stderr}`,
+    };
+  }
+}
+
+async function createQueue(name: string): TaskResult {
+  try {
+    await runWranglerCommand(["queues", "create", name]);
+
+    return {
+      success: true,
+      message: `✅ Queue: ${name} created!`,
+      wranglerConfig: {
+        queues: {
+          producers: [
+            {
+              queue: name,
+              binding: "QUEUE",
+            },
+          ],
+          consumers: [
+            {
+              queue: name,
+            },
+          ],
+        },
+      },
+      superflareConfig: `queues: {\n  default: ctx.env.QUEUE,\n},`,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      message: `❌ Queue: ${e.stderr}`,
+    };
+  }
+}
+
+async function setUpDurableObject(pathName: string) {
+  // Add `export { Channel } from "superflare";` to the end of `worker.ts`:
+  const workerPath = join(pathName, "worker.ts");
+  const contents = await readFile(workerPath, "utf-8");
+  await writeFile(
+    workerPath,
+    `${contents}\nexport { Channel } from "superflare";`
+  );
+
+  return {
+    success: true,
+    message: `✅ Durable Object: Added binding and Channel export to worker.ts`,
+    wranglerConfig: {
+      durable_objects: {
+        bindings: [
+          {
+            name: "CHANNELS",
+            class_name: "Channel",
+          },
+        ],
+      },
+      migrations: [
+        {
+          tag: "v1",
+          new_classes: ["Channel"],
+        },
+      ],
+    },
+    superflareConfig: `channels: {\n  default: {\n    binding: ctx.env.CHANNELS,\n  },\n},`,
+  };
+}
+
+/**
+ * Update the project's wrangler config with some new config.
+ */
+async function addToWranglerConfig(
+  config: Record<string, any>,
+  pathName: string
+) {
+  let wranglerConfigPath = join(pathName, "wrangler.toml");
+
+  try {
+    throw new Error("not implemented for TOML yet");
+    // const wranglerConfig = await readToml(wranglerConfigPath);
+
+    // await writeToml(wranglerConfigPath, {
+    //   ...wranglerConfig,
+    //   ...config,
+    // });
+  } catch (e) {
+    // Must be using wrangler.json...
+    wranglerConfigPath = join(pathName, "wrangler.json");
+    const wranglerConfig = JSON.parse(
+      await readFile(wranglerConfigPath, "utf-8")
+    );
+
+    await writeFile(
+      wranglerConfigPath,
+      JSON.stringify(
+        {
+          ...wranglerConfig,
+          ...config,
+        },
+        null,
+        2
+      )
+    );
+  }
+}
+
+/**
+ * Write the superflare.config.ts file from scratch. This is pretty jank.
+ */
+async function writeSuperflareConfig(chunks: string[], pathName: string) {
+  const superflareConfigPath = join(pathName, "superflare.config.ts");
+
+  let contents = `import { defineConfig } from "superflare";\n\nexport default defineConfig<Env>((ctx) => {\n  return {\n`;
+
+  const indentation = "    ";
+
+  contents += indentation + "appKey: ctx.env.APP_KEY,\n";
+
+  chunks.forEach((chunk) => {
+    chunk.split("\n").forEach((line) => {
+      contents += `${indentation}${line}\n`;
+    });
+  });
+
+  contents += `  };\n});`;
+
+  await writeFile(superflareConfigPath, contents);
+}
+
+/**
+ * Check to see whether the user is logged in.
+ * BONUS: I think this also forces Wrangler to check for an existing auth token,
+ * which will help us later on when we need to create resources without making
+ * the user complete the auth flow over again.
+ */
+async function ensureWranglerAuthenticated() {
+  const result = await runWranglerCommand(["whoami"]);
+
+  return !result.stdout.includes("You are not authenticated");
+}
+
+/**
+ * Pop open the Wrangler login flow.
+ */
+async function wranglerLogin() {
+  return await new Promise<void>((resolve, reject) => {
+    spawn("npx", ["wrangler", "login"], { stdio: "inherit" }).on(
+      "close",
+      (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject();
+        }
+      }
+    );
+  });
+}
+
+async function setSecret(key: string, value: string, path: string) {
+  const devVarsPath = join(path, ".dev.vars");
+  let contents = "";
+
+  try {
+    contents = await readFile(devVarsPath, "utf-8");
+  } catch (_e) {
+    // Ignore
+  }
+
+  contents += `${key}=${value}`;
+
+  await writeFile(devVarsPath, contents);
+
+  // TODO: Set the secret in Wrangler, someday. I don't know how right now.
+}
