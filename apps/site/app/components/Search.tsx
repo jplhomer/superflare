@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import { DocSearchModal, useDocSearchKeyboardEvents } from "@docsearch/react";
 
 const docSearchConfig = {
@@ -9,11 +9,11 @@ const docSearchConfig = {
   // indexName: process.env.NEXT_PUBLIC_DOCSEARCH_INDEX_NAME,
 };
 
-function Hit({ hit, children }) {
-  return <Link href={hit.url}>{children}</Link>;
+function Hit({ hit, children }: { hit: any; children: any }) {
+  return <Link to={hit.url}>{children}</Link>;
 }
 
-function SearchIcon(props) {
+function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg aria-hidden="true" viewBox="0 0 20 20" {...props}>
       <path d="M16.293 17.707a1 1 0 0 0 1.414-1.414l-1.414 1.414ZM9 14a5 5 0 0 1-5-5H2a7 7 0 0 0 7 7v-2ZM4 9a5 5 0 0 1 5-5V2a7 7 0 0 0-7 7h2Zm5-5a5 5 0 0 1 5 5h2a7 7 0 0 0-7-7v2Zm8.707 12.293-3.757-3.757-1.414 1.414 3.757 3.757 1.414-1.414ZM14 9a4.98 4.98 0 0 1-1.464 3.536l1.414 1.414A6.98 6.98 0 0 0 16 9h-2Zm-1.464 3.536A4.98 4.98 0 0 1 9 14v2a6.98 6.98 0 0 0 4.95-2.05l-1.414-1.414Z" />
@@ -24,6 +24,7 @@ function SearchIcon(props) {
 export function Search() {
   let [isOpen, setIsOpen] = useState(false);
   let [modifierKey, setModifierKey] = useState();
+  const navigate = useNavigate();
 
   const onOpen = useCallback(() => {
     setIsOpen(true);
@@ -68,7 +69,7 @@ export function Search() {
             hitComponent={Hit}
             navigator={{
               navigate({ itemUrl }) {
-                Router.push(itemUrl);
+                navigate(itemUrl);
               },
             }}
           />,
