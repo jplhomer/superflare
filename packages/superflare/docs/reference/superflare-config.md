@@ -5,7 +5,17 @@ description: Configuration options for Superflare apps
 
 ## Defining Superflare configuration
 
-Superflare apps are configured using a `superflare.config.ts` file in the root of your project. This file should export a function that returns an object.
+Superflare apps are configured using a `superflare.config.ts` file in the root of your project. This file should export a function wrapped with `defineConfig` that returns an object.
+
+```ts
+import { defineConfig } from "superflare";
+
+export default defineConfig((ctx) => {
+  return {
+    // ...
+  };
+});
+```
 
 It receives a single `ctx` argument that contains the following properties:
 
