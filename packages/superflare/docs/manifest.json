@@ -11,6 +11,10 @@
         "href": "/getting-started"
       },
       {
+        "title": "Deploying Superflare Apps",
+        "href": "/deploying"
+      },
+      {
         "title": "Design Principles",
         "href": "/design"
       }
@@ -76,6 +80,15 @@
       {
         "title": "Hashing",
         "href": "/security/hashing"
+      }
+    ]
+  },
+  {
+    "title": "API Reference",
+    "links": [
+      {
+        "title": "superflare.config",
+        "href": "/reference/superflare-config"
       }
     ]
   }

@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
   "twitter:card": "summary",
   "twitter:creator": "@jplhomer",
   "og:type": "website",
-  "og:image": "https://superflare.dev/images/superflare-og.jpg",
+  "og:image": "https://superflare.dev/superflare-og.jpg",
 });
 
 export const links: LinksFunction = () => [
