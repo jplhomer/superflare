@@ -325,7 +325,7 @@ async function runWranglerCommand(
   let stdout = "";
   let stderr = "";
 
-  const child = spawn("npx", ["wrangler@latest", ...command]);
+  const child = spawn("npx", ["wrangler@latest", ...command], { shell: true });
 
   child.stderr.on("data", (data) => {
     stderr += data;
@@ -390,7 +390,7 @@ async function createD1Database(name: string): TaskResult {
   } catch (e: any) {
     return {
       success: false,
-      message: `❌ D1 Database: ${e.stderr}`,
+      message: `❌ D1 Database: ${e.stderr || e.stdout || e.message}`,
     };
   }
 }
@@ -420,7 +420,7 @@ async function createR2Bucket(name: string): TaskResult {
   } catch (e: any) {
     return {
       success: false,
-      message: `❌ R2 Bucket: ${e.stderr}`,
+      message: `❌ R2 Bucket: ${e.stderr || e.stdout || e.message}`,
     };
   }
 }
@@ -452,7 +452,7 @@ async function createQueue(name: string): TaskResult {
   } catch (e: any) {
     return {
       success: false,
-      message: `❌ Queue: ${e.stderr}`,
+      message: `❌ Queue: ${e.stderr || e.stdout || e.message}`,
     };
   }
 }
