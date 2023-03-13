@@ -106,6 +106,13 @@ export async function newHandler(
     throw new Error("Invalid path");
   }
 
+  // Validate appName. It should just be a string of letters, numbers, and dashes.
+  if (!appName.match(/^[a-z0-9-]+$/)) {
+    throw new Error(
+      `Invalid app name: ${appName}. App names can only contain lowercase letters, numbers, and dashes.`
+    );
+  }
+
   s.start(`Creating a new Remix Superflare app in ${path}...`);
 
   await generateTemplate(path, appName, argv.template || "remix", argv.ref);
