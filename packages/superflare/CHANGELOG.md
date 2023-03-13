@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.11
+
+### Patch Changes
+
+- d3d4776: Add lots of refinement
+
 ## 0.0.10
 
 ### Patch Changes
