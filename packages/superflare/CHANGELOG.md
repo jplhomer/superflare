@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.15
+
+### Patch Changes
+
+- c78f8b1: Try to get the latest version of wrangler successfully
+
 ## 0.0.14
 
 ### Patch Changes
