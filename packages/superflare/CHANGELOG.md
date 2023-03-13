@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.14
+
+### Patch Changes
+
+- ce7cea9: More graceful handling of wrangler "whoami"
+
 ## 0.0.13
 
 ### Patch Changes
