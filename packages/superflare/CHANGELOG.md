@@ -1,5 +1,13 @@
 # superflare
 
+## 0.0.12
+
+### Patch Changes
+
+- 09901b7: Use latest GitHub release for templates
+- 0bbd1f8: Include Broadcasting by default
+- 091f84c: Clean up logging in dev
+
 ## 0.0.11
 
 ### Patch Changes
