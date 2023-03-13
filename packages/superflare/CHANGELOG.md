@@ -1,5 +1,12 @@
 # superflare
 
+## 0.0.13
+
+### Patch Changes
+
+- fde0626: Improve new app startup messaging
+- c8e63f1: Fix spacing in commands
+
 ## 0.0.12
 
 ### Patch Changes
