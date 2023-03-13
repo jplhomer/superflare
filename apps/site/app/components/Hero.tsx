@@ -77,7 +77,9 @@ export function Hero() {
                 The best parts of D1, R2, Queues, and more—all in one place.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <Button href="/getting-started">Get started</Button>
+                <Button href="/getting-started" prefetch="intent">
+                  Get started
+                </Button>
                 <Button
                   href="https://github.com/jplhomer/superflare"
                   variant="secondary"
