@@ -21,7 +21,7 @@ interface Env {
   __STATIC_CONTENT: string;
 
   DB: D1Database;
-  REMIX_CMS_MEDIA: R2Bucket;
+  BUCKET: R2Bucket;
   APP_KEY: string;
   QUEUE: Queue;
   CHANNELS: DurableObjectNamespace;
