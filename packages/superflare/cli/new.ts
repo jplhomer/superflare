@@ -49,7 +49,15 @@ export async function newHandler(
 ) {
   intro(`Create a new Superflare app`);
 
+  const s = spinner();
+
+  s.start(
+    "Welcome! Checking to make sure you have the Wrangler CLI installed and authenticated..."
+  );
+
   if (!(await ensureWranglerAuthenticated())) {
+    s.stop("Hmm. Looks like you're not logged in yet.");
+
     const wantsToLogIn = await confirm({
       message:
         "You need to be logged into Wrangler to create a Superflare app. Log in now?",
@@ -64,6 +72,8 @@ export async function newHandler(
 
     await wranglerLogin();
   }
+
+  s.stop("Everything looks good!");
 
   let path = "";
 
@@ -95,8 +105,6 @@ export async function newHandler(
   if (!appName) {
     throw new Error("Invalid path");
   }
-
-  const s = spinner();
 
   s.start(`Creating a new Remix Superflare app in ${path}...`);
 
