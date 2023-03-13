@@ -8,7 +8,7 @@ description: Getting started with Superflare
 The easiest way to start with Superflare is to spin up a brand-new project with the following command:
 
 ```bash
-npx superflare new
+npx superflare@latest new
 ```
 
 Superflare will ask you which bindings you'd like to use for D1, R2 and KV. It will also offer to create the bindings if you haven't already!

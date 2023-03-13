@@ -12,7 +12,7 @@ Check out various Superflare [example apps](https://github.com/jplhomer/superfla
 Check it out on [GitHub](https://github.com/jplhomer/superflare), or create a new app right now:
 
 ```bash
-npx superflare new
+npx superflare@latest new
 ```
 
 Superflare is a project created by me, [Josh Larson](https://jplhomer.org).
