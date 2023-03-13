@@ -27,6 +27,10 @@ export function newOptions(yargs: CommonYargsArgv) {
       description: "The template to use",
       default: "remix",
     })
+    .option("ref", {
+      type: "string",
+      description: "Optional GitHub ref to use for templates",
+    })
     .positional("name", {
       type: "string",
       description: "The name of the app to create",
@@ -78,7 +82,12 @@ export async function newHandler(
 
     path = pathResponse || defaultPath;
   } else {
-    path = `./${argv.name}`;
+    path = argv.name;
+
+    // Prepend a relative path if necessary
+    if (!path.startsWith(".") && !path.startsWith("/")) {
+      path = `./${path}`;
+    }
   }
 
   const appName = path.split("/").pop();
@@ -91,7 +100,7 @@ export async function newHandler(
 
   s.start(`Creating a new Remix Superflare app in ${path}...`);
 
-  await generateTemplate(path, appName, argv.template || "remix");
+  await generateTemplate(path, appName, argv.template || "remix", argv.ref);
 
   s.stop(`App created!`);
 
@@ -163,7 +172,7 @@ Do you want to continue?`;
       message: confirmMessage,
     });
 
-    if (!confirmation) {
+    if (!confirmation || isCancel(confirmation)) {
       return await buildPlan();
     }
 
@@ -229,13 +238,14 @@ Do you want to continue?`;
 async function generateTemplate(
   path: string,
   appName: string,
-  template: string
+  template: string,
+  ref?: string
 ) {
   const gitHubRepo = `jplhomer/superflare`;
   const templatePath = `templates/${template}`;
 
   // Download tarball to a temp directory
-  const tempDir = await downloadGitHubTarball(gitHubRepo);
+  const tempDir = await downloadGitHubTarball(gitHubRepo, ref);
 
   // Copy the templatePath to the path
   await cp(join(tempDir, templatePath), path, { recursive: true });
@@ -250,14 +260,27 @@ async function generateTemplate(
   await writeFile(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
 }
 
-async function downloadGitHubTarball(gitHubRepo: string) {
+async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   const tempDir = await mkdtemp(join(tmpdir(), "superflare-"));
 
-  const downloadUrl = `
-    https://api.github.com/repos/${gitHubRepo}/tarball
-  `.trim();
+  // Get version of latest release from GitHub, and use that if no ref is specified.
+  const release = await fetch(
+    `https://api.github.com/repos/${gitHubRepo}/releases/latest`,
+    {
+      headers: {
+        "user-agent": "Superflare CLI",
+      },
+    }
+  );
 
-  const response = await fetch(downloadUrl, {
+  const { name } = (await release.json()) as { name: string };
+  const gitHubRef = ref || name || "main";
+
+  const downloadUrl = new URL(
+    `https://api.github.com/repos/${gitHubRepo}/tarball/${gitHubRef}`
+  );
+
+  const response = await fetch(downloadUrl.toString(), {
     headers: {
       "user-agent": "Superflare CLI",
     },
