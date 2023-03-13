@@ -120,7 +120,7 @@ export async function newHandler(
           hint: "We'll set up a Durable Object for you",
         },
       ],
-      initialValues: ["database", "storage", "queue"],
+      initialValues: ["database", "storage", "queue", "broadcasting"],
     });
 
     if (isCancel(selections)) {
