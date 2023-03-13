@@ -1,5 +1,15 @@
 # @superflare/remix
 
+## 0.0.4
+
+### Patch Changes
+
+- 806dceb: Prevent recursive type defs
+- Updated dependencies [09901b7]
+- Updated dependencies [0bbd1f8]
+- Updated dependencies [091f84c]
+  - superflare@0.0.12
+
 ## 0.0.3
 
 ### Patch Changes
