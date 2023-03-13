@@ -6,6 +6,7 @@ import { Button } from "~/components/Button";
 import { HeroBackground } from "~/components/HeroBackground";
 import blurCyanImage from "~/images/blur-cyan.png";
 import blurIndigoImage from "~/images/blur-indigo.png";
+import { Logo } from "./Logo";
 
 const codeLanguage = "javascript";
 const routeCode = `export async function action({ params }) {
@@ -70,7 +71,7 @@ export function Hero() {
             />
             <div className="relative">
               <p className="inline bg-gradient-to-r from-red-200 via-rose-400 to-red-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
-                A magical full-stack toolkit for Cloudflare Workers.
+                A full-stack toolkit for Cloudflare Workers.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
                 The best parts of D1, R2, Queues, and more—all in one place.

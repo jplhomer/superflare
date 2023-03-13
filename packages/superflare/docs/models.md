@@ -1,5 +1,6 @@
 ---
 title: Models (D1)
+description: Learn how to use Superflare models to interact with your D1 database.
 ---
 
 Models are a handy way to interact with your [D1 database](https://developers.cloudflare.com/d1/). They provide a layer of abstraction between your database and your application, allowing you to define relationships between models and easily query for data.

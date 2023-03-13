@@ -1,5 +1,6 @@
 ---
 title: Database Migrations
+description: Find out how to use database migrations with Superflare.
 ---
 
 ## Introduction

@@ -14,6 +14,12 @@ export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Superflare",
   viewport: "width=device-width,initial-scale=1",
+  description:
+    "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
+  "twitter:card": "summary",
+  "twitter:creator": "@jplhomer",
+  "og:type": "website",
+  "og:image": "https://superflare.dev/images/superflare-og.jpg",
 });
 
 export const links: LinksFunction = () => [

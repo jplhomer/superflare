@@ -1,7 +1,7 @@
 {
   "name": "superflare",
   "version": "0.0.11",
-  "description": "The missing full-stack framework for Cloudflare Workers.",
+  "description": "A full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
   "types": "dist/index.types.d.ts",
   "bugs": {

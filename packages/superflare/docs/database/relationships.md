@@ -1,5 +1,6 @@
 ---
 title: Model Relationships
+description: Learn how to define relationships between models in Superflare.
 ---
 
 Superflare allows you to define relationships between your models. You can then use these relationships to query related models or add related models to a model.

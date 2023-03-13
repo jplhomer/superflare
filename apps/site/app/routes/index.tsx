@@ -1,4 +1,8 @@
-import { json, LoaderArgs } from "@remix-run/cloudflare";
+import {
+  json,
+  type LoaderArgs,
+  type MetaFunction,
+} from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { Layout } from "~/components/Layout";
 import { getManifest, getMarkdownForPath, parseMarkdoc } from "~/docs.server";
@@ -20,10 +24,18 @@ export async function loader({ params, context: { env } }: LoaderArgs) {
     throw new Response("Manifest could not be loaded", { status: 404 });
   }
 
-  const { content, title, tableOfContents } = parseMarkdoc(markdown);
+  const { content, title, tableOfContents, description } =
+    parseMarkdoc(markdown);
 
-  return json({ content, title, tableOfContents, manifest });
+  return json({ content, title, tableOfContents, manifest, description });
 }
+
+export const meta: MetaFunction = ({ data }: { data: any }) => {
+  return {
+    title: data.title,
+    description: data.description,
+  };
+};
 
 export default function DocsPage() {
   const { content, title, tableOfContents, manifest } =

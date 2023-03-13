@@ -1,5 +1,6 @@
 ---
 title: File Storage
+description: Storing and retrieving files from Cloudflare's R2 storage
 ---
 
 Superflare provides a simple interface for working with [R2 storage](https://www.cloudflare.com/products/r2/). You can use this to store and retrieve files from Cloudflare Workers.
@@ -37,7 +38,7 @@ export async function action() {
 
 ## Serving public files
 
-By default, Superflare does not serve your bucket contents to the pbulic. However, you can mark a disk as public by setting the `publicPath` property to a public route in your `superflare.config.ts` file:
+By default, Superflare does not serve your bucket contents to the public. However, you can mark a disk as public by setting the `publicPath` property to a public route in your `superflare.config.ts` file:
 
 ```ts
 // superflare.config.ts

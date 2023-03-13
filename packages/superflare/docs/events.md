@@ -1,5 +1,6 @@
 ---
 title: Events
+description: Emitting and listening to events in Superflare
 ---
 
 ## Introduction

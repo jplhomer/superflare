@@ -1,5 +1,6 @@
 ---
 title: Superflare's Design Principles
+description: How I built Superflare, some hot takes, and more.
 ---
 
 I built Superflare to scratch my own itch. Traditionally, I'm a PHP developer who's been working with Laravel for a long time. However, I've spent much of my time recently in the JavaScript framework space.
@@ -95,7 +96,7 @@ Again, there are tradeoffs, but:
 
 No decorators in Superflare.
 
-### Auth at the Center
+### Auth included
 
 Superflare is built around the idea that authentication is a core part of any application. It's not an afterthought.
 

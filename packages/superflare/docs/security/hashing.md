@@ -1,5 +1,6 @@
 ---
-title: "Hashing"
+title: Hashing
+description: Hashing passwords and other sensitive data
 ---
 
 ## Introduction

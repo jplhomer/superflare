@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+description: Getting started with Superflare
 ---
 
 ## Installation

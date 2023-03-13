@@ -1,5 +1,6 @@
 ---
 title: Sessions
+description: Storing information about users across requests with HTTP sessions.
 ---
 
 Sessions provide a way to store information about users across requests. Superflare provides a `SuperflareSession` class which acts as a wrapper around a simple `Session` object.
