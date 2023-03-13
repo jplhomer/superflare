@@ -33,7 +33,9 @@ export async function loader({ params, context: { env } }: LoaderArgs) {
 export const meta: MetaFunction = ({ data }: { data: any }) => {
   return {
     title: data.title,
+    "twitter:title": data.title,
     description: data.description,
+    "twitter:description": data.description,
   };
 };
 

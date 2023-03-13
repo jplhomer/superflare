@@ -13,13 +13,17 @@ import "focus-visible";
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Superflare",
+  "twitter:title": "Superflare",
   viewport: "width=device-width,initial-scale=1",
   description:
     "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
-  "twitter:card": "summary",
+  "twitter:description":
+    "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
+  "twitter:card": "summary_large_image",
   "twitter:creator": "@jplhomer",
   "og:type": "website",
   "og:image": "https://superflare.dev/superflare-og.jpg",
+  "twitter:image": "https://superflare.dev/superflare-og.jpg",
 });
 
 export const links: LinksFunction = () => [
