@@ -84,11 +84,15 @@
     ]
   },
   {
-    "title": "API Reference",
+    "title": "Reference",
     "links": [
       {
         "title": "superflare.config",
         "href": "/reference/superflare-config"
+      },
+      {
+        "title": "CLI",
+        "href": "/reference/cli"
       }
     ]
   }

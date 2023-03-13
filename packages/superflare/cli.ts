@@ -60,7 +60,7 @@ function createCLIParser(argv: string[]) {
   // Migrate
   superflare.command(
     "migrate",
-    "🏗️  Migrate your database and update types",
+    "🏗️ Migrate your database and update types",
     migrateOptions,
     migrateHandler
   );
@@ -100,7 +100,7 @@ function createCLIParser(argv: string[]) {
   );
 
   // DB
-  superflare.command("db", "🗄️  Manage your database", (yargs) => {
+  superflare.command("db", "🗄️ Manage your database", (yargs) => {
     return db(yargs.command(subHelp));
   });
 
