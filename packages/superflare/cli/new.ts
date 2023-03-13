@@ -325,7 +325,7 @@ async function runWranglerCommand(
   let stdout = "";
   let stderr = "";
 
-  const child = spawn("npx", ["wrangler", ...command]);
+  const child = spawn("npx", ["wrangler@latest", ...command]);
 
   child.stderr.on("data", (data) => {
     stderr += data;
@@ -557,9 +557,15 @@ async function writeSuperflareConfig(chunks: string[], pathName: string) {
  * the user complete the auth flow over again.
  */
 async function ensureWranglerAuthenticated() {
-  const result = await runWranglerCommand(["whoami"]);
+  try {
+    const result = await runWranglerCommand(["whoami"]);
 
-  return !result.stdout.includes("You are not authenticated");
+    return !result.stdout.includes("You are not authenticated");
+  } catch (_e: any) {
+    // Some older versions of Wrangler return a non-zero exit code when
+    // you're not logged in.
+    return false;
+  }
 }
 
 /**
