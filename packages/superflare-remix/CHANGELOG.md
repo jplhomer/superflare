@@ -1,5 +1,13 @@
 # @superflare/remix
 
+## 0.0.3
+
+### Patch Changes
+
+- d3d4776: Add lots of refinement
+- Updated dependencies [d3d4776]
+  - superflare@0.0.11
+
 ## 0.0.2
 
 ### Patch Changes
