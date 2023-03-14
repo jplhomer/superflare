@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.18
+
+### Patch Changes
+
+- 592a05e: Tell people to use `--force` when running `npm install` until Remix Cloudflare template types are fixed.
+
 ## 0.0.17
 
 ### Patch Changes
