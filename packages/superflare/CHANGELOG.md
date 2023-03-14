@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.19
+
+### Patch Changes
+
+- 713e1eb: Add even more error handling
+
 ## 0.0.18
 
 ### Patch Changes
