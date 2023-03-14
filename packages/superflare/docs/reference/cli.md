@@ -45,8 +45,53 @@ npx superflare dev
 
 ## `superflare generate`
 
+Scaffold useful things in your Superflare app:
+
+```bash
+$ superflare generate
+
+🌇 Scaffold useful things
+
+Commands:
+  superflare g job <name>        Generate a Job
+  superflare g migration <name>  Generate a Migration
+  superflare g model <name>      Generate a Model
+```
+
+### `superflare generate job`
+
+Generates a new [Job](/queues) with the given name.
+
+### `superflare generate migration`
+
+Generates a new [Migration](/database/migrations) with the given name.
+
+### `superflare generate model`
+
+Generates a new [Model](/models) with the given name.
+
+**Optional**: `-m` or `--migration` will generate a migration for the model as well.
+
 ## `superflare new`
+
+Allows you to create a new Superflare app.
 
 ## `superflare console`
 
+Opens an interactive developer console for your Superflare app. You can access all your [models](/models) and perform queries against your local database.
+
 ## `superflare db`
+
+```bash
+$ superflare db
+
+🗄️ Manage your database
+
+Commands:
+  superflare db seed  🌱  Seed your database with data
+
+```
+
+### `superflare db seed`
+
+Seeds your local database with data from your [seed file](/database/seeding).

@@ -31,7 +31,7 @@ It receives a single `ctx` argument that contains the following properties:
 
 ### `database`
 
-This is an object which contains strings for database connections which refer to bindings. At a minimum, you should provide a `default` connection:
+This is an object which contains strings for [database](/database/getting-started) connections which refer to bindings. At a minimum, you should provide a `default` connection:
 
 ```ts
 database: {
@@ -42,7 +42,7 @@ database: {
 
 ### `storage`
 
-This is an object which contains strings for storage disks which refer to bindings. At a minimum, you should provide a `default` disk:
+This is an object which contains strings for [storage disks](/storage) which refer to bindings. At a minimum, you should provide a `default` disk:
 
 ```ts
 storage: {
@@ -53,7 +53,7 @@ storage: {
 
 ### `queues`
 
-This is an object which contains strings for queue connections which refer to bindings. At a minimum, you should provide a `default` connection:
+This is an object which contains strings for [queue connections](/queues) which refer to bindings. At a minimum, you should provide a `default` connection:
 
 ```ts
 queues: {
