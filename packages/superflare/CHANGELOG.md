@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.16
+
+### Patch Changes
+
+- b662086: Sanitize app name
+
 ## 0.0.15
 
 ### Patch Changes
