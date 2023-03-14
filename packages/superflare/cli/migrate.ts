@@ -94,7 +94,16 @@ export async function migrateHandler(
   }
 
   logger.info(`Migrating database...`);
-  await wranglerMigrate();
+  try {
+    await wranglerMigrate();
+  } catch (e: any) {
+    logger.error(
+      "❌ An error ocurred while running wrangler migrations: " + e.stderr ||
+        e.stdout ||
+        e.message
+    );
+    process.exit(1);
+  }
 
   const db = await createSQLiteDB(dbPath, logger.log);
 

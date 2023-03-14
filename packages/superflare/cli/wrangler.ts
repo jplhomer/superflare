@@ -41,7 +41,7 @@ export async function runWranglerCommand(
  * Spawn a child process to execute: npx wrangler d1 migrations apply DB --local
  */
 export async function wranglerMigrate() {
-  return await runWranglerCommand([
+  await runWranglerCommand([
     "d1",
     "migrations",
     "apply",
