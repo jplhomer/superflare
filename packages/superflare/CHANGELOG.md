@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.17
+
+### Patch Changes
+
+- 320da3c: Run wrangler commands using common interface with better error handling and logging
+
 ## 0.0.16
 
 ### Patch Changes
