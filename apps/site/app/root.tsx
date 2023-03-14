@@ -1,4 +1,9 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
+import {
+  json,
+  type LinksFunction,
+  type MetaFunction,
+  type LoaderArgs,
+} from "@remix-run/cloudflare";
 import {
   Links,
   LiveReload,
@@ -6,6 +11,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import styles from "./styles/tailwind.css";
 import "focus-visible";
@@ -37,6 +43,16 @@ export const links: LinksFunction = () => [
     href: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>",
   },
 ];
+
+export async function loader({ context: { env } }: LoaderArgs) {
+  return json({
+    ENV: {
+      DOCSEARCH_APP_ID: env.DOCSEARCH_APP_ID,
+      DOCSEARCH_API_KEY: env.DOCSEARCH_API_KEY,
+      DOCSEARCH_INDEX_NAME: env.DOCSEARCH_INDEX_NAME,
+    },
+  });
+}
 
 const themeScript = `
   let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
@@ -77,6 +93,7 @@ const themeScript = `
 `;
 
 export default function App() {
+  const data = useLoaderData<typeof loader>();
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
       <head>
@@ -86,6 +103,11 @@ export default function App() {
       </head>
       <body className="bg-white dark:bg-slate-900">
         <Outlet />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

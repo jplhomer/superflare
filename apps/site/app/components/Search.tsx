@@ -3,12 +3,6 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate } from "@remix-run/react";
 import { DocSearchModal, useDocSearchKeyboardEvents } from "@docsearch/react";
 
-const docSearchConfig = {
-  // appId: process.env.NEXT_PUBLIC_DOCSEARCH_APP_ID,
-  // apiKey: process.env.NEXT_PUBLIC_DOCSEARCH_API_KEY,
-  // indexName: process.env.NEXT_PUBLIC_DOCSEARCH_INDEX_NAME,
-};
-
 function Hit({ hit, children }: { hit: any; children: any }) {
   return <Link to={hit.url}>{children}</Link>;
 }
@@ -23,7 +17,7 @@ function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function Search() {
   let [isOpen, setIsOpen] = useState(false);
-  let [modifierKey, setModifierKey] = useState();
+  let [modifierKey, setModifierKey] = useState<string | undefined>();
   const navigate = useNavigate();
 
   const onOpen = useCallback(() => {
@@ -63,13 +57,19 @@ export function Search() {
       {isOpen &&
         createPortal(
           <DocSearchModal
-            {...docSearchConfig}
+            // @ts-ignore
+            appId={window.ENV.DOCSEARCH_APP_ID}
+            // @ts-ignore
+            apiKey={window.ENV.DOCSEARCH_API_KEY}
+            // @ts-ignore
+            indexName={window.ENV.DOCSEARCH_INDEX_NAME}
             initialScrollY={window.scrollY}
             onClose={onClose}
             hitComponent={Hit}
             navigator={{
               navigate({ itemUrl }) {
-                navigate(itemUrl);
+                const url = new URL(itemUrl);
+                navigate(url.pathname + url.search + url.hash);
               },
             }}
           />,

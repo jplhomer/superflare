@@ -63,8 +63,7 @@ function Header({ navigation }: { navigation: Manifest }) {
         </Link>
       </div>
       <div className="-my-5 mr-6 sm:mr-8 md:mr-0">
-        {/* TODO: Display when Algolia gives us their blessing */}
-        {/* <Search /> */}
+        <Search />
       </div>
       <div className="relative flex basis-0 justify-end gap-6 sm:gap-8 md:flex-grow">
         <ThemeSelector className="relative z-10" />
