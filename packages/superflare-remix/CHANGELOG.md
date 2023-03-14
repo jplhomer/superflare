@@ -1,5 +1,12 @@
 # @superflare/remix
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [320da3c]
+  - superflare@0.0.17
+
 ## 0.0.8
 
 ### Patch Changes
