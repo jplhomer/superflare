@@ -246,6 +246,8 @@ Do you want to continue?`;
 
   results.forEach((result) => logger.log(result.message));
 
+  // TODO: Drop the `--force` once the remix template is fixed:
+  // @see https://github.com/remix-run/remix/pull/5425
   outro(
     `You're all set! \`cd ${path}\`, run \`npm install --force\`, and then \`npx superflare migrate\` to get started.`
   );
