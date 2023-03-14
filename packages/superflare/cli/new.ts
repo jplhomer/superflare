@@ -18,6 +18,7 @@ import { extract } from "tar-fs";
 import { spawn } from "child_process";
 import { logger } from "./logger";
 import { randomBytes } from "crypto";
+import { runWranglerCommand } from "./wrangler";
 
 export function newOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -318,39 +319,6 @@ async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   );
 
   return tempDir;
-}
-
-type WranglerCommandResponse = { code: number; stdout: string; stderr: string };
-
-/**
- * Run a wrangler command. It would be great to replace this with a real exported API instead
- * of spawning a child process every time.
- */
-async function runWranglerCommand(
-  command: string[]
-): Promise<WranglerCommandResponse> {
-  let stdout = "";
-  let stderr = "";
-
-  const child = spawn("npx", ["wrangler@latest", ...command], { shell: true });
-
-  child.stderr.on("data", (data) => {
-    stderr += data;
-  });
-  child.stdout.on("data", (data) => {
-    stdout += data;
-  });
-
-  return new Promise((resolve, reject) => {
-    child.on("close", (code) => {
-      if (code === 0) {
-        resolve({ code, stdout, stderr });
-        return;
-      }
-
-      reject({ code, stdout, stderr });
-    });
-  });
 }
 
 type TaskResult = Promise<{
