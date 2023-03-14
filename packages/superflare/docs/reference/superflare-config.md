@@ -31,7 +31,7 @@ It receives a single `ctx` argument that contains the following properties:
 
 ### `database`
 
-This is an object which contains strings for [database](/database/getting-started) connections which refer to bindings. At a minimum, you should provide a `default` connection:
+This is an object which contains strings for [database connections](/database/getting-started) which refer to bindings. At a minimum, you should provide a `default` connection:
 
 ```ts
 database: {
