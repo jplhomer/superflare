@@ -269,3 +269,19 @@ To remove the association, use the `dissociate` method:
 profile.$user().dissociate();
 await profile.save();
 ```
+
+## Migrations and Relationships
+
+Superflare expects you to manually define migrations which map to your relationships. For example, if your `Post` mdoel `belongsTo` your `User` model, you would need to include a column for `userId` in a migration:
+
+```ts
+import { Schema } from "superflare";
+
+export default () => {
+  return Schema.create("posts", (table) => {
+    table.increments("id");
+    table.string("title");
+    table.integer("userId");
+  });
+};
+```
