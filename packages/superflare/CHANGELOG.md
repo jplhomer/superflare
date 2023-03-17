@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.20
+
+### Patch Changes
+
+- d700790: Add more output to superflare migrate
+
 ## 0.0.19
 
 ### Patch Changes
