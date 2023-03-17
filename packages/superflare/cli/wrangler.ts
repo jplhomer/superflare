@@ -16,7 +16,14 @@ export async function runWranglerCommand(
   let stdout = "";
   let stderr = "";
 
-  const child = spawn("npx", ["wrangler@latest", ...command], { shell: true });
+  const child = spawn("npx", ["wrangler@latest", ...command], {
+    shell: true,
+    env: {
+      ...process.env,
+      // TODO: Remove when D1 is stable.
+      NO_D1_WARNING: "true",
+    },
+  });
 
   child.stderr.on("data", (data) => {
     stderr += data;
@@ -41,7 +48,7 @@ export async function runWranglerCommand(
  * Spawn a child process to execute: npx wrangler d1 migrations apply DB --local
  */
 export async function wranglerMigrate() {
-  await runWranglerCommand([
+  return await runWranglerCommand([
     "d1",
     "migrations",
     "apply",
