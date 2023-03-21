@@ -1,6 +1,6 @@
 {
   "name": "superflare",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
   "types": "dist/index.types.d.ts",

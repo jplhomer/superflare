@@ -1,6 +1,6 @@
 {
   "name": "@superflare/remix",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Remix plugin for Superflare",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

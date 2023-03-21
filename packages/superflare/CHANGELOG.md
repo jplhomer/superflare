@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.22
+
+### Patch Changes
+
+- 5ae4bac: - Fix `$relationship.create()` and `$relationship.save()` to accept a single model and an array of models.
+
 ## 0.0.21
 
 ### Patch Changes
