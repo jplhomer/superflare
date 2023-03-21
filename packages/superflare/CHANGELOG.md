@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.21
+
+### Patch Changes
+
+- 1c37d48: Add a delete method to the R2 storage adapter
+
 ## 0.0.20
 
 ### Patch Changes
