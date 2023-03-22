@@ -28,6 +28,22 @@ If you've created a Superflare app with `npx superflare new`, you should already
 
 Superflare provides basic `/auth/register` and `/auth/login` routes and forms for you to use. You can use these as-is, or you can copy the code and modify it to your liking.
 
+## Overriding auth query
+
+By default, Superflare will query for your record with a simple [`.find()`](https://superflare.dev/database/getting-started#find) method. You can provide your own lookup by adding an `auth` class method to your `User` model.
+
+```ts
+export class User extends Model {
+  // ...
+  
+  static async auth (id: number) {
+    return this.with('myEagerLoadedRelation').find(id)
+  }
+  
+  // ...
+}
+```
+
 ## Protecting routes
 
 You can protect routes by using the `SuperflareAuth` instance you created in your app's entrypoint. For the purpose of this example, we'll pretend you're using Remix, and that you've injected the `SuperflareAuth` instance into the `AppContext` as `auth`:
