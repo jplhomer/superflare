@@ -57,7 +57,7 @@ export async function action({ request }) {
 }
 ```
 
-Instead, a better option is to stream file uploads directly to R2. Superflare provides a `parseMultipartFormData` utility to make parsing multipart form data requests easier:
+Instead, a better option is to stream file uploads directly to R2. Superflare provides a `parseMultipartFormData` utility, [inspired by Remix](https://remix.run/docs/en/1.14.3/utils/parse-multipart-form-data#uploadhandler), to make parsing multipart form data requests easier:
 
 ```ts
 import { storage, parseMultipartFormData } from "superflare";
