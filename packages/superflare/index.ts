@@ -1,4 +1,4 @@
-export { setConfig, defineConfig } from "./src/config";
+export { defineConfig } from "./src/config";
 export { Model } from "./src/model";
 export { SuperflareSession } from "./src/session";
 export { DatabaseException } from "./src/query-builder";
