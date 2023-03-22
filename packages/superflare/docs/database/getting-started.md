@@ -1,5 +1,6 @@
 ---
 title: Getting Started with D1 Models
+description: Learn about Superflare's D1 Models and how to use them to build your application.
 ---
 
 This documentation describes how to use Superflare's [D1 Models](/models).

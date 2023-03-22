@@ -1,0 +1,10 @@
+node_modules
+
+/.cache
+/build/*
+!/build/index.d.ts
+/public/build
+.env
+/.wrangler
+superflare.env.d.ts
+.dev.vars

@@ -1,5 +1,6 @@
 ---
 title: Seeding the Database
+description: Learn how to seed your local database with Superflare.
 ---
 
 ## Introduction

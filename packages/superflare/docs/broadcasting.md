@@ -1,5 +1,6 @@
 ---
 title: Broadcasting
+description: Broadcasting realtime events to users using Durable Objects and Events
 ---
 
 If you're building a modern web application, you'll probably want some form of realtime communication powered by [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API).

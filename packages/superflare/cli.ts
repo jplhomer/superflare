@@ -10,6 +10,7 @@ import { CommonYargsArgv } from "./cli/yargs-types";
 import { migrateHandler, migrateOptions } from "./cli/migrate";
 import { devHandler, devOptions } from "./cli/dev";
 import { db } from "./cli/db";
+import { newHandler, newOptions } from "./cli/new";
 
 const resetColor = "\x1b[0m";
 const fgGreenColor = "\x1b[32m";
@@ -59,7 +60,7 @@ function createCLIParser(argv: string[]) {
   // Migrate
   superflare.command(
     "migrate",
-    "🏗️  Migrate your database and update types",
+    "🏗️ Migrate your database and update types",
     migrateOptions,
     migrateHandler
   );
@@ -81,6 +82,14 @@ function createCLIParser(argv: string[]) {
     }
   );
 
+  // New
+  superflare.command(
+    "new [name]",
+    "🎸 Create a new Superflare project",
+    newOptions,
+    newHandler
+  );
+
   // Console
   superflare.command(
     ["console", "c"],
@@ -91,7 +100,7 @@ function createCLIParser(argv: string[]) {
   );
 
   // DB
-  superflare.command("db", "🗄️  Manage your database", (yargs) => {
+  superflare.command("db", "🗄️ Manage your database", (yargs) => {
     return db(yargs.command(subHelp));
   });
 

@@ -1,7 +1,7 @@
 {
   "name": "superflare",
-  "version": "0.0.10",
-  "description": "The missing full-stack framework for Cloudflare Workers.",
+  "version": "0.0.22",
+  "description": "A full-stack framework for Cloudflare Workers.",
   "main": "dist/index.js",
   "types": "dist/index.types.d.ts",
   "bugs": {
@@ -37,13 +37,16 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@clack/prompts": "^0.6.3",
     "bcryptjs": "^2.4.3",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
     "esbuild": "^0.17.10",
     "esbuild-register": "^3.4.2",
+    "gunzip-maybe": "^1.4.2",
     "npx-import": "^1.1.4",
     "pluralize": "^8.0.0",
+    "tar-fs": "^2.1.1",
     "tiny-invariant": "^1.3.1",
     "wrangler": "^2.12.0",
     "yargs": "^17.6.2"
@@ -55,8 +58,10 @@
     "@miniflare/shared": "^2.12.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/better-sqlite3": "^7.6.3",
+    "@types/gunzip-maybe": "^1.4.0",
     "@types/node": "^18.14.1",
     "@types/pluralize": "^0.0.29",
+    "@types/tar-fs": "^2.0.1",
     "@types/yargs": "^17.0.20",
     "better-sqlite3": "^7.6",
     "tsconfig": "workspace:*",

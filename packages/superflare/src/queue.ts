@@ -1,4 +1,4 @@
-import { asyncLocalStorage, runWithContext } from "./context";
+import { runWithContext } from "./context";
 import { defineConfig } from "./config";
 import { getContextFromUserConfig } from "./context";
 import { dispatchEvent, Event } from "./event";

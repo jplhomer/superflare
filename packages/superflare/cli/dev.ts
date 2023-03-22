@@ -61,13 +61,23 @@ export async function devHandler(
 
   const d1Bindings = config?.d1;
 
-  if (d1Bindings && Array.isArray(d1Bindings) && d1Bindings.length) {
+  if (
+    isPagesMode &&
+    d1Bindings &&
+    Array.isArray(d1Bindings) &&
+    d1Bindings.length
+  ) {
     logger.info(`Using D1 binding: ${d1Bindings.join(", ")}`);
   }
 
   const r2Bindings = config?.r2;
 
-  if (r2Bindings && Array.isArray(r2Bindings) && r2Bindings.length) {
+  if (
+    isPagesMode &&
+    r2Bindings &&
+    Array.isArray(r2Bindings) &&
+    r2Bindings.length
+  ) {
     logger.info(`Using R2 bindings: ${r2Bindings.join(", ")}`);
   }
 

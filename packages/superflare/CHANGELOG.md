@@ -1,5 +1,80 @@
 # superflare
 
+## 0.0.22
+
+### Patch Changes
+
+- 5ae4bac: - Fix `$relationship.create()` and `$relationship.save()` to accept a single model and an array of models.
+
+## 0.0.21
+
+### Patch Changes
+
+- 1c37d48: Add a delete method to the R2 storage adapter
+
+## 0.0.20
+
+### Patch Changes
+
+- d700790: Add more output to superflare migrate
+
+## 0.0.19
+
+### Patch Changes
+
+- 713e1eb: Add even more error handling
+
+## 0.0.18
+
+### Patch Changes
+
+- 592a05e: Tell people to use `--force` when running `npm install` until Remix Cloudflare template types are fixed.
+
+## 0.0.17
+
+### Patch Changes
+
+- 320da3c: Run wrangler commands using common interface with better error handling and logging
+
+## 0.0.16
+
+### Patch Changes
+
+- b662086: Sanitize app name
+
+## 0.0.15
+
+### Patch Changes
+
+- c78f8b1: Try to get the latest version of wrangler successfully
+
+## 0.0.14
+
+### Patch Changes
+
+- ce7cea9: More graceful handling of wrangler "whoami"
+
+## 0.0.13
+
+### Patch Changes
+
+- fde0626: Improve new app startup messaging
+- c8e63f1: Fix spacing in commands
+
+## 0.0.12
+
+### Patch Changes
+
+- 09901b7: Use latest GitHub release for templates
+- 0bbd1f8: Include Broadcasting by default
+- 091f84c: Clean up logging in dev
+
+## 0.0.11
+
+### Patch Changes
+
+- d3d4776: Add lots of refinement
+
 ## 0.0.10
 
 ### Patch Changes

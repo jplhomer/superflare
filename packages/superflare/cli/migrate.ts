@@ -94,7 +94,20 @@ export async function migrateHandler(
   }
 
   logger.info(`Migrating database...`);
-  await wranglerMigrate();
+  try {
+    const results = await wranglerMigrate();
+
+    // Always print results. Sometimes D1 errors with an exit code of 0, so we
+    // can't rely on that. Plus, it might be nice to help the user with debugging.
+    logger.info(results.stdout);
+  } catch (e: any) {
+    logger.error(
+      "❌ An error occurred while running wrangler migrations:\n" + e.stderr ||
+        e.stdout ||
+        e.message
+    );
+    process.exit(1);
+  }
 
   const db = await createSQLiteDB(dbPath, logger.log);
 

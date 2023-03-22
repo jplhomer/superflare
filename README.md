@@ -1,5 +1,9 @@
 # Superflare
 
-The missing full-stack framework for Cloudflare Workers.
+A full-stack toolkit for Cloudflare Workers.
 
-[Read the docs](packages/superflare/README.md)
+[Read the docs](https://superflare.dev), or get started now:
+
+```bash
+npx superflare@latest new
+```

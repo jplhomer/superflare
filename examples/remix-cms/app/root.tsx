@@ -1,8 +1,4 @@
-import type {
-  LinksFunction,
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/cloudflare";
+import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
 import {
   Links,
   LiveReload,
@@ -13,7 +9,6 @@ import {
 } from "@remix-run/react";
 import styles from "./tailwind.css";
 import syntax from "./styles/syntax.css";
-import setConfig from "../superflare.config";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -25,14 +20,6 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   { rel: "stylesheet", href: syntax },
 ];
-
-export async function loader({ request, context: { env, ctx } }: LoaderArgs) {
-  return setConfig({
-    env,
-    ctx,
-    request,
-  });
-}
 
 export default function App() {
   return (

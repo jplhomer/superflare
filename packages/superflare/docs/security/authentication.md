@@ -1,5 +1,6 @@
 ---
-title: "Authentication"
+title: Authentication
+description: Find out how to use Superflare's Authentication system
 ---
 
 ## Introduction

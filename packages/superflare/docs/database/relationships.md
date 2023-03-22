@@ -1,5 +1,6 @@
 ---
 title: Model Relationships
+description: Learn how to define relationships between models in Superflare.
 ---
 
 Superflare allows you to define relationships between your models. You can then use these relationships to query related models or add related models to a model.
@@ -267,4 +268,20 @@ To remove the association, use the `dissociate` method:
 ```ts
 profile.$user().dissociate();
 await profile.save();
+```
+
+## Migrations and Relationships
+
+Superflare expects you to manually define [migrations](/database/migrations) which map to your relationships. For example, if your `Post` mdoel `belongsTo` your `User` model, you would need to include a column for `userId` in a migration:
+
+```ts
+import { Schema } from "superflare";
+
+export default () => {
+  return Schema.create("posts", (table) => {
+    table.increments("id");
+    table.string("title");
+    table.integer("userId");
+  });
+};
 ```

@@ -60,8 +60,8 @@ it("supports timestamps", () => {
   expect(schema.toSql()).toEqual(
     `CREATE TABLE articles (
   id INTEGER PRIMARY KEY,
-  created_at DATETIME NOT NULL,
-  updated_at DATETIME NOT NULL
+  createdAt DATETIME NOT NULL,
+  updatedAt DATETIME NOT NULL
 );`
   );
 });

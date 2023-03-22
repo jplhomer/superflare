@@ -37,6 +37,10 @@ class Storage {
     return this.disk.binding.get(key);
   }
 
+  delete(key: string) {
+    return this.disk.binding.delete(key);
+  }
+
   put(file: File) {
     const extension = file.name.split(".").pop();
     const hash = crypto.randomUUID();

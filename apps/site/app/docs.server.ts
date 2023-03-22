@@ -201,11 +201,12 @@ export function parseMarkdoc(markdown: string) {
     : ({} as Frontmatter);
 
   const title = frontmatter.title;
+  const description = frontmatter.description;
 
   let tableOfContents =
     content && typeof content !== "string"
       ? collectHeadings(Array.isArray(content) ? content : content.children)
       : [];
 
-  return { content, frontmatter, tableOfContents, title };
+  return { content, frontmatter, tableOfContents, title, description };
 }

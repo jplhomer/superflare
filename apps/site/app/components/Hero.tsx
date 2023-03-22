@@ -6,6 +6,7 @@ import { Button } from "~/components/Button";
 import { HeroBackground } from "~/components/HeroBackground";
 import blurCyanImage from "~/images/blur-cyan.png";
 import blurIndigoImage from "~/images/blur-indigo.png";
+import { Logo } from "./Logo";
 
 const codeLanguage = "javascript";
 const routeCode = `export async function action({ params }) {
@@ -14,7 +15,7 @@ const routeCode = `export async function action({ params }) {
   post.name = "New name";
   await post.save();
 
-  await NotifyContributorsJob.dispatch(post);
+  NotifyContributorsJob.dispatch(post);
 
   return json({ post });
 }`;
@@ -32,12 +33,10 @@ const jobCode = `export class NotifyContributorsJob extends Job {
   constructor(public post: Post) {}
 
   async perform() {
-    for (const contributor of await this.post.contributors) {
-      await contributor.notify(new PostUpdatedNotification(post));
-    }
+    const contributors = await this.post.contributors;
+    // ...
   }
-}
-`;
+}\n\n`;
 
 const tabs = [
   { name: "routes/$postId.edit.ts", isActive: true, code: routeCode },
@@ -72,14 +71,15 @@ export function Hero() {
             />
             <div className="relative">
               <p className="inline bg-gradient-to-r from-red-200 via-rose-400 to-red-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
-                The missing full-stack toolkit for Cloudflare Workers.
+                A full-stack toolkit for Cloudflare Workers.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Hit the ground running with the best parts of D1, R2, KV,
-                queues, scheduled jobs, and more—all in one place.
+                The best parts of D1, R2, Queues, and more—all in one place.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <Button href="/">Get started</Button>
+                <Button href="/getting-started" prefetch="intent">
+                  Get started
+                </Button>
                 <Button
                   href="https://github.com/jplhomer/superflare"
                   variant="secondary"

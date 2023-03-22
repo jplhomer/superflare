@@ -54,7 +54,7 @@ function Header({ navigation }: { navigation: Manifest }) {
         <MobileNavigation navigation={navigation} />
       </div>
       <div className="relative flex flex-grow basis-0 items-center">
-        <Link to="/" aria-label="Home page">
+        <Link to="/" aria-label="Home page" prefetch="intent">
           <Logomark className="h-8 w-9 lg:hidden" />
           <Logo
             className="hidden lg:flex"

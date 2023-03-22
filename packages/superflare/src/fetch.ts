@@ -24,6 +24,8 @@ export async function handleFetch<Env>(
   },
   getResponse: () => Promise<Response>
 ) {
+  config({ request, env, ctx });
+
   /**
    * Some session storage mechanisms might not assign a proper `id`. No worries!
    * We will assign our own here as a value in the session itself.

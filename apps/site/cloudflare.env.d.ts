@@ -19,4 +19,7 @@ interface Env {
   QUEUE: Queue;
   SESSION_SECRET: string;
   GITHUB_TOKEN: string;
+  DOCSEARCH_APP_ID: string;
+  DOCSEARCH_API_KEY: string;
+  DOCSEARCH_INDEX_NAME: string;
 }

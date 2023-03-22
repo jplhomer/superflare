@@ -1,8 +1,6 @@
+import { createCookieSessionStorage } from "@remix-run/cloudflare";
 import {
-  AppLoadContext,
-  createCookieSessionStorage,
-} from "@remix-run/cloudflare";
-import {
+  defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
@@ -67,7 +65,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   );
 }
 
-export interface SuperflareAppLoadContext<Env> extends AppLoadContext {
+export interface SuperflareAppLoadContext<Env> {
   session: SuperflareSession;
   auth: SuperflareAuth;
   env: Env;

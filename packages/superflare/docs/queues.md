@@ -1,5 +1,6 @@
 ---
 title: Queues
+description: Handling asynchronous tasks with Cloudflare Queues and Superflare's Job classes
 ---
 
 Sometimes you want to handle a task asynchronously. For example, you might want to send an email after a user signs up for your application. Or, you might want to process a large file in the background.
@@ -98,19 +99,12 @@ export default {
   /**
    * For Queues:
    */
-   async queue(
+  async queue(
     batch: MessageBatch,
     env: Env,
     ctx: ExecutionContext
   ): Promise<void[]> {
-    return handleQueue(
-      config({
-        env,
-        ctx,
-      }),
-      batch,
-      ctx
-    );
+    return handleQueue(batch, env, ctx, config);
   },
 ```
 

@@ -11,6 +11,10 @@
         "href": "/getting-started"
       },
       {
+        "title": "Deploying",
+        "href": "/deploying"
+      },
+      {
         "title": "Design Principles",
         "href": "/design"
       }
@@ -80,19 +84,15 @@
     ]
   },
   {
-    "title": "Email",
+    "title": "Reference",
     "links": [
       {
-        "title": "Sending Email",
-        "href": "/email/sending-email"
+        "title": "superflare.config",
+        "href": "/reference/superflare-config"
       },
       {
-        "title": "Notifications",
-        "href": "/email/notifications"
-      },
-      {
-        "title": "Receiving Mail with Mailboxes",
-        "href": "/email/mailboxes"
+        "title": "CLI",
+        "href": "/reference/cli"
       }
     ]
   }
