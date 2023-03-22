@@ -47,8 +47,11 @@ export class SuperflareAuth {
 
     if (!id) return null;
 
-    // @ts-expect-error I do not understand how to make TypeScript happy, and I do not care.
-    return await model.find(id);
+    return ("auth" in model)
+      // @ts-expect-error I do not understand how to make TypeScript happy, and I do not care.
+      ? await model.auth(id)
+      // @ts-expect-error I do not understand how to make TypeScript happy, and I do not care.
+      : await model.find(id);
   }
 
   logout() {
