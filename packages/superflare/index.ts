@@ -15,3 +15,4 @@ export { Listener } from "./src/listener";
 export { handleWebSockets } from "./src/websockets";
 export { Channel } from "./src/durable-objects/Channel";
 export { Schema } from "./src/schema";
+export { parseMultipartFormData } from "./src/form-data";
