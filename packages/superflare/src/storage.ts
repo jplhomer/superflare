@@ -1,5 +1,7 @@
 import { Config, StorageDiskConfig } from "./config";
 
+export type R2Input = Parameters<R2Bucket["put"]>[1];
+
 export function storage(disk?: string) {
   if (!Config.storage?.disks) {
     throw new Error(
@@ -39,19 +41,25 @@ class Storage {
     return this.disk.binding.delete(key);
   }
 
-  put(file: File) {
-    const extension = file.name.split(".").pop();
-    const hash = crypto.randomUUID();
-    let key = hash;
-    if (extension) {
-      key += `.${extension}`;
-    }
-
-    return this.disk.binding.put(key, file);
+  put(...args: Parameters<R2Bucket["put"]>) {
+    return this.disk.binding.put(...args);
   }
 
-  putAs(...args: Parameters<R2Bucket["put"]>) {
-    return this.disk.binding.put(...args);
+  /**
+   * Takes an input without a key and generates a random filename for you.
+   * Optionally pass an `{ extension: string }` option to add an extension to the filename.
+   */
+  putRandom(
+    input: R2Input,
+    options?: R2PutOptions & { extension?: string; prefix?: string }
+  ) {
+    const hash = crypto.randomUUID();
+    let key = options?.prefix ? `${options.prefix}/${hash}` : hash;
+    if (options?.extension) {
+      key += `.${options.extension}`;
+    }
+
+    return this.disk.binding.put(key, input, options);
   }
 }
 

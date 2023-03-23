@@ -205,6 +205,7 @@ importers:
       '@types/pluralize': ^0.0.29
       '@types/tar-fs': ^2.0.1
       '@types/yargs': ^17.0.20
+      '@web3-storage/multipart-parser': ^1.0.0
       bcryptjs: ^2.4.3
       better-sqlite3: ^7.6
       chalk: ^4.1.2
@@ -224,6 +225,7 @@ importers:
       yargs: ^17.6.2
     dependencies:
       '@clack/prompts': 0.6.3
+      '@web3-storage/multipart-parser': 1.0.0
       bcryptjs: 2.4.3
       chalk: 4.1.2
       cli-table3: 0.6.3
