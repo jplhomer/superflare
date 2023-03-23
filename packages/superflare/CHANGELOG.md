@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.23
+
+### Patch Changes
+
+- 1bb00a5: Fix the storage API, introduce `storage().putRandom()`, and provide a better way to stream file uploads with `parseMultipartFormData`
+
 ## 0.0.22
 
 ### Patch Changes
