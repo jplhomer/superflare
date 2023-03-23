@@ -1,6 +1,5 @@
 import { createCookieSessionStorage } from "@remix-run/cloudflare";
 import {
-  defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
