@@ -8,6 +8,7 @@ import {
   outro,
   spinner,
   text,
+  note,
 } from "@clack/prompts";
 import { cp, mkdtemp, readFile, rmdir, writeFile } from "fs/promises";
 import { join, normalize } from "path";
@@ -75,6 +76,14 @@ export async function newHandler(
   }
 
   s.stop("Everything looks good!");
+
+  note(
+    "Before using R2, Queues, and Durable objects,\n" +
+      "make sure you've enabled them in the Cloudflare Dashboard.\n" +
+      "https://dash.cloudflare.com/\n" +
+      "Otherwise, the following commands might fail! 😬",
+    "👋 Heads-up:"
+  );
 
   let path = "";
 
@@ -242,9 +251,11 @@ Do you want to continue?`;
   const appKey = randomBytes(256).toString("base64");
   await setSecret("APP_KEY", appKey, path);
 
-  s.stop("Done creating resources:");
+  s.stop("Done creating resources!");
 
-  results.forEach((result) => logger.log(result.message));
+  const allResults = results.map((r) => r.message);
+
+  note(allResults.join("\n"), "Here's what we did:");
 
   // TODO: Drop the `--legacy-peer-deps` once the remix template is fixed:
   // @see https://github.com/remix-run/remix/pull/5425
