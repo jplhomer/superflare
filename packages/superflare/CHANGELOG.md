@@ -1,5 +1,11 @@
 # superflare
 
+## 0.0.24
+
+### Patch Changes
+
+- e7ea5e5: Add helpers to get people to check their Cloudflare Queue, R2, etc settings
+
 ## 0.0.23
 
 ### Patch Changes
