@@ -4,7 +4,7 @@ import { User } from "~/models/User";
 
 export async function loader({ context: { auth } }: LoaderArgs) {
   if (!(await auth.check(User))) {
-    return redirect("/auth/login");
+    return redirect("/login");
   }
 
   return json({
@@ -20,7 +20,7 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
       <p>You're logged in as {user.email}</p>
 
-      <form method="post" action="/auth/logout">
+      <form method="post" action="/logout">
         <button type="submit">Log out</button>
       </form>
     </>
