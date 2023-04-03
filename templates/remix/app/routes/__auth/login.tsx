@@ -41,7 +41,7 @@ export default function Login() {
 
       <button type="submit">Log in</button>
 
-      <Link to="/auth/register">Register</Link>
+      <Link to="/register">Register</Link>
     </Form>
   );
 }

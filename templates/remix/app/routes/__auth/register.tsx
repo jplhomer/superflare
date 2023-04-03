@@ -49,7 +49,7 @@ export default function Register() {
 
       <button type="submit">Register</button>
 
-      <Link to="/auth/login">Log in</Link>
+      <Link to="/login">Log in</Link>
     </Form>
   );
 }

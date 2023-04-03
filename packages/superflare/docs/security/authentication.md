@@ -26,7 +26,7 @@ If you've created a Superflare app with `npx superflare new`, you should already
 
 ## Register and Login pages
 
-Superflare provides basic `/auth/register` and `/auth/login` routes and forms for you to use. You can use these as-is, or you can copy the code and modify it to your liking.
+Superflare provides basic `/register` and `/login` routes and forms for you to use. You can use these as-is, or you can copy the code and modify it to your liking.
 
 ## Protecting routes
 
@@ -37,7 +37,7 @@ You can protect routes by using the `SuperflareAuth` instance you created in you
 export async function loader({ context: { auth } }: LoaderArgs) {
   // If the user is not logged in, redirect them to the login page
   if (!(await auth.check(User))) {
-    return redirect("/auth/login");
+    return redirect("/login");
   }
 
   const user = await auth.user(User);
@@ -56,7 +56,7 @@ To log out, you can use the `SuperflareAuth` instance's `logout()` method:
 export async function action({ context: { auth } }: LoaderArgs) {
   auth.logout();
 
-  return redirect("/auth/login");
+  return redirect("/login");
 }
 ```
 
