@@ -6,7 +6,9 @@ import { Article } from "~/models/Article";
 import { useChannel } from "~/utils/use-channel";
 
 export async function loader() {
-  const articles = await Article.with("user").orderBy("createdAt", "desc");
+  const articles = await Article.with("user")
+    .orderBy("createdAt", "desc")
+    .get();
 
   return json({ articles });
 }

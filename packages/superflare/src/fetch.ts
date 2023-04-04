@@ -1,4 +1,5 @@
 import { defineConfig } from "./config";
+import { getContextFromUserConfig, runWithContext } from "./context";
 import { type SuperflareSession } from "./session";
 
 export async function handleFetch<Env>(
@@ -34,9 +35,12 @@ export async function handleFetch<Env>(
   }
 
   /**
-   * Run the framework code and get a response.
+   * Build up the local context object, which will be attached to the AsyncLocalStorage store.
    */
-  const response = await getResponse();
+  const context = getContextFromUserConfig(config({ request, env, ctx }));
+  context.env = env;
+
+  const response = await runWithContext(context, getResponse);
 
   if (session.isDirty()) {
     /**

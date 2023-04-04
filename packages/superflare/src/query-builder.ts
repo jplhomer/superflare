@@ -136,7 +136,12 @@ export class QueryBuilder {
 
   first(): any {
     this.$single = true;
-    return this.limit(1);
+
+    /**
+     * n.b. Explicitly calling `get()` here as a workaround for ALS in workerd which
+     * does not yet support custom thenables. We can remove when it's ready.
+     */
+    return this.limit(1).get();
   }
 
   async insert(attributes: Record<string, any>): Promise<any> {

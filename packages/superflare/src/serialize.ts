@@ -1,5 +1,5 @@
 import { BaseModel } from "../index.types";
-import { getModel } from "./config";
+import { getModel } from "./registry";
 import { Model } from "./model";
 
 /**

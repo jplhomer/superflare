@@ -1,5 +1,3 @@
-import { sanitizeModuleName } from "./string";
-
 export interface StorageDiskConfig {
   binding: R2Bucket;
   /**
@@ -47,126 +45,6 @@ export interface SuperflareUserConfig {
   channels?: ChannelsConfig;
 }
 
-export function setConfig(userConfig: SuperflareUserConfig) {
-  Config.appKey = userConfig.appKey;
-
-  if (userConfig.database) {
-    Config.database = {
-      connections: userConfig.database,
-    };
-  }
-  if (userConfig.storage) {
-    Config.storage = {
-      disks: userConfig.storage,
-    };
-  }
-  if (userConfig.queues) {
-    Config.queues = userConfig.queues;
-  }
-  if (userConfig.channels) {
-    Config.channels = userConfig.channels;
-  }
-  if (userConfig.listeners) {
-    Config.listeners = new Map(Object.entries(userConfig.listeners));
-  }
-
-  return userConfig;
-}
-
-/**
- * Register a model into the Superflare config.
- */
-export function registerModel(model: any) {
-  Config.models = Config.models || {};
-  Config.models[model.name] = model;
-}
-
-export function getModel(name: string) {
-  return Config.models?.[name];
-}
-
-/**
- * Register a job into the Superflare config.
- */
-export function registerJob(job: any) {
-  const jobName = sanitizeModuleName(job.name);
-  Config.jobs = Config.jobs || {};
-  Config.jobs[jobName] = job;
-}
-
-export function getJob(name: string) {
-  return Config.jobs?.[name];
-}
-
-export function getQueue(name: string) {
-  return Config.queues?.[name];
-}
-
-export function registerEvent(event: any) {
-  const eventName = sanitizeModuleName(event.name);
-  Config.events = Config.events || {};
-  Config.events[eventName] = event;
-}
-
-export function getEvent(name: string) {
-  return Config.events?.[name];
-}
-
-export function getListenersForEventClass(eventClass: any) {
-  const eventName = sanitizeModuleName(eventClass.name);
-  return Config.listeners.get(eventName) || [];
-}
-
-export function setEnv(env: any) {
-  Config.env = env;
-}
-
-export function getEnv() {
-  return Config.env;
-}
-
-export function getChannelNames() {
-  return Object.keys(Config.channels || {});
-}
-
-export function getChannel(name: string) {
-  return Config.channels?.[name as keyof typeof Config.channels];
-}
-
-export class Config {
-  static appKey: SuperflareUserConfig["appKey"];
-
-  static env: any;
-
-  static ctx: ExecutionContext;
-
-  static database?: {
-    connections: SuperflareUserConfig["database"];
-  };
-
-  static storage?: {
-    disks: SuperflareUserConfig["storage"];
-  };
-
-  static queues?: SuperflareUserConfig["queues"];
-
-  static models?: {
-    [name: string]: any;
-  };
-
-  static jobs?: {
-    [name: string]: any;
-  };
-
-  static events?: {
-    [name: string]: any;
-  };
-
-  static listeners: Map<string, any[]> = new Map();
-
-  static channels: SuperflareUserConfig["channels"];
-}
-
 /**
  * Accept a general set of request attributes in order to work
  * with both Cloudflare Workers and Pages.
@@ -189,8 +67,5 @@ export type DefineConfigResult = SuperflareUserConfig;
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
 ): (ctx: DefineConfigContext<Env>) => DefineConfigResult {
-  return (ctx: DefineConfigContext<Env>) => {
-    setEnv(ctx.env);
-    return setConfig(callback(ctx));
-  };
+  return (ctx: DefineConfigContext<Env>) => callback(ctx);
 }

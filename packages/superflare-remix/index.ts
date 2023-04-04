@@ -1,9 +1,9 @@
 import { createCookieSessionStorage } from "@remix-run/cloudflare";
 import {
-  defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
+  type defineConfig,
 } from "superflare";
 
 /**
@@ -51,8 +51,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     },
     async () => {
       /**
-       * We inject env and session into the Remix load context.
-       * Someday, we could replace this with AsyncLocalStorage.
+       * TODO: REMOVE THIS since we're using AsyncLocalStorage
        */
       const loadContext: SuperflareAppLoadContext<Env> = {
         session,

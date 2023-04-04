@@ -19,6 +19,8 @@ export function Toast({
   useEffect(() => {
     if (message) {
       setShow(true);
+    } else {
+      setShow(false);
     }
   }, [message]);
 
@@ -31,6 +33,8 @@ export function Toast({
       return () => {
         clearTimeout(timeout);
       };
+    } else {
+      setShow(false);
     }
   }, [show]);
 
@@ -57,12 +61,13 @@ export function Toast({
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    {success ? (
+                    {success && (
                       <CheckCircleIcon
                         className="h-6 w-6 text-green-400"
                         aria-hidden="true"
                       />
-                    ) : (
+                    )}
+                    {error && (
                       <ExclamationCircleIcon
                         className="h-6 w-6 text-red-400"
                         aria-hidden="true"

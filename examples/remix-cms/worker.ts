@@ -1,5 +1,4 @@
 import { createRequestHandler } from "@remix-run/cloudflare";
-import config from "./superflare.config";
 import * as build from "./build";
 import {
   getAssetFromKV,
@@ -9,6 +8,7 @@ import {
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
 import { handleQueue } from "superflare";
 import { handleFetch } from "@superflare/remix";
+import config from "./superflare.config";
 
 export { Channel } from "superflare";
 

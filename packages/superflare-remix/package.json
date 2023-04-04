@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.3.0",
+    "@types/node": "^18.14.1",
     "superflare": "workspace:*"
   }
 }

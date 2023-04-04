@@ -1,17 +1,19 @@
-import { Config, StorageDiskConfig } from "./config";
+import { StorageDiskConfig } from "./config";
+import { getStorage } from "./context";
 
 export type R2Input = Parameters<R2Bucket["put"]>[1];
 
 export function storage(disk?: string) {
-  if (!Config.storage?.disks) {
+  const storage = getStorage();
+  if (!storage?.disks) {
     throw new Error(
       "No Storage disks configured. Please assign an R2 bucket in your config file."
     );
   }
 
   const diskToUse = disk
-    ? Config.storage?.disks[disk]
-    : Config.storage?.disks?.default;
+    ? storage.disks?.[disk as keyof typeof storage]
+    : storage.disks?.default;
 
   if (!diskToUse || !diskToUse.binding) {
     throw new Error(`R2 bucket "${disk}" could not be found.`);
@@ -66,23 +68,22 @@ class Storage {
 export async function servePublicPathFromStorage(path: string) {
   const notFoundResponse = new Response("Not found", { status: 404 });
 
-  if (!Config.storage?.disks) {
+  const storageConfig = getStorage();
+  if (!storageConfig?.disks) {
     return notFoundResponse;
   }
 
-  const matchingDiskName = Object.keys(Config.storage.disks).find(
-    (diskName) => {
-      const { publicPath } = Config.storage!.disks![diskName];
-      return publicPath && path.startsWith(publicPath);
-    }
-  );
+  const matchingDiskName = Object.keys(storageConfig.disks).find((diskName) => {
+    const { publicPath } = storageConfig.disks![diskName];
+    return publicPath && path.startsWith(publicPath);
+  });
 
   if (!matchingDiskName) {
     return notFoundResponse;
   }
 
   const key = path
-    .replace(Config.storage.disks[matchingDiskName].publicPath!, "")
+    .replace(storageConfig.disks[matchingDiskName].publicPath!, "")
     .replace(/^\//, "");
 
   const object = await storage(matchingDiskName).get(key);
