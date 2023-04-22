@@ -7,7 +7,7 @@ Superflare allows you to integrate with [Cloudflare's cron triggers feature](htt
 
 ## Enabling Cron Triggers
 
-To enable Cron Triggers on your app, you need to add the `cron` key to your `wrangler.json` file:
+To enable Cron Triggers on your app, you need to add the `triggers#crons` key to your `wrangler.json` file:
 
 Or `wrangler.json`:
 
