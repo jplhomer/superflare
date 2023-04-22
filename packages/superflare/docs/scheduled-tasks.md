@@ -42,7 +42,7 @@ export default {
 
 ## Scheduling Tasks
 
-To schedule a task, call the `schedule` method on the `schedule` object passed to your `scheduled` function:
+To schedule a task, call the `run` method on the `schedule` object passed to the callback function from `handleScheduled` function:
 
 ```ts
 import { handleScheduled } from "superflare";
