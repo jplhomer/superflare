@@ -66,11 +66,6 @@ export default {
           console.log("Running every minute");
         })
         .everyMinute();
-
-      schedule.run(() => console.log("Running every day at midnight")).daily();
-      schedule
-        .run(() => console.log("Running every day at 11:00"))
-        .dailyAt("11:00");
     });
   },
 };

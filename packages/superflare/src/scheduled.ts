@@ -5,12 +5,18 @@ export async function handleScheduled<Env>(
   env: Env,
   ctx: ExecutionContext,
   config: ReturnType<typeof defineConfig<Env>>,
-  scheduleDefinition: (scheduler: Scheduler) => void
+  scheduleDefinition: (scheduler: Scheduler) => void | Promise<void>
 ) {
+  /**
+   * Set the user config into the singleton context.
+   * TODO: Replace this with AsyncLocalStorage when available.
+   */
+  config({ env, ctx });
+
   const now = new Date(event.scheduledTime);
   const scheduler = new Scheduler();
 
-  scheduleDefinition(scheduler);
+  await scheduleDefinition(scheduler);
 
   scheduler.tasks.map((task) => {
     if (shouldRunTask(task, now)) {
@@ -30,10 +36,7 @@ class Scheduler {
   }
 
   job(job: any): Task {
-    // TODO: Convert to a dispatch
-    const fn = job;
-
-    const task = new Task(fn);
+    const task = new Task(async () => await job.handle());
     this.tasks.push(task);
 
     return task;

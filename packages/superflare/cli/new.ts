@@ -252,7 +252,7 @@ Do you want to continue?`;
         message: "✅ Scheduled Tasks: Set up cron trigger for every minute",
         wranglerConfig: {
           triggers: {
-            cron: ["* * * * *"],
+            crons: ["* * * * *"],
           },
         },
       })
