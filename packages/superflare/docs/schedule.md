@@ -65,3 +65,37 @@ In addition to arbitrary tasks, you can also schedule [Jobs](./queues):
 ```ts
 schedule.job(new MyJob()).weeklyOn(1, "8:00");
 ```
+
+### Schedule Frequency Options
+
+You can use the following methods to define the frequency of your scheduled tasks:
+
+| Method                  | Description                                                             |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `everyMinute()`         | Runs the task every minute                                              |
+| `hourly()`              | Runs the task every hour                                                |
+| `daily()`               | Runs the task every day at midnight UTC                                 |
+| `dailyAt('13:00')`      | Runs the task every day at the at 13:00 UTC                             |
+| `weekly()`              | Runs the task every week at midnight UTC on Sunday                      |
+| `weeklyOn(1, '13:00')`  | Runs the task every Monday at 13:00 UTC                                 |
+| `monthly()`             | Runs the task every month at midnight UTC on the first day of the month |
+| `monthlyOn(1, '13:00')` | Runs the task on the first day of the month at 13:00 UTC                |
+| `yearly()`              | Runs the task every year at midnight UTC on January 1st                 |
+
+### More Advanced Scheduling Options
+
+If you need a more specific scheduling interval, you can manually validate the current time in your codebase or define a custom cron trigger schedule in your Wrangler config file:
+
+```ts
+schedule.run(async () => {
+  if (isTheSecondTuesdayDuringAFullMoon(new Date(event.scheduledTime))) {
+    // Run your quirky task here
+  }
+});
+```
+
+You can also choose to import a Date library like [Luxon](https://moment.github.io/luxon/) to make it easier to work with dates and timezones. This isn't included by default in Superflare because this is a heavy dependency, and it would slow down the invocation of every worker request.
+
+## Testing Scheduled Tasks
+
+To test your scheduled tasks, can open a browser visit `/__scheduled`. This will fire the `scheduled` function of your worker entrypoint.
