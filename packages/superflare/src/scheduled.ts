@@ -18,7 +18,7 @@ export async function handleScheduled<Env>(
 
   await scheduleDefinition(scheduler);
 
-  scheduler.tasks.map((task) => {
+  scheduler.tasks.forEach((task) => {
     if (shouldRunTask(task, now)) {
       ctx.waitUntil(task.fn());
     }
