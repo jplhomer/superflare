@@ -1,5 +1,5 @@
 import { beforeEach, expect, it } from "vitest";
-import { setConfig } from "../../src/config";
+import { setTestContext } from "../../src/context";
 import { Model } from "../../src/model";
 import type { BaseModel } from "../../index.types";
 import { createTestDatabase } from "../db";
@@ -47,7 +47,7 @@ beforeEach(async () => {
       updatedAt timestamp not null default current_timestamp
     );
   `);
-  setConfig({
+  setTestContext({
     database: {
       default: database,
     },
@@ -79,7 +79,7 @@ it("saves", async () => {
   const posts = await user.$posts().save(
     new Post({
       text: "Hello World",
-    }),
+    })
   );
 
   expect(posts[0].userId).toBe(user.id);
@@ -102,11 +102,9 @@ it("creates", async () => {
   const user = await User.create({
     name: "John Doe",
   });
-  const posts = await user.$posts().create(
-    {
-      text: "Hello World",
-    },
-  );
+  const posts = await user.$posts().create({
+    text: "Hello World",
+  });
 
   expect(posts[0].userId).toBe(user.id);
 });

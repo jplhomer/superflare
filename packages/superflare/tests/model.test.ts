@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, test, vi } from "vitest";
-import { setConfig } from "../src/config";
+import { setTestContext } from "../src/context";
 import { Model } from "../src/model";
 import type { BaseModel } from "../index.types";
 import { createTestDatabase } from "./db";
@@ -28,7 +28,7 @@ describe("model", async () => {
         updatedAt timestamp not null default current_timestamp
       );
     `);
-    setConfig({
+    setTestContext({
       database: {
         default: database,
       },

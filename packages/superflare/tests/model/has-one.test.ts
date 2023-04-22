@@ -1,8 +1,8 @@
 import { beforeEach, expect, it } from "vitest";
-import { setConfig } from "../../src/config";
 import { Model } from "../../src/model";
 import type { BaseModel } from "../../index.types";
 import { createTestDatabase } from "../db";
+import { setTestContext } from "../../src/context";
 
 let ModelConstructor = Model as unknown as BaseModel;
 
@@ -49,7 +49,7 @@ beforeEach(async () => {
       updatedAt timestamp not null default current_timestamp
     );
   `);
-  setConfig({
+  setTestContext({
     database: {
       default: database,
     },

@@ -22,22 +22,43 @@ export interface AppContext {
     disks: SuperflareUserConfig["storage"];
   };
   queues?: SuperflareUserConfig["queues"];
-  models?: {
-    [name: string]: any;
-  };
-  jobs?: {
-    [name: string]: any;
-  };
-  events?: {
-    [name: string]: any;
-  };
   listeners?: Map<string, any[]>;
   channels?: SuperflareUserConfig["channels"];
 }
 
 export const asyncLocalStorage = new AsyncLocalStorage<AppContextContainer>();
 
+class TestContext implements AppContext {
+  static appKey?: SuperflareUserConfig["appKey"];
+  static database?: {
+    connections: SuperflareUserConfig["database"];
+  };
+  static storage?: {
+    disks: SuperflareUserConfig["storage"];
+  };
+  static queues?: SuperflareUserConfig["queues"];
+  static listeners?: Map<string, any[]>;
+  static channels?: SuperflareUserConfig["channels"];
+}
+
+export function setTestContext(userConfig: SuperflareUserConfig) {
+  TestContext.appKey = userConfig.appKey;
+  TestContext.database = {
+    connections: userConfig.database,
+  };
+  TestContext.storage = {
+    disks: userConfig.storage,
+  };
+  TestContext.queues = userConfig.queues;
+  TestContext.channels = userConfig.channels;
+  TestContext.listeners = new Map(Object.entries(userConfig.listeners ?? {}));
+}
+
 export function getContext(): AppContext {
+  if (process.env.NODE_ENV === "test") {
+    return TestContext;
+  }
+
   const context = asyncLocalStorage.getStore();
 
   if (!context || !context.ctx) {
