@@ -14,7 +14,7 @@ Or `wrangler.json`:
 ```json
 {
   "triggers": {
-    "cron": ["* * * * *"]
+    "crons": ["* * * * *"]
   }
 }
 ```
