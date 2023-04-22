@@ -17,7 +17,6 @@ import { pipeline } from "stream/promises";
 import gunzipMaybe from "gunzip-maybe";
 import { extract } from "tar-fs";
 import { spawn } from "child_process";
-import { logger } from "./logger";
 import { randomBytes } from "crypto";
 import { runWranglerCommand } from "./wrangler";
 
@@ -44,6 +43,7 @@ interface Plan {
   r2?: string;
   queue?: string;
   durableOject?: string;
+  scheduledTasks?: boolean;
 }
 
 export async function newHandler(
@@ -153,8 +153,19 @@ export async function newHandler(
           label: "Broadcasting",
           hint: "We'll set up a Durable Object for you",
         },
+        {
+          value: "scheduledTasks",
+          label: "Scheduled Tasks",
+          hint: "We'll set up a cron trigger for you",
+        },
       ],
-      initialValues: ["database", "storage", "queue", "broadcasting"],
+      initialValues: [
+        "database",
+        "storage",
+        "queue",
+        "broadcasting",
+        "scheduledTasks",
+      ],
     });
 
     if (isCancel(selections)) {
@@ -178,6 +189,9 @@ export async function newHandler(
         case "broadcasting":
           plan.durableOject = `Channel`;
           break;
+        case "scheduledTasks":
+          plan.scheduledTasks = true;
+          break;
 
         default:
           break;
@@ -190,6 +204,11 @@ ${plan.d1 ? `  - D1 Database: ${plan.d1} (bound as DB)` : ""}
 ${plan.r2 ? `  - R2 Bucket: ${plan.r2} (bound as BUCKET)` : ""}
 ${plan.queue ? `  - Queue: ${plan.queue} (bound as QUEUE)` : ""}
 ${plan.durableOject ? `  - Durable Object: Channel (bound as CHANNEL)` : ""}
+${
+  plan.scheduledTasks
+    ? `  - Scheduled Tasks: A cron trigger for every minute`
+    : ""
+}
 
 Do you want to continue?`;
 
@@ -224,6 +243,20 @@ Do you want to continue?`;
 
   if (plan.durableOject) {
     promises.push(setUpDurableObject(path));
+  }
+
+  if (plan.scheduledTasks) {
+    promises.push(
+      Promise.resolve({
+        success: true,
+        message: "✅ Scheduled Tasks: Set up cron trigger for every minute",
+        wranglerConfig: {
+          triggers: {
+            cron: ["* * * * *"],
+          },
+        },
+      })
+    );
   }
 
   const results = await Promise.all(promises);

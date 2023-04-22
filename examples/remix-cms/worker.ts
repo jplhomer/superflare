@@ -7,7 +7,7 @@ import {
   MethodNotAllowedError,
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import { handleQueue } from "superflare";
+import { handleQueue, handleScheduled } from "superflare";
 import { handleFetch } from "@superflare/remix";
 
 export { Channel } from "superflare";
@@ -57,5 +57,20 @@ export default {
     ctx: ExecutionContext
   ): Promise<void[]> {
     return handleQueue(batch, env, ctx, config);
+  },
+
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    return await handleScheduled(event, env, ctx, config, (schedule) => {
+      schedule
+        .run(async () => {
+          console.log("Running every minute");
+        })
+        .everyMinute();
+
+      schedule.run(() => console.log("Running every day at midnight")).daily();
+      schedule
+        .run(() => console.log("Running every day at 11:00"))
+        .dailyAt("11:00");
+    });
   },
 };

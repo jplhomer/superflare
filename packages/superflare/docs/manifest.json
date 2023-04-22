@@ -32,6 +32,10 @@
         "href": "/file-storage"
       },
       {
+        "title": "Scheduled Tasks (Cron)",
+        "href": "/schedule"
+      },
+      {
         "title": "Sessions",
         "href": "/sessions"
       },
