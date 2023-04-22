@@ -1,10 +1,10 @@
 import { Form, Link, useActionData } from "@remix-run/react";
 import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
-import { hash } from "superflare";
+import { auth, hash } from "superflare";
 
-export async function action({ request, context: { auth } }: ActionArgs) {
-  if (await auth.check(User)) {
+export async function action({ request }: ActionArgs) {
+  if (await auth().check(User)) {
     return redirect("/dashboard");
   }
 
@@ -21,9 +21,17 @@ export async function action({ request, context: { auth } }: ActionArgs) {
     password: await hash().make(password),
   });
 
-  auth.login(user);
+  auth().login(user);
 
   return redirect("/dashboard");
+}
+
+export async function loader() {
+  if (await auth().check(User)) {
+    return redirect("/dashboard");
+  }
+
+  return null;
 }
 
 export default function Register() {

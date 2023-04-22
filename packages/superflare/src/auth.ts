@@ -1,8 +1,21 @@
 import { BaseModel } from "../index.types";
 import { hash } from "./hash";
 import { Session } from "./session";
+import { getContext } from "./context";
 
 const SESSION_KEY = "superflare:auth:id";
+
+export function auth() {
+  const auth = getContext().auth;
+
+  if (!auth) {
+    throw new Error(
+      "No auth found. You must be inside the request lifecycle to access Superflare auth."
+    );
+  }
+
+  return auth;
+}
 
 export class SuperflareAuth {
   constructor(public session: Session) {}

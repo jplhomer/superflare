@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { SuperflareUserConfig } from "./config";
 import { sanitizeModuleName } from "./string";
+import type { SuperflareAuth } from "./auth";
 
 /**
  * AppContext represents the context of the current request or job. It is added to the AsyncLocalStorage
@@ -9,6 +10,7 @@ import { sanitizeModuleName } from "./string";
  */
 export interface AppContext {
   appKey?: SuperflareUserConfig["appKey"];
+  auth?: SuperflareAuth;
   env?: any;
   ctx?: ExecutionContext;
   database?: {
@@ -26,6 +28,7 @@ export const asyncLocalStorage = new AsyncLocalStorage<AppContext>();
 
 class TestContext implements AppContext {
   static appKey?: SuperflareUserConfig["appKey"];
+  static auth?: SuperflareAuth;
   static database?: {
     connections: SuperflareUserConfig["database"];
   };

@@ -17,8 +17,7 @@ To set up authentication, you need to do a few things:
 
 1. Add a `User` model (and a `users` table)
 2. Ensure you've created an instance of [`SuperflareSession`](/sessions)
-3. Create an instance of `SuperflareAuth` (with a session) and pass it to a place your application code can access it during a request (like a Remix `AppContext`).
-4. Add some sort of `/register` and `/login` routes to your application so users can log in.
+3. Add some sort of `/register` and `/login` routes to your application so users can log in.
 
 {% callout title="Batteries-included" %}
 If you've created a Superflare app with `npx superflare new`, you should already have these requirements met! Go take a nap or something.
@@ -30,37 +29,43 @@ Superflare provides basic `/auth/register` and `/auth/login` routes and forms fo
 
 ## Protecting routes
 
-You can protect routes by using the `SuperflareAuth` instance you created in your app's entrypoint. For the purpose of this example, we'll pretend you're using Remix, and that you've injected the `SuperflareAuth` instance into the `AppContext` as `auth`:
+You can protect routes by using the `auth` helper exported by Superflare:
 
 ```ts
+import { auth } from "superflare";
+
 // routes/my-secret-route.tsx
-export async function loader({ context: { auth } }: LoaderArgs) {
+export async function loader() {
   // If the user is not logged in, redirect them to the login page
-  if (!(await auth.check(User))) {
+  if (!(await auth().check(User))) {
     return redirect("/auth/login");
   }
 
-  const user = await auth.user(User);
+  const user = await auth().user(User);
 
   // If the user is logged in, show them the secret page
   return json({ message: `You're logged in, ${user.name}!` });
 }
 ```
 
+{% callout title="Fetch requests only" %}
+Auth is only available during `fetch` requests to your worker—not during `queue` or `scheduled` requests. This is because `fetch` requests are the only ones that have access to a user's session. Auth is injected using [AsyncLocalStorage](https://nodejs.org/api/async_context.html#class-asynclocalstorage), which is only available in `fetch` requests.
+{% /callout %}
+
 ## Logging out
 
-To log out, you can use the `SuperflareAuth` instance's `logout()` method:
+To log out, you can use the `auth().logout()` method:
 
 ```ts
 // routes/logout.tsx
-export async function action({ context: { auth } }: LoaderArgs) {
-  auth.logout();
+export async function action() {
+  auth().logout();
 
   return redirect("/auth/login");
 }
 ```
 
-## `SuperflareAuth` API
+## `auth()` API
 
 ### `check(model: typeof Model): Promise<boolean>`
 

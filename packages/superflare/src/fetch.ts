@@ -1,3 +1,4 @@
+import { SuperflareAuth } from "../index.types";
 import { defineConfig } from "./config";
 import { getContextFromUserConfig, runWithContext } from "./context";
 import { type SuperflareSession } from "./session";
@@ -39,6 +40,7 @@ export async function handleFetch<Env>(
    */
   const context = getContextFromUserConfig(config({ request, env, ctx }));
   context.env = env;
+  context.auth = new SuperflareAuth(session);
 
   const response = await runWithContext(context, getResponse);
 
