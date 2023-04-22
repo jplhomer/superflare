@@ -2,10 +2,6 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { SuperflareUserConfig } from "./config";
 import { sanitizeModuleName } from "./string";
 
-interface AppContextContainer {
-  ctx?: AppContext;
-}
-
 /**
  * AppContext represents the context of the current request or job. It is added to the AsyncLocalStorage
  * so that it can be accessed from anywhere in the current request closure, which means it will not be
@@ -26,7 +22,7 @@ export interface AppContext {
   channels?: SuperflareUserConfig["channels"];
 }
 
-export const asyncLocalStorage = new AsyncLocalStorage<AppContextContainer>();
+export const asyncLocalStorage = new AsyncLocalStorage<AppContext>();
 
 class TestContext implements AppContext {
   static appKey?: SuperflareUserConfig["appKey"];
@@ -61,25 +57,20 @@ export function getContext(): AppContext {
 
   const context = asyncLocalStorage.getStore();
 
-  if (!context || !context.ctx) {
+  if (!context) {
     throw new Error(
       "No context found. You must be inside the request lifecycle to access Superflare context."
     );
   }
 
-  return context.ctx;
+  return context;
 }
 
 export async function runWithContext<T>(
   context: AppContext,
   fn: () => Promise<T>
 ) {
-  return await asyncLocalStorage.run({}, async () => {
-    /**
-     * I'm being extra cautious to not set the object value until we're _inside_ the asyncLocalStorage.run
-     * closure. This is to prevent accidental leaks between requests. I don't know if it's necessary.
-     */
-    asyncLocalStorage.getStore()!.ctx = context;
+  return await asyncLocalStorage.run(context, async () => {
     return await fn();
   });
 }
@@ -88,9 +79,7 @@ export async function runWithContext<T>(
  * Meant to be used for console and internal uses only.
  */
 export async function enterWithConfig<T>(userConfig: SuperflareUserConfig) {
-  asyncLocalStorage.enterWith({
-    ctx: getContextFromUserConfig(userConfig),
-  });
+  asyncLocalStorage.enterWith(getContextFromUserConfig(userConfig));
   console.log(getContext());
 }
 
