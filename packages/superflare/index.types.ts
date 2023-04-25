@@ -96,6 +96,14 @@ export interface BaseModel<M = any> {
     this: T,
     relationName: string | string[]
   ): QueryBuilder<T>;
+  withOnly<T extends BaseModel>(
+    this: T,
+    relationName: string | string[]
+  ): QueryBuilder<T>;
+  without<T extends BaseModel>(
+    this: T,
+    relationName: string | string[]
+  ): QueryBuilder<T>;
   create<T extends BaseModel>(
     this: T,
     attributes: any

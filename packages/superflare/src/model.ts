@@ -131,6 +131,14 @@ export class Model {
     return this.query().with(relationName);
   }
 
+  static withOnly(relationName: string | string[]) {
+    return this.query().withOnly(relationName);
+  }
+
+  static without (relationName: string | string[]) {
+    return this.query().without(relationName);
+  }
+
   static getRelation(relationName: string) {
     return new this()[`$${relationName}` as keyof Model]?.();
   }

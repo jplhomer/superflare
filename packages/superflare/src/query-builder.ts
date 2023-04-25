@@ -124,6 +124,26 @@ export class QueryBuilder {
     return this;
   }
 
+  withOnly(relationName: string | string[]) {
+    if (Array.isArray(relationName)) {
+      this.$eagerLoad = relationName;
+    } else {
+      this.$eagerLoad = [relationName];
+    }
+
+    return this;
+  }
+
+  without (relationName: string | string[]) {
+    if (Array.isArray(relationName)) {
+      this.$eagerLoad = this.$eagerLoad.filter((relation) => !relationName.includes(relation));
+    } else {
+      this.$eagerLoad = this.$eagerLoad.filter((relation) => relation !== relationName);
+    }
+
+    return this;
+  }
+
   limit(limit: number) {
     this.$limit = limit;
     return this;
