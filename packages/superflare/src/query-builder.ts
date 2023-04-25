@@ -18,6 +18,10 @@ export class QueryBuilder {
     this.$from =
       this.$modelClass.table ||
       modelToTableName(sanitizeModuleName(this.$modelClass.name));
+
+    if (this.$modelClass.$with) {
+      this.$eagerLoad.push(...this.$modelClass.$with);
+    }
   }
 
   select(...fields: string[]) {

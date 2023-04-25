@@ -17,6 +17,7 @@ interface Constructor<T> {
 export class Model {
   static connection = "default";
   static table = "";
+  static $with: string[] = [];
   id: number | null;
   updatedAt?: Date;
   createdAt?: Date;
