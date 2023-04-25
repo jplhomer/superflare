@@ -321,14 +321,18 @@ export class Model {
 export interface ModelConstructor<M extends Model> extends Constructor<M> {}
 
 function validateModel (model: Model) {
-  if (Object.getOwnPropertyNames(model.constructor).includes('$with')) {
-    (model.constructor as typeof Model).$with.forEach((relationName) => {
-      const methodName = `$${relationName}`;
-      const hasWithRelation = Object.getOwnPropertyNames(model.constructor.prototype).includes(methodName);
+  function checkStaticWithRelationsExist (model: Model) {
+    if (Object.getOwnPropertyNames(model.constructor).includes('$with')) {
+      (model.constructor as typeof Model).$with.forEach((relationName) => {
+        const methodName = `$${relationName}`;
+        const hasWithRelation = Object.getOwnPropertyNames(model.constructor.prototype).includes(methodName);
 
-      if (!hasWithRelation) {
-        throw new Error(`Relation "${relationName}" does not exist. Please remove "${relationName}" from $with in ${model.constructor.name}.`);
-      }
-    });
+        if (!hasWithRelation) {
+          throw new Error(`Relation "${relationName}" does not exist. Please remove "${relationName}" from $with in ${model.constructor.name}.`);
+        }
+      });
+    }
   }
+
+  return checkStaticWithRelationsExist(model);
 }
