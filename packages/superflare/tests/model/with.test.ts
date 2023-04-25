@@ -1,7 +1,7 @@
-import { assertType, beforeEach, expect, expectTypeOf, it, test } from 'vitest'
+import { assertType, beforeEach, expect, expectTypeOf, it, test } from "vitest";
 import { BaseModel, setConfig } from "../../index.types";
 import { Model } from "../../src/model";
-import { HasMany } from '../../src/relations/has-many'
+import { HasMany } from "../../src/relations/has-many";
 import { createTestDatabase } from "../db";
 
 let ModelConstructor = Model as unknown as BaseModel;
@@ -107,10 +107,14 @@ it("errors if a relation is passed but doesn't exist", async () => {
     static $with = ["posts"];
   }
 
-  await expect(User.create({
-    name: "John Doe",
-  })).rejects.toThrowError(`Relation "posts" does not exist. Please remove "posts" from $with in User2.`)
-})
+  await expect(
+    User.create({
+      name: "John Doe",
+    })
+  ).rejects.toThrowError(
+    `Relation "posts" does not exist. Please remove "posts" from $with in User2.`
+  );
+});
 
 test("#withOnly", async () => {
   const user = await User.create({
@@ -129,14 +133,18 @@ test("#withOnly", async () => {
     userId: user.id,
   });
 
-  const userWithoutPostsButWithAProfile = await User.withOnly("profile").find(user.id);
+  const userWithoutPostsButWithAProfile = await User.withOnly("profile").find(
+    user.id
+  );
 
   expect(userWithoutPostsButWithAProfile).toBeTruthy();
   expect(userWithoutPostsButWithAProfile!.posts).toBeInstanceOf(HasMany);
 
   expect(userWithoutPostsButWithAProfile!.profile).toBeInstanceOf(Profile);
   expect((userWithoutPostsButWithAProfile!.profile as Profile).id).toBe(1);
-  expect((userWithoutPostsButWithAProfile!.profile as Profile).text).toBe("Hello World");
+  expect((userWithoutPostsButWithAProfile!.profile as Profile).text).toBe(
+    "Hello World"
+  );
 });
 
 test("#without", async () => {
@@ -156,12 +164,16 @@ test("#without", async () => {
     userId: user.id,
   });
 
-  const userWithoutPostsButWithAProfile = await User.without("posts").find(user.id);
+  const userWithoutPostsButWithAProfile = await User.without("posts").find(
+    user.id
+  );
 
   expect(userWithoutPostsButWithAProfile).toBeTruthy();
   expect(userWithoutPostsButWithAProfile!.posts).toBeInstanceOf(HasMany);
 
   expect(userWithoutPostsButWithAProfile!.profile).toBeInstanceOf(Profile);
   expect((userWithoutPostsButWithAProfile!.profile as Profile).id).toBe(1);
-  expect((userWithoutPostsButWithAProfile!.profile as Profile).text).toBe("Hello World");
+  expect((userWithoutPostsButWithAProfile!.profile as Profile).text).toBe(
+    "Hello World"
+  );
 });

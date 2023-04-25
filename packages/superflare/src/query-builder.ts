@@ -134,11 +134,15 @@ export class QueryBuilder {
     return this;
   }
 
-  without (relationName: string | string[]) {
+  without(relationName: string | string[]) {
     if (Array.isArray(relationName)) {
-      this.$eagerLoad = this.$eagerLoad.filter((relation) => !relationName.includes(relation));
+      this.$eagerLoad = this.$eagerLoad.filter(
+        (relation) => !relationName.includes(relation)
+      );
     } else {
-      this.$eagerLoad = this.$eagerLoad.filter((relation) => relation !== relationName);
+      this.$eagerLoad = this.$eagerLoad.filter(
+        (relation) => relation !== relationName
+      );
     }
 
     return this;

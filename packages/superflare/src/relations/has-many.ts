@@ -27,7 +27,8 @@ export class HasMany extends Relation {
   }
 
   create(attributeSets: Record<string, any>[] | Record<string, any>) {
-    attributeSets = attributeSets instanceof Array ? attributeSets : [attributeSets];
+    attributeSets =
+      attributeSets instanceof Array ? attributeSets : [attributeSets];
 
     return Promise.all(
       attributeSets.map(async (attributes: any) => {

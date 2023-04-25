@@ -135,7 +135,7 @@ export class Model {
     return this.query().withOnly(relationName);
   }
 
-  static without (relationName: string | string[]) {
+  static without(relationName: string | string[]) {
     return this.query().without(relationName);
   }
 
@@ -328,15 +328,19 @@ export class Model {
 
 export interface ModelConstructor<M extends Model> extends Constructor<M> {}
 
-function validateModel (model: Model) {
-  function checkStaticWithRelationsExist (model: Model) {
-    if (Object.getOwnPropertyNames(model.constructor).includes('$with')) {
+function validateModel(model: Model) {
+  function checkStaticWithRelationsExist(model: Model) {
+    if (Object.getOwnPropertyNames(model.constructor).includes("$with")) {
       (model.constructor as typeof Model).$with.forEach((relationName) => {
         const methodName = `$${relationName}`;
-        const hasWithRelation = Object.getOwnPropertyNames(model.constructor.prototype).includes(methodName);
+        const hasWithRelation = Object.getOwnPropertyNames(
+          model.constructor.prototype
+        ).includes(methodName);
 
         if (!hasWithRelation) {
-          throw new Error(`Relation "${relationName}" does not exist. Please remove "${relationName}" from $with in ${model.constructor.name}.`);
+          throw new Error(
+            `Relation "${relationName}" does not exist. Please remove "${relationName}" from $with in ${model.constructor.name}.`
+          );
         }
       });
     }
