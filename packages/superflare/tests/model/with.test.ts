@@ -22,7 +22,7 @@ class User extends ModelConstructor {
 
   static $with = ["posts"];
 
-  posts?: Post[] | Promise<Post[]>;
+  posts!: Post[] | Promise<Post[]>;
   $posts() {
     return this.hasMany(Post);
   }
@@ -69,5 +69,22 @@ it("works", async () => {
   });
 
   const userWithPosts = await User.find(user.id);
+
   expect(userWithPosts!.posts).toHaveLength(2);
 });
+
+it("errors if a relation is passed but doesn't exist", async () => {
+  class User extends ModelConstructor {
+    id!: number;
+    name!: string;
+    createdAt!: string;
+    updatedAt!: string;
+    profileId?: number;
+
+    static $with = ["posts"];
+  }
+
+  await expect(User.create({
+    name: "John Doe",
+  })).rejects.toThrowError(`Relation "posts" does not exist. Please remove "posts" from $with in User2.`)
+})
