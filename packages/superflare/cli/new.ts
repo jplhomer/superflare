@@ -263,6 +263,9 @@ Do you want to continue?`;
 
   let wranglerConfig = {
     name: appName,
+    site: {
+      bucket: "public"
+    },
   };
 
   results.forEach((result) => {
