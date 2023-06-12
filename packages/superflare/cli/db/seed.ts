@@ -16,7 +16,7 @@ export function seedOptions(yargs: CommonYargsArgv) {
         ".wrangler",
         "state",
         "d1",
-        "DB.sqlite3"
+        "db.sqlite"
       ),
     })
     .option("seed-path", {

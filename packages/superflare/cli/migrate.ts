@@ -30,7 +30,7 @@ export function defaultSuperflareDatabasePath (rootPath = process.cwd()) {
       "v3",
       "d1",
       d1DatabaseId,
-      "DB.sqlite3"
+      "db.sqlite"
     )
   } catch (e) {
     return path.join(
@@ -38,7 +38,7 @@ export function defaultSuperflareDatabasePath (rootPath = process.cwd()) {
       ".wrangler",
       "state",
       "d1",
-      "DB.sqlite3"
+      "db.sqlite"
     )
   }
 }
