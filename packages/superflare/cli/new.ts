@@ -376,7 +376,7 @@ type TaskResult = Promise<{
 
 async function createD1Database(name: string): TaskResult {
   try {
-    const result = await runWranglerCommand(["d1", "create", name, "--experimental-backend"]);
+    const result = await runWranglerCommand(["d1", "create", name]);
 
     // Parse the ID out of the stdout:
     // database_id = "79da141d-acd3-4d64-adb1-9a50f8ed7e2b"
