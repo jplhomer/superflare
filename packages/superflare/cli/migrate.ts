@@ -1,6 +1,7 @@
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import path from "node:path";
 import fs, { mkdir, readdir, writeFile } from "node:fs/promises";
+import fsSync from 'node:fs'
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
@@ -13,6 +14,35 @@ export function defaultSuperflareMigrationsPath(rootPath = process.cwd()) {
   return path.join(rootPath, "db", "migrations");
 }
 
+export function defaultSuperflareDatabasePath (rootPath = process.cwd()) {
+  try {
+    const wranglerConfig = fsSync.readFileSync(
+      path.join(rootPath, 'wrangler.json'),
+      'utf8'
+    )
+    const wranglerConfigJson = JSON.parse(wranglerConfig)
+    const d1DatabaseId = wranglerConfigJson?.d1_databases?.[0]?.database_id
+
+    return path.join(
+      rootPath,
+      ".wrangler",
+      "state",
+      "v3",
+      "d1",
+      d1DatabaseId,
+      "db.sqlite"
+    )
+  } catch (e) {
+    return path.join(
+      rootPath,
+      ".wrangler",
+      "state",
+      "d1",
+      "db.sqlite"
+    )
+  }
+}
+
 export function migrateOptions(yargs: CommonYargsArgv) {
   return yargs
     .option("db", {
@@ -20,13 +50,7 @@ export function migrateOptions(yargs: CommonYargsArgv) {
       describe: "Path to the database",
 
       // Default to the path in the .wrangler directory
-      default: path.join(
-        process.cwd(),
-        ".wrangler",
-        "state",
-        "d1",
-        "DB.sqlite3"
-      ),
+      default: defaultSuperflareDatabasePath(),
     })
     .option("models", {
       alias: "m",
