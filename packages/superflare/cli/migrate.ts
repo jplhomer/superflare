@@ -1,7 +1,7 @@
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import path from "node:path";
 import fs, { mkdir, readdir, writeFile } from "node:fs/promises";
-import fsSync from 'node:fs'
+import fsSync from "node:fs";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
@@ -14,14 +14,14 @@ export function defaultSuperflareMigrationsPath(rootPath = process.cwd()) {
   return path.join(rootPath, "db", "migrations");
 }
 
-export function defaultSuperflareDatabasePath (rootPath = process.cwd()) {
+export function defaultSuperflareDatabasePath(rootPath = process.cwd()) {
   try {
     const wranglerConfig = fsSync.readFileSync(
-      path.join(rootPath, 'wrangler.json'),
-      'utf8'
-    )
-    const wranglerConfigJson = JSON.parse(wranglerConfig)
-    const d1DatabaseId = wranglerConfigJson?.d1_databases?.[0]?.database_id
+      path.join(rootPath, "wrangler.json"),
+      "utf8"
+    );
+    const wranglerConfigJson = JSON.parse(wranglerConfig);
+    const d1DatabaseId = wranglerConfigJson?.d1_databases?.[0]?.database_id;
 
     return path.join(
       rootPath,
@@ -31,15 +31,9 @@ export function defaultSuperflareDatabasePath (rootPath = process.cwd()) {
       "d1",
       d1DatabaseId,
       "db.sqlite"
-    )
+    );
   } catch (e) {
-    return path.join(
-      rootPath,
-      ".wrangler",
-      "state",
-      "d1",
-      "db.sqlite"
-    )
+    return path.join(rootPath, ".wrangler", "state", "d1", "db.sqlite");
   }
 }
 
