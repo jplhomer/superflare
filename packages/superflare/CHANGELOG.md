@@ -1,5 +1,11 @@
 # superflare
 
+## 0.1.1
+
+### Patch Changes
+
+- aaebb5b: Fix the name and location of the local SQLite db
+
 ## 0.1.0
 
 ### Minor Changes
