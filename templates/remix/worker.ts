@@ -7,7 +7,7 @@ import {
   MethodNotAllowedError,
 } from "@cloudflare/kv-asset-handler";
 import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import { handleQueue } from "superflare";
+import { handleQueue, handleScheduled } from "superflare";
 import { handleFetch } from "@superflare/remix";
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
@@ -55,5 +55,11 @@ export default {
     ctx: ExecutionContext
   ): Promise<void[]> {
     return handleQueue(batch, env, ctx, config);
+  },
+
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    return await handleScheduled(event, env, ctx, config, (schedule) => {
+      // Define a schedule
+    });
   },
 };
