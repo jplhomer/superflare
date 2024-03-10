@@ -29,13 +29,14 @@ export abstract class Job {
   /**
    * Dispatch the job with the given arguments.
    */
-  static async dispatch<T extends Job>(
-    this: new (...arg: any[]) => T,
-    ...args: any[]
-  ) {
-    const job = new this(...args);
-    return job.dispatch(...args);
-  }
+	static async dispatch<T extends Job, Args extends any[]>(
+		this: new (...args: Args) => T,
+		...args: Args
+	) {
+		const job = new this(...args);
+
+		return job.dispatch(...args);
+	}
 
   /**
    * Convert the constructor arguments to a payload that can be sent to the queue.
