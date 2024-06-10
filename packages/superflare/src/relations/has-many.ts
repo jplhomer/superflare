@@ -17,7 +17,7 @@ export class HasMany extends Relation {
     models = models instanceof Array ? models : [models];
 
     return Promise.all(
-      models.map(async (model) => {
+      models.map(async (model: any) => {
         model[this.foreignKey as keyof Model] =
           this.parent[this.ownerKey as keyof Model];
         await model.save();
@@ -27,10 +27,11 @@ export class HasMany extends Relation {
   }
 
   create(attributeSets: Record<string, any>[] | Record<string, any>) {
-    attributeSets = attributeSets instanceof Array ? attributeSets : [attributeSets];
+    attributeSets =
+      attributeSets instanceof Array ? attributeSets : [attributeSets];
 
     return Promise.all(
-      attributeSets.map(async (attributes) => {
+      attributeSets.map(async (attributes: any) => {
         const model = new this.query.modelInstance.constructor(attributes);
         model[this.foreignKey as keyof Model] =
           this.parent[this.ownerKey as keyof Model];
