@@ -52,7 +52,7 @@
     "tailwindcss": "^3.2.7",
     "tsconfig": "workspace:*",
     "typescript": "^4.9.5",
-    "wrangler": "^2.12.2"
+    "wrangler": "^3"
   },
   "engines": {
     "node": ">=16.13"
