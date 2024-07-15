@@ -18,11 +18,7 @@ export async function runWranglerCommand(
 
   const child = spawn("npx", ["wrangler@latest", ...command], {
     shell: true,
-    env: {
-      ...process.env,
-      // TODO: Remove when D1 is stable.
-      NO_D1_WARNING: "true",
-    },
+    env: process.env,
   });
 
   child.stderr.on("data", (data) => {
