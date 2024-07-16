@@ -30,18 +30,18 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@remix-run/cloudflare": "^1.14.0",
-    "@remix-run/server-runtime": "^1.14.0",
+    "@remix-run/cloudflare": "^2",
+    "@remix-run/server-runtime": "^2",
     "tsconfig": "workspace:*",
     "tsup": "^6.6.3",
     "typescript": "^5"
   },
   "peerDependencies": {
-    "@remix-run/cloudflare": "^1.14.0",
-    "@remix-run/server-runtime": "^1.14.0"
+    "@remix-run/cloudflare": "^2",
+    "@remix-run/server-runtime": "^2"
   },
   "dependencies": {
-    "@cloudflare/kv-asset-handler": "^0.3.0",
+    "@cloudflare/kv-asset-handler": "^0.3.4",
     "superflare": "workspace:*"
   }
 }

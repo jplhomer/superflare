@@ -53,7 +53,7 @@
     "yargs": "^17.6.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20221111.1",
+    "@cloudflare/workers-types": "^4.20240620.0",
     "@miniflare/core": "^2.12.1",
     "@miniflare/d1": "^2.12.1",
     "@miniflare/shared": "^2.12.1",
