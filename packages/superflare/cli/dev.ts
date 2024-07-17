@@ -125,8 +125,6 @@ export async function devHandler(
     ...normalizedBindings.map(
       (binding) => "--" + `${isPagesMode ? "binding" : "var"} ${binding}`
     ),
-    "--local",
-    "--persist",
     "--experimental-json-config",
     "--test-scheduled",
     argv.liveReload && "--live-reload",
