@@ -1,8 +1,8 @@
 import type { RenderableTreeNode } from "@markdoc/markdoc";
-import { slugifyWithCounter } from "@sindresorhus/slugify";
-import { TableOfContents } from "./components/Layout";
-import yaml from "js-yaml";
 import Markdoc, { nodes as defaultNodes } from "@markdoc/markdoc";
+import { slugifyWithCounter } from "@sindresorhus/slugify";
+import yaml from "js-yaml";
+import { type TableOfContents } from "./components/Layout";
 
 const DOCS_PORT = 3123;
 

@@ -13,8 +13,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import styles from "./styles/tailwind.css";
-import "focus-visible";
+import styles from "./styles/tailwind.css?url";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

@@ -1,14 +1,18 @@
 {
   "name": "site",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
-    "build": "npm run build:remix",
-    "build:remix": "remix build",
-    "dev:remix": "remix watch",
+    "build": "remix vite:build",
+    "deploy": "wrangler deploy",
+    "dev:remix": "remix vite:dev",
     "dev:superflare": "NODE_ENV=development wrangler dev worker.ts --site public --var SESSION_SECRET:secret --local --persist -j",
     "dev:docs": "node ./scripts/serve-local-docs.mjs",
-    "dev": "concurrently \"npm:dev:*\""
+    "dev": "concurrently \"npm:dev:*\"",
+    "start": "wrangler -j dev ./server.js",
+    "typegen": "wrangler -j types",
+    "typecheck": "tsc"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
