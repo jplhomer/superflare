@@ -7,8 +7,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import styles from "./tailwind.css";
-import syntax from "./styles/syntax.css";
+import styles from "./tailwind.css?url";
+import syntax from "./styles/syntax.css?url";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
