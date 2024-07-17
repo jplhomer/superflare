@@ -2,15 +2,18 @@
   "name": "superflare-remix-remplate",
   "version": "1.0.0",
   "description": "A Superflare template for Remix",
+  "type": "module",
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "npm run build:remix",
-    "build:remix": "remix build",
-    "dev:remix": "remix watch",
+    "build": "remix vite:build",
+    "deploy": "wrangler deploy",
+    "dev:remix": "remix vite:dev",
     "dev:superflare": "NODE_ENV=development superflare dev",
     "dev": "npm run build && concurrently \"npm:dev:*\"",
-    "start": "cross-env NODE_ENV=production npm run dev:superflare"
+    "start": "wrangler -j dev ./server.js",
+    "typegen": "wrangler -j types",
+    "typecheck": "tsc"
   },
   "keywords": [],
   "license": "MIT",
