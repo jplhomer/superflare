@@ -1,3 +1,4 @@
+import { Miniflare } from "miniflare";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import path from "node:path";
 import fs, { mkdir, readdir, writeFile } from "node:fs/promises";
@@ -6,7 +7,6 @@ import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
 import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
 import { seedDb } from "./db/seed";
-import { createSQLiteDB } from "./d1-database";
 import { Schema } from "../src/schema";
 import { register } from "esbuild-register/dist/node";
 
@@ -127,7 +127,8 @@ export async function migrateHandler(
     process.exit(1);
   }
 
-  const db = await createSQLiteDB(dbPath, logger.log);
+  const mf = new Miniflare({ envPath: true });
+  const db = await mf.getD1Database(dbPath);
 
   const seed = argv.seed;
   const seedPath = argv.seedPath;
@@ -136,7 +137,7 @@ export async function migrateHandler(
   }
 
   logger.info("Generating types from database...");
-  const types = generateTypesFromSqlite(db);
+  const types = await generateTypesFromSqlite(db);
   const results = syncSuperflareTypes(process.cwd(), modelsDirectory, types, {
     createIfNotFound: argv.create as boolean,
   });

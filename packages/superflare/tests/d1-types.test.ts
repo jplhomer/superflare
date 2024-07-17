@@ -45,8 +45,8 @@ describe("generateTypesFromSqlite", () => {
     db.exec(sql);
   });
 
-  it("creates types from a sqlite database", () => {
-    const result = generateTypesFromSqlite(db);
+  it("creates types from a sqlite database", async () => {
+    const result = await generateTypesFromSqlite(db);
 
     expect(result.length).toBe(2);
 
@@ -113,13 +113,13 @@ describe("syncSuperflareTypes", () => {
     fs.rmSync(tmpDir, { recursive: true });
   });
 
-  it("adds types to all existing typescript models in a directory", () => {
+  it("adds types to all existing typescript models in a directory", async () => {
     populateDirectoryWithFiles({
       "User.ts": baseModel("User"),
       "Post.ts": baseModel("Post"),
     });
 
-    const types = generateTypesFromSqlite(db);
+    const types = await generateTypesFromSqlite(db);
     syncSuperflareTypes(tmpDir, modelsDir, types);
     const generated = fs.readFileSync(
       path.join(tmpDir, SUPERFLARE_TYPES_FILE),
@@ -140,12 +140,12 @@ describe("syncSuperflareTypes", () => {
 }`);
   });
 
-  it("does not create new files by default", () => {
+  it("does not create new files by default", async () => {
     populateDirectoryWithFiles({
       "Post.ts": baseModel("Post"),
     });
 
-    const types = generateTypesFromSqlite(db);
+    const types = await generateTypesFromSqlite(db);
     const results = syncSuperflareTypes(tmpDir, modelsDir, types);
 
     // Expect `user.ts` to not exist
@@ -165,12 +165,12 @@ describe("syncSuperflareTypes", () => {
     });
   });
 
-  it("creates new model files if requested", () => {
+  it("creates new model files if requested", async () => {
     populateDirectoryWithFiles({
       "Post.ts": baseModel("Post"),
     });
 
-    const types = generateTypesFromSqlite(db);
+    const types = await generateTypesFromSqlite(db);
     const results = syncSuperflareTypes(tmpDir, modelsDir, types, {
       createIfNotFound: true,
     });

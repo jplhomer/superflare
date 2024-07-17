@@ -1,3 +1,5 @@
+import type { SqliteDB } from "@miniflare/shared";
+
 export async function createD1Database(
   sqliteDbPath: string,
   logger = console.log
@@ -20,5 +22,21 @@ export async function createSQLiteDB(
     typeof import("@miniflare/shared")
   >("@miniflare/shared", logger);
 
-  return create(dbPath);
+  return new D1DatabaseAdaptor(await create(dbPath));
+}
+
+class D1DatabaseAdaptor {
+  constructor(private readonly db: SqliteDB) {}
+
+  exec = this.db.exec.bind(this.db);
+
+  prepare(query: string) {
+    return {
+      all: async <T>() => {
+        return {
+          results: this.db.prepare(query).all() as T[],
+        };
+      },
+    };
+  }
 }

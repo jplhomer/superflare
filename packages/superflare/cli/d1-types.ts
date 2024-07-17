@@ -1,4 +1,4 @@
-import type Database from "better-sqlite3";
+import type { D1Database } from "@cloudflare/workers-types";
 import pluralize from "pluralize";
 import fs from "fs";
 import path from "path";
@@ -55,23 +55,21 @@ const ignoreSqliteTable = (table: string) =>
 /**
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
-export function generateTypesFromSqlite(db: Database.Database) {
-  const tableList = db
-    .prepare("PRAGMA table_list")
-    .all()
-    .filter(
-      (table) => !ignoreSqliteTable(table.name)
-    ) as SqliteTableListTable[];
+export async function generateTypesFromSqlite(db: D1Database) {
+  const foo = await db.prepare("PRAGMA table_list").all<SqliteTableListTable>();
+  const tableList = foo.results!.filter(
+    (table) => !ignoreSqliteTable(table.name)
+  );
 
   const types: ModelWithSuperflareTypes[] = [];
 
   for (const table of tableList) {
-    const tableInfo = db
+    const { results } = await db
       .prepare(`PRAGMA table_info(${table.name})`)
-      .all() as SqliteTableInfoColumn[];
+      .all<SqliteTableInfoColumn>();
     const tableTypes: SuperflareType[] = [];
 
-    for (const column of tableInfo) {
+    for (const column of results!) {
       const type = sqliteColumnTypeToSuperflareType(column.type.toLowerCase());
 
       tableTypes.push({
