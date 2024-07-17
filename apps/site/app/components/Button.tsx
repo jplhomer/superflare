@@ -8,21 +8,27 @@ const styles = {
     "rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400",
 };
 
-export function Button({
+export function Button<Href extends string>({
   variant = "primary",
   className,
   href,
   ...props
-}: {
+}: Omit<
+  React.ComponentProps<Href extends string ? typeof Link : "button">,
+  "to"
+> & {
   variant?: keyof typeof styles;
   className?: string;
-  href?: string;
-} & React.ComponentProps<"button" | typeof Link>) {
+  href?: Href;
+}) {
   className = clsx(styles[variant], className);
 
   return href ? (
-    <Link to={href} className={className} {...props} />
+    <Link {...props} to={href} className={className} />
   ) : (
-    <button className={className} {...props} />
+    <button
+      {...(props as React.ComponentProps<"button">)}
+      className={className}
+    />
   );
 }
