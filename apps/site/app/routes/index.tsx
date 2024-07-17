@@ -1,6 +1,6 @@
 import {
   json,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
   type MetaFunction,
 } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
@@ -8,7 +8,7 @@ import { Layout } from "~/components/Layout";
 import { getManifest, getMarkdownForPath, parseMarkdoc } from "~/docs.server";
 import { renderMarkdoc } from "~/markdoc";
 
-export async function loader({ params, context: { env } }: LoaderArgs) {
+export async function loader({ params, context: { env } }: LoaderFunctionArgs) {
   const path = params["*"] ?? ("index" as string);
 
   const useGitHub = process.env.NODE_ENV === "production";

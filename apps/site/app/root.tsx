@@ -2,7 +2,7 @@ import {
   json,
   type LinksFunction,
   type MetaFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import {
   Links,
@@ -43,7 +43,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ context: { env } }: LoaderArgs) {
+export async function loader({ context: { env } }: LoaderFunctionArgs) {
   return json({
     ENV: {
       DOCSEARCH_APP_ID: env.DOCSEARCH_APP_ID,

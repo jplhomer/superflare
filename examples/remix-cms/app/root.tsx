@@ -10,11 +10,11 @@ import {
 import styles from "./tailwind.css?url";
 import syntax from "./styles/syntax.css?url";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Remix CMS",
-  viewport: "width=device-width,initial-scale=1",
-});
+export const meta: MetaFunction = () => [
+  { charset: "utf-8" },
+  { title: "Remix CMS" },
+  { viewport: "width=device-width,initial-scale=1" },
+];
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
