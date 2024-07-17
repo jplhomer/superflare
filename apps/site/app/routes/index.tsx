@@ -30,14 +30,12 @@ export async function loader({ params, context: { env } }: LoaderFunctionArgs) {
   return json({ content, title, tableOfContents, manifest, description });
 }
 
-export const meta: MetaFunction = ({ data }: { data: any }) => {
-  return {
-    title: data.title,
-    "twitter:title": data.title,
-    description: data.description,
-    "twitter:description": data.description,
-  };
-};
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  { title: data?.title },
+  { "twitter:title": data?.title },
+  { description: data?.description },
+  { "twitter:description": data?.description },
+];
 
 export default function DocsPage() {
   const { content, title, tableOfContents, manifest } =
