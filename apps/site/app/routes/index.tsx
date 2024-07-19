@@ -8,17 +8,24 @@ import { Layout } from "~/components/Layout";
 import { getManifest, getMarkdownForPath, parseMarkdoc } from "~/docs.server";
 import { renderMarkdoc } from "~/markdoc";
 
-export async function loader({ params, context: { env } }: LoaderFunctionArgs) {
+export async function loader({
+  params,
+  context: { cloudflare },
+}: LoaderFunctionArgs) {
   const path = params["*"] ?? ("index" as string);
 
   const useGitHub = process.env.NODE_ENV === "production";
-  const markdown = await getMarkdownForPath(path, env.GITHUB_TOKEN, useGitHub);
+  const markdown = await getMarkdownForPath(
+    path,
+    cloudflare.env.GITHUB_TOKEN,
+    useGitHub
+  );
 
   if (!markdown) {
     throw new Response("Not found", { status: 404 });
   }
 
-  const manifest = await getManifest(env.GITHUB_TOKEN, useGitHub);
+  const manifest = await getManifest(cloudflare.env.GITHUB_TOKEN, useGitHub);
 
   if (!manifest) {
     throw new Response("Manifest could not be loaded", { status: 404 });

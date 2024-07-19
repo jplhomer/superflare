@@ -46,12 +46,12 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ context: { env } }: LoaderFunctionArgs) {
+export async function loader({ context: { cloudflare } }: LoaderFunctionArgs) {
   return json({
     ENV: {
-      DOCSEARCH_APP_ID: env.DOCSEARCH_APP_ID,
-      DOCSEARCH_API_KEY: env.DOCSEARCH_API_KEY,
-      DOCSEARCH_INDEX_NAME: env.DOCSEARCH_INDEX_NAME,
+      DOCSEARCH_APP_ID: cloudflare.env.DOCSEARCH_APP_ID,
+      DOCSEARCH_API_KEY: cloudflare.env.DOCSEARCH_API_KEY,
+      DOCSEARCH_INDEX_NAME: cloudflare.env.DOCSEARCH_INDEX_NAME,
     },
   });
 }
