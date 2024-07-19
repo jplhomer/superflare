@@ -27,6 +27,7 @@
     "@tailwindcss/typography": "^0.5.8",
     "autoprefixer": "^10.4.7",
     "clsx": "^1.2.0",
+    "focus-visible": "^5.2.0",
     "isbot": "latest",
     "js-yaml": "^4.1.0",
     "postcss-focus-visible": "^6.0.4",

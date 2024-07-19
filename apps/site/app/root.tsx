@@ -14,6 +14,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import styles from "./styles/tailwind.css?url";
+import "focus-visible";
 
 export const meta: MetaFunction = () => [
   { charset: "utf-8" },
