@@ -1,6 +1,6 @@
 {
   "name": "superflare-site",
-  "main": "./server.js",
+  "main": "./worker.ts",
   "workers_dev": true,
   "compatibility_date": "2023-04-20",
   "site": {
