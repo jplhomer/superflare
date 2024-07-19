@@ -11,7 +11,7 @@
     "dev:remix": "remix vite:dev",
     "dev:superflare": "NODE_ENV=development superflare dev -b APP_KEY=secret",
     "dev": "pnpm build && concurrently \"npm:dev:*\"",
-    "start": "wrangler -j dev ./server.js",
+    "start": "wrangler -j dev",
     "migrate": "superflare migrate",
     "typegen": "wrangler -j types",
     "typecheck": "tsc"
