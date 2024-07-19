@@ -136,7 +136,7 @@ export async function newHandler(
         {
           value: "database",
           label: "Database Models",
-          hint: "We'll create D1 a database for you",
+          hint: "We'll create a D1 database for you",
         },
         {
           value: "storage",
