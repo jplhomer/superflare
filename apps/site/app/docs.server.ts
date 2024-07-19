@@ -1,4 +1,4 @@
-import type { RenderableTreeNode } from "@markdoc/markdoc";
+import type { RenderableTreeNode, Schema, Tag } from "@markdoc/markdoc";
 import Markdoc, { nodes as defaultNodes } from "@markdoc/markdoc";
 import { slugifyWithCounter } from "@sindresorhus/slugify";
 import yaml from "js-yaml";
@@ -79,7 +79,7 @@ export type Manifest = ManifestEntry[];
 export async function getManifest(
   gitHubToken: string,
   useGitHub: boolean
-): Promise<Manifest> {
+): Promise<Manifest | null> {
   const manifest = useGitHub
     ? await getDocsForPathFromGitHub("manifest.json", gitHubToken)
     : await getDocsForPathFromLocal("manifest.json");
@@ -88,14 +88,17 @@ export async function getManifest(
   return JSON.parse(manifest);
 }
 
-function getNodeText(node: RenderableTreeNode) {
+function getNodeText(renderableNode: RenderableTreeNode) {
+  if (typeof renderableNode === "string") return renderableNode;
+  if (!renderableNode || typeof renderableNode !== "object") return "";
   let text = "";
-  if (typeof node === "string" || !node) return text;
+  let node = renderableNode as Tag;
   for (let child of node.children ?? []) {
     if (typeof child === "string") {
       text += child;
+    } else {
+      text += getNodeText(child);
     }
-    text += getNodeText(child);
   }
   return text;
 }
@@ -104,27 +107,31 @@ export function collectHeadings(
   nodes: RenderableTreeNode[],
   slugify = slugifyWithCounter()
 ): TableOfContents {
-  let sections = [];
+  let sections: TableOfContents = [];
 
-  for (let node of nodes) {
-    if (!node || typeof node !== "object") continue;
+  for (let renderableNode of nodes) {
+    if (!renderableNode || typeof renderableNode !== "object") {
+      continue;
+    }
+
+    let node = renderableNode as Tag;
+
     if (node.name === "h2" || node.name === "h3") {
       let title = getNodeText(node);
       if (title) {
         let id = slugify(title);
-        node.attributes.id = id;
+        let attributes = { children: [], ...node.attributes, id, title };
         if (node.name === "h3") {
-          if (!sections[sections.length - 1]) {
+          let previousSection = sections[sections.length - 1];
+          if (!previousSection) {
             throw new Error(
               "Cannot add `h3` to table of contents without a preceding `h2`"
             );
           }
-          sections[sections.length - 1].children.push({
-            ...node.attributes,
-            title,
-          });
+          (previousSection.children as TableOfContents).push(attributes);
         } else {
-          sections.push({ ...node.attributes, title, children: [] });
+          attributes.children = [];
+          sections.push(attributes);
         }
       }
     }
@@ -136,10 +143,11 @@ export function collectHeadings(
 }
 
 export interface Frontmatter {
+  description?: string;
   title: string;
 }
 
-const tags = {
+const tags: Record<string, Schema> = {
   callout: {
     attributes: {
       title: { type: String },
@@ -205,7 +213,9 @@ export function parseMarkdoc(markdown: string) {
 
   let tableOfContents =
     content && typeof content !== "string"
-      ? collectHeadings(Array.isArray(content) ? content : content.children)
+      ? collectHeadings(
+          Array.isArray(content) ? content : (content as Tag).children
+        )
       : [];
 
   return { content, frontmatter, tableOfContents, title, description };
