@@ -1,4 +1,8 @@
-import { createCookieSessionStorage } from "@remix-run/cloudflare";
+import { type Request } from "@cloudflare/workers-types";
+import {
+  createCookieSessionStorage,
+  type AppLoadContext,
+} from "@remix-run/cloudflare";
 import {
   defineConfig,
   handleFetch as superflareHandleFetch,
@@ -17,7 +21,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   config: ReturnType<typeof defineConfig<Env>>,
   remixHandler: (
     request: Request,
-    loadContext: SuperflareAppLoadContext<Env>
+    loadContext: SuperflareAppLoadContext
   ) => Promise<Response>
 ) {
   if (!env.APP_KEY) {
@@ -54,20 +58,29 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
        * We inject env and session into the Remix load context.
        * Someday, we could replace this with AsyncLocalStorage.
        */
-      const loadContext: SuperflareAppLoadContext<Env> = {
+      const loadContext: SuperflareAppLoadContext = {
+        cloudflare: {
+          // This object matches the return value from Wrangler's
+          // `getPlatformProxy` used during development via Remix's
+          // `cloudflareDevProxyVitePlugin`:
+          // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
+          cf: request.cf,
+          ctx: {
+            passThroughOnException: ctx.passThroughOnException.bind(ctx),
+            waitUntil: ctx.waitUntil.bind(ctx),
+          },
+          caches,
+          env,
+        },
         session,
         auth: new SuperflareAuth(session),
-        env,
-        ctx,
       };
       return await remixHandler(request, loadContext);
     }
   );
 }
 
-export interface SuperflareAppLoadContext<Env> {
+export interface SuperflareAppLoadContext extends AppLoadContext {
   session: SuperflareSession;
   auth: SuperflareAuth;
-  env: Env;
-  ctx: ExecutionContext;
 }
