@@ -11,7 +11,8 @@
     "test": "vitest",
     "build": "tsup --format esm,cjs",
     "dev": "tsup --format esm,cjs --watch",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "typecheck": "tsc"
   },
   "exports": {
     ".": {

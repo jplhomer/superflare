@@ -21,7 +21,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "typecheck": "tsc"
   },
   "keywords": [
     "remix",
