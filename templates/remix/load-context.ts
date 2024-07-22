@@ -1,3 +1,4 @@
+import { SuperflareAuth, SuperflareSession } from "superflare";
 import { type PlatformProxy } from "wrangler";
 
 // NOTE: PlatformProxy’s caches property is incompatible with the caches global
@@ -10,5 +11,7 @@ type Cloudflare = Omit<PlatformProxy<Env>, "dispose" | "caches"> & {
 declare module "@remix-run/cloudflare" {
   interface AppLoadContext {
     cloudflare: Cloudflare;
+    auth: InstanceType<typeof SuperflareAuth>;
+    session: InstanceType<typeof SuperflareSession>;
   }
 }
