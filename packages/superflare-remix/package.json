@@ -32,7 +32,7 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240620.0",
+    "@cloudflare/workers-types": "^4.20240718.0",
     "@remix-run/cloudflare": "^2",
     "@remix-run/server-runtime": "^2",
     "tsconfig": "workspace:*",

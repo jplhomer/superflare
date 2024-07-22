@@ -44,7 +44,7 @@ importers:
         version: 0.4.0(@types/react@18.3.3)(react@18.2.0)
       '@remix-run/cloudflare':
         specifier: ^2
-        version: 2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)
+        version: 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
       '@remix-run/react':
         specifier: ^2
         version: 2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
@@ -98,11 +98,11 @@ importers:
         version: 1.3.3
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
-        version: 4.20240712.0
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
       '@remix-run/dev':
         specifier: ^2
-        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0))
+        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))
       '@remix-run/eslint-config':
         specifier: ^2
         version: 2.10.3(eslint@8.26.0)(react@18.2.0)(typescript@5.5.3)
@@ -144,7 +144,7 @@ importers:
         version: 4.3.2(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))
       wrangler:
         specifier: ^3
-        version: 3.64.0(@cloudflare/workers-types@4.20240712.0)
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
 
   examples/remix-cms:
     dependencies:
@@ -159,7 +159,7 @@ importers:
         version: 2.1.5(react@18.2.0)
       '@remix-run/cloudflare':
         specifier: ^2
-        version: 2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)
+        version: 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
       '@remix-run/react':
         specifier: ^2
         version: 2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
@@ -168,7 +168,7 @@ importers:
         version: 2.10.3(typescript@5.5.3)
       '@remix-run/v1-route-convention':
         specifier: ^0.1.4
-        version: 0.1.4(@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0)))
+        version: 0.1.4(@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0)))
       '@superflare/remix':
         specifier: workspace:*
         version: link:../../packages/superflare-remix
@@ -204,14 +204,14 @@ importers:
         version: 1.3.3
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
-        version: 4.20240712.0
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
       '@faker-js/faker':
         specifier: ^7.6.0
         version: 7.6.0
       '@remix-run/dev':
         specifier: ^2
-        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0))
+        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))
       '@remix-run/eslint-config':
         specifier: ^2
         version: 2.10.3(eslint@8.57.0)(react@18.2.0)(typescript@5.5.3)
@@ -256,7 +256,7 @@ importers:
         version: 4.3.2(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))
       wrangler:
         specifier: ^3
-        version: 3.64.0(@cloudflare/workers-types@4.20240712.0)
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
 
   packages/eslint-config-custom:
     dependencies:
@@ -317,14 +317,14 @@ importers:
         version: 1.3.3
       wrangler:
         specifier: ^3
-        version: 3.64.0(@cloudflare/workers-types@4.20240712.0)
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
       yargs:
         specifier: ^17.6.2
         version: 17.7.2
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
-        version: 4.20240712.0
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
       '@miniflare/core':
         specifier: ^2.12.1
         version: 2.14.2
@@ -381,11 +381,11 @@ importers:
         version: link:../superflare
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
-        version: 4.20240712.0
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
       '@remix-run/cloudflare':
         specifier: ^2
-        version: 2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)
+        version: 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
       '@remix-run/server-runtime':
         specifier: ^2
         version: 2.10.3(typescript@5.5.3)
@@ -408,7 +408,7 @@ importers:
         version: 0.3.4
       '@remix-run/cloudflare':
         specifier: ^2
-        version: 2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)
+        version: 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
       '@remix-run/react':
         specifier: ^2
         version: 2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
@@ -417,7 +417,7 @@ importers:
         version: 2.10.3(typescript@5.5.3)
       '@superflare/remix':
         specifier: '*'
-        version: 0.0.18(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3))(@remix-run/server-runtime@2.10.3(typescript@5.5.3))(cron-schedule@3.0.6)
+        version: 0.0.18(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3))(@remix-run/server-runtime@2.10.3(typescript@5.5.3))(cron-schedule@3.0.6)
       isbot:
         specifier: ^4.1.0
         version: 4.4.0
@@ -435,11 +435,11 @@ importers:
         version: 1.3.3
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
-        version: 4.20240712.0
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
       '@remix-run/dev':
         specifier: ^2
-        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0))
+        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))
       '@types/react':
         specifier: ^18.0.28
         version: 18.3.3
@@ -463,7 +463,7 @@ importers:
         version: 4.3.2(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))
       wrangler:
         specifier: ^3
-        version: 3.64.0(@cloudflare/workers-types@4.20240712.0)
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
 
 packages:
 
@@ -848,8 +848,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@4.20240712.0':
-    resolution: {integrity: sha512-C+C0ZnkRrxR2tPkZKAXwBsWEse7bWaA7iMbaG6IKaxaPTo/5ilx7Ei3BkI2izxmOJMsC05VS1eFUf95urXzhmw==}
+  '@cloudflare/workers-types@4.20240718.0':
+    resolution: {integrity: sha512-7RqxXIM9HyhjfZ9ztXjITuc7mL0w4s+zXgypqKmMuvuObC3DgXutJ3bOYbQ+Ss5QbywrzWSNMlmGdL/ldg/yZg==}
 
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -6459,7 +6459,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20240701.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20240712.0': {}
+  '@cloudflare/workers-types@4.20240718.0': {}
 
   '@colors/colors@1.5.0':
     optional: true
@@ -7181,15 +7181,15 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)':
+  '@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)':
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
-      '@cloudflare/workers-types': 4.20240712.0
+      '@cloudflare/workers-types': 4.20240718.0
       '@remix-run/server-runtime': 2.10.3(typescript@5.5.3)
     optionalDependencies:
       typescript: 5.5.3
 
-  '@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0))':
+  '@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))':
     dependencies:
       '@babel/core': 7.24.8
       '@babel/generator': 7.24.8
@@ -7249,7 +7249,7 @@ snapshots:
       '@remix-run/serve': 2.10.3(typescript@5.5.3)
       typescript: 5.5.3
       vite: 5.3.3(@types/node@18.19.39)
-      wrangler: 3.64.0(@cloudflare/workers-types@4.20240712.0)
+      wrangler: 3.64.0(@cloudflare/workers-types@4.20240718.0)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -7380,9 +7380,9 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.3
 
-  '@remix-run/v1-route-convention@0.1.4(@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0)))':
+  '@remix-run/v1-route-convention@0.1.4(@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0)))':
     dependencies:
-      '@remix-run/dev': 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0))
+      '@remix-run/dev': 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.3(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))
       minimatch: 7.4.6
 
   '@remix-run/web-blob@3.1.0':
@@ -7472,10 +7472,10 @@ snapshots:
     dependencies:
       escape-string-regexp: 5.0.0
 
-  '@superflare/remix@0.0.18(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3))(@remix-run/server-runtime@2.10.3(typescript@5.5.3))(cron-schedule@3.0.6)':
+  '@superflare/remix@0.0.18(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3))(@remix-run/server-runtime@2.10.3(typescript@5.5.3))(cron-schedule@3.0.6)':
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
-      '@remix-run/cloudflare': 2.10.3(@cloudflare/workers-types@4.20240712.0)(typescript@5.5.3)
+      '@remix-run/cloudflare': 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
       '@remix-run/server-runtime': 2.10.3(typescript@5.5.3)
       superflare: 0.1.1(cron-schedule@3.0.6)
     transitivePeerDependencies:
@@ -12309,7 +12309,7 @@ snapshots:
       - ioredis
       - utf-8-validate
 
-  wrangler@3.64.0(@cloudflare/workers-types@4.20240712.0):
+  wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
@@ -12328,7 +12328,7 @@ snapshots:
       unenv: unenv-nightly@1.10.0-1717606461.a117952
       xxhash-wasm: 1.0.2
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20240712.0
+      '@cloudflare/workers-types': 4.20240718.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
