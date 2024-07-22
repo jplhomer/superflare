@@ -1,9 +1,12 @@
 import { Form, Link, useActionData } from "@remix-run/react";
-import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
 import { hash } from "superflare";
 
-export async function action({ request, context: { auth } }: ActionArgs) {
+export async function action({
+  request,
+  context: { auth },
+}: ActionFunctionArgs) {
   if (await auth.check(User)) {
     return redirect("/dashboard");
   }

@@ -1,6 +1,6 @@
-import { type ActionArgs, redirect } from "@remix-run/server-runtime";
+import { type ActionFunctionArgs, redirect } from "@remix-run/server-runtime";
 
-export async function action({ context: { auth } }: ActionArgs) {
+export async function action({ context: { auth } }: ActionFunctionArgs) {
   auth.logout();
 
   return redirect("/");
