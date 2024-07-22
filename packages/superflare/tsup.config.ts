@@ -14,6 +14,7 @@ export default defineConfig([
     format: ["esm", "cjs"],
     esbuildPlugins: [nodejsCompatPlugin],
     entry: ["index.ts", "cli.ts"],
+    external: ["@miniflare/storage-redis", "ioredis"],
   },
   {
     entry: ["index.types.ts"],
