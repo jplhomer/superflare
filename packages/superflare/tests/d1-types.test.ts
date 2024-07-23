@@ -7,7 +7,7 @@ import {
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { createSQLiteDB } from "../cli/d1-database";
+import { createTestDatabase } from "./db";
 
 const baseModel = (
   modelName: string
@@ -41,8 +41,7 @@ describe("generateTypesFromSqlite", () => {
   let db: any;
 
   beforeEach(async () => {
-    db = await createSQLiteDB(":memory:");
-    db.exec(sql);
+    db = await createTestDatabase(sql);
   });
 
   it("creates types from a sqlite database", async () => {
@@ -103,8 +102,7 @@ describe("syncSuperflareTypes", () => {
   }
 
   beforeEach(async () => {
-    db = await createSQLiteDB(":memory:");
-    db.exec(sql);
+    db = await createTestDatabase(sql);
     tmpDir = fs.mkdtempSync(path.join(osTmpDir, "superflare-test-models"));
     modelsDir = path.join(tmpDir, "app", "models");
   });
