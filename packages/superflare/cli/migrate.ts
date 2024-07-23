@@ -1,10 +1,10 @@
-import { Miniflare } from "miniflare";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import path from "node:path";
 import fs, { mkdir, readdir, writeFile } from "node:fs/promises";
 import fsSync from "node:fs";
 import { logger } from "./logger";
 import { wranglerMigrate } from "./wrangler";
+import { createD1Database } from "./d1-database";
 import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
 import { seedDb } from "./db/seed";
 import { Schema } from "../src/schema";
@@ -127,8 +127,7 @@ export async function migrateHandler(
     process.exit(1);
   }
 
-  const mf = new Miniflare({ envPath: true });
-  const db = await mf.getD1Database(dbPath);
+  const db = await createD1Database(dbPath);
 
   const seed = argv.seed;
   const seedPath = argv.seedPath;
