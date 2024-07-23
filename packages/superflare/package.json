@@ -56,9 +56,9 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240718.0",
-    "@miniflare/core": "^2.12.1",
-    "@miniflare/d1": "^2.12.1",
-    "@miniflare/shared": "^2.12.1",
+    "@miniflare/core": "^2.14.2",
+    "@miniflare/d1": "^2.14.2",
+    "@miniflare/shared": "^2.14.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/better-sqlite3": "^7.6.11",
     "@types/gunzip-maybe": "^1.4.0",

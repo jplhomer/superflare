@@ -326,13 +326,13 @@ importers:
         specifier: ^4.20240718.0
         version: 4.20240718.0
       '@miniflare/core':
-        specifier: ^2.12.1
+        specifier: ^2.14.2
         version: 2.14.2
       '@miniflare/d1':
-        specifier: ^2.12.1
+        specifier: ^2.14.2
         version: 2.14.2
       '@miniflare/shared':
-        specifier: ^2.12.1
+        specifier: ^2.14.2
         version: 2.14.2
       '@types/bcryptjs':
         specifier: ^2.4.2
