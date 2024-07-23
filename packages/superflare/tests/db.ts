@@ -1,5 +1,6 @@
+import type { D1Database as D1DatabaseType } from "@cloudflare/workers-types";
+import { D1Database, D1DatabaseAPI } from "@miniflare/d1";
 import Database from "better-sqlite3";
-import { D1Database, D1DatabaseAPI } from "../d1js";
 
 /**
  * This should only be exported locally for tests, not in places that are used in the package,
@@ -12,7 +13,6 @@ export async function createTestDatabase(sql: string) {
    * Migrating at this step because D1 doesn't allow multi-statement execs.
    */
   sqliteDb.exec(sql);
-
-  // Using local `/d1js` due to type mismatches in the @miniflare/d1 package :(
-  return new D1Database(new D1DatabaseAPI(sqliteDb));
+  const db = new D1Database(new D1DatabaseAPI(sqliteDb));
+  return db as any as D1DatabaseType;
 }
