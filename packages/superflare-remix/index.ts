@@ -34,7 +34,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     cookie: {
       httpOnly: true,
       path: "/",
-      secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
+      secure: /^(http|ws)s:\/\//.test(request.url),
       secrets: [env.APP_KEY],
     },
   });

@@ -21,7 +21,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     cookie: {
       httpOnly: true,
       path: "/",
-      secure: Boolean(ctx.request.url.match(/^(http|ws)s:\/\//)),
+      secure: /^(http|ws)s:\/\//.test(ctx.request.url),
       secrets: [ctx.env.APP_KEY],
     },
   });
