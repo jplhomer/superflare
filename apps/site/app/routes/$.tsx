@@ -1,8 +1,8 @@
 import { MetaFunction } from "@remix-run/react/dist/routeModules";
 
-import { loader as indexLoader } from "./index";
+import { loader as indexLoader } from "./_index";
 
-export { default } from "./index";
+export { default } from "./_index";
 
 export const loader = indexLoader;
 
