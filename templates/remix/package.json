@@ -37,7 +37,7 @@
     "better-sqlite3": "^11",
     "concurrently": "^7.6.0",
     "typescript": "^5",
-    "vite": "^5.3.3",
+    "vite": "^5.3.4",
     "vite-tsconfig-paths": "^4.3.2",
     "wrangler": "^3"
   },
