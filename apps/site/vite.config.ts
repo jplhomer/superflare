@@ -18,6 +18,7 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   ssr: {
+    noExternal: ["@docsearch/react", "@markdoc/markdoc"],
     resolve: {
       conditions: ["workerd", "worker", "browser"],
     },
