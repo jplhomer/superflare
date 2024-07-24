@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import clsx from "clsx";
-import Highlight, { defaultProps } from "prism-react-renderer";
+import { Highlight } from "prism-react-renderer";
 
 import { Button } from "~/components/Button";
 import { HeroBackground } from "~/components/HeroBackground";
@@ -153,7 +153,6 @@ export function Hero() {
                       ))}
                     </div>
                     <Highlight
-                      {...defaultProps}
                       code={activeTab.code}
                       language={codeLanguage}
                       theme={undefined}
