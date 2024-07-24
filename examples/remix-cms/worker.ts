@@ -8,6 +8,8 @@ import * as build from "./build/server"; // eslint-disable-line import/no-unreso
 // eslint-disable-next-line import/no-unresolved
 import __STATIC_CONTENT_MANIFEST from "__STATIC_CONTENT_MANIFEST";
 
+export { Channel } from "superflare";
+
 const MANIFEST = JSON.parse(__STATIC_CONTENT_MANIFEST);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
