@@ -58,10 +58,9 @@ const ignoreSqliteTable = (table: string) =>
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
 export async function generateTypesFromSqlite(db: D1Database) {
-  const foo = await db.prepare("PRAGMA table_list").all<SqliteTableListTable>();
-  const tableList = foo.results!.filter(
-    (table) => !ignoreSqliteTable(table.name)
-  );
+  const tableList = (
+    await db.prepare("PRAGMA table_list").all<SqliteTableListTable>()
+  ).results!.filter((table) => !ignoreSqliteTable(table.name));
 
   const types: ModelWithSuperflareTypes[] = [];
 
