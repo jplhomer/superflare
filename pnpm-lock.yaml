@@ -352,6 +352,9 @@ importers:
       '@types/yargs':
         specifier: ^17.0.20
         version: 17.0.32
+      miniflare:
+        specifier: ^3
+        version: 3.20240701.0
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
