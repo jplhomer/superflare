@@ -54,13 +54,17 @@ const ignoreSqliteTable = (table: string) =>
   table === "_cf_KV" ||
   table.startsWith("sqlite_");
 
+export async function getD1DatabaseTables(db: D1Database) {
+  return (
+    await db.prepare("PRAGMA table_list").all<SqliteTableListTable>()
+  ).results!.filter((table) => !ignoreSqliteTable(table.name));
+}
+
 /**
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
 export async function generateTypesFromSqlite(db: D1Database) {
-  const tableList = (
-    await db.prepare("PRAGMA table_list").all<SqliteTableListTable>()
-  ).results!.filter((table) => !ignoreSqliteTable(table.name));
+  const tableList = await getD1DatabaseTables(db);
 
   const types: ModelWithSuperflareTypes[] = [];
 

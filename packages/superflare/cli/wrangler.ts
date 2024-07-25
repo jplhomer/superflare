@@ -43,12 +43,12 @@ export async function runWranglerCommand(
 /**
  * Spawn a child process to execute: npx wrangler d1 migrations apply DB --local
  */
-export async function wranglerMigrate() {
+export async function wranglerMigrate(dbName: string) {
   return await runWranglerCommand([
     "d1",
     "migrations",
     "apply",
-    "DB",
+    dbName,
     "--local",
     "-j",
   ]);
