@@ -12,3 +12,13 @@ export async function createD1Database(
   const db = new D1Database(new D1DatabaseAPI(sqliteDb));
   return db as any as D1DatabaseType;
 }
+
+export async function getD1Database(dbName: string, logger = console.log) {
+  const { npxImport } = await import("npx-import");
+  const { getPlatformProxy } = await npxImport<typeof import("wrangler")>(
+    "wrangler",
+    logger
+  );
+  const { env } = await getPlatformProxy({ experimentalJsonConfig: true });
+  return env[dbName] as D1DatabaseType | undefined;
+}
