@@ -128,6 +128,7 @@ export async function migrateHandler(
   logger.table(results);
 
   logger.info("Done!");
+  process.exit(0);
 }
 
 /**
