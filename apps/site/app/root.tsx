@@ -12,8 +12,8 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import styles from "./styles/tailwind.css?url";
 import "focus-visible";
+import "./styles/tailwind.css";
 
 export const meta: MetaFunction = () => [
   { charset: "utf-8" },
@@ -35,7 +35,6 @@ export const meta: MetaFunction = () => [
 ];
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap",
