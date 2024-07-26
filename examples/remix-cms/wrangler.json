@@ -3,7 +3,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "./worker.ts",
   "workers_dev": true,
-  "compatibility_date": "2023-04-20",
+  "compatibility_date": "2024-06-03",
   "site": {
     "bucket": "./build/client"
   },
