@@ -6,7 +6,6 @@ import {
 } from "@remix-run/cloudflare";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -113,7 +112,6 @@ export default function App() {
         />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );
