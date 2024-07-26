@@ -7,7 +7,6 @@
     "build": "remix vite:build",
     "deploy": "wrangler deploy",
     "dev:remix": "remix vite:dev",
-    "dev:superflare": "NODE_ENV=development wrangler dev --site public --var SESSION_SECRET:secret -j",
     "dev:docs": "node ./scripts/serve-local-docs.mjs",
     "dev": "concurrently \"npm:dev:*\"",
     "start": "wrangler -j dev",
