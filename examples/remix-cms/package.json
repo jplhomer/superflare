@@ -8,9 +8,7 @@
   "scripts": {
     "build": "remix vite:build",
     "deploy": "wrangler deploy",
-    "dev:remix": "remix vite:dev",
-    "dev:superflare": "NODE_ENV=development superflare dev -b APP_KEY=secret",
-    "dev": "pnpm build && concurrently \"npm:dev:*\"",
+    "dev": "superflare dev",
     "start": "wrangler -j dev",
     "migrate": "superflare migrate",
     "typegen": "wrangler -j types",
