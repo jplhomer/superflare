@@ -54,7 +54,7 @@ export async function newHandler(
   const s = spinner();
 
   s.start(
-    "Welcome! Checking to make sure you have the Wrangler CLI installed and authenticated..."
+    "Welcome! Checking to make sure you have the Wrangler CLI installed and authenticated"
   );
 
   if (!(await ensureWranglerAuthenticated())) {
@@ -123,7 +123,7 @@ export async function newHandler(
     );
   }
 
-  s.start(`Creating a new Remix Superflare app in ${path}...`);
+  s.start(`Creating a new Remix Superflare app in ${path}`);
 
   await generateTemplate(path, appName, argv.template || "remix", argv.ref);
 
