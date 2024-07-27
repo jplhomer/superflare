@@ -54,7 +54,7 @@ export async function newHandler(
   const s = spinner();
 
   s.start(
-    "Welcome! Checking to make sure you have the Wrangler CLI installed and authenticated"
+    "Welcome! Checking that the Wrangler CLI is installed and authenticated"
   );
 
   if (!(await ensureWranglerAuthenticated())) {
