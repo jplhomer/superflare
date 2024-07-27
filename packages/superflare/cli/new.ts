@@ -31,6 +31,12 @@ export function newOptions(yargs: CommonYargsArgv) {
     .option("ref", {
       type: "string",
       description: "Optional GitHub ref to use for templates",
+      default: "main",
+    })
+    .option("repo", {
+      type: "string",
+      description: "Optional GitHub repo to use for templates",
+      default: "jplhomer/superflare",
     })
     .positional("name", {
       type: "string",
@@ -125,7 +131,13 @@ export async function newHandler(
 
   s.start(`Creating a new Remix Superflare app in ${path}`);
 
-  await generateTemplate(path, appName, argv.template || "remix", argv.ref);
+  await generateTemplate(
+    path,
+    appName,
+    argv.template || "remix",
+    argv.repo,
+    argv.ref
+  );
 
   s.stop(`App created!`);
 
@@ -299,13 +311,13 @@ async function generateTemplate(
   path: string,
   appName: string,
   template: string,
+  repo: string,
   ref?: string
 ) {
-  const gitHubRepo = `jplhomer/superflare`;
   const templatePath = `templates/${template}`;
 
   // Download tarball to a temp directory
-  const tempDir = await downloadGitHubTarball(gitHubRepo, ref);
+  const tempDir = await downloadGitHubTarball(repo, ref);
 
   // Copy the templatePath to the path
   await cp(join(tempDir, templatePath), path, { recursive: true });
