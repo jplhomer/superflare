@@ -290,10 +290,8 @@ Do you want to continue?`;
 
   note(allResults.join("\n"), "Here's what we did:");
 
-  // TODO: Drop the `--legacy-peer-deps` once the remix template is fixed:
-  // @see https://github.com/remix-run/remix/pull/5425
   outro(
-    `You're all set! \`cd ${path}\`, run \`npm install --legacy-peer-deps\`, and then \`npx superflare migrate\` to get started.`
+    `You're all set! \`cd ${path}\`, run \`npm install\`, and then \`npx superflare migrate\` to get started.`
   );
 }
 
