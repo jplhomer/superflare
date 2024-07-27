@@ -7,3 +7,5 @@ A full-stack toolkit for Cloudflare Workers.
 ```bash
 npx superflare@latest new
 ```
+
+Foo
