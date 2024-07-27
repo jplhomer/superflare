@@ -326,11 +326,7 @@ async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   // Get version of latest release from GitHub, and use that if no ref is specified.
   const release = await fetch(
     `https://api.github.com/repos/${gitHubRepo}/releases/latest`,
-    {
-      headers: {
-        "user-agent": "Superflare CLI",
-      },
-    }
+    { headers: { "user-agent": "Superflare CLI" } }
   );
 
   const { name } = (await release.json()) as { name: string };
@@ -341,9 +337,7 @@ async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   );
 
   const response = await fetch(downloadUrl.toString(), {
-    headers: {
-      "user-agent": "Superflare CLI",
-    },
+    headers: { "user-agent": "Superflare CLI" },
   });
 
   await pipeline(
