@@ -18,7 +18,12 @@ import gunzipMaybe from "gunzip-maybe";
 import { extract } from "tar-fs";
 import { spawn } from "child_process";
 import { randomBytes } from "crypto";
-import { runWranglerCommand } from "./wrangler";
+import {
+  hasAlreadySelectedAccount,
+  parseAccountOutput,
+  runWranglerCommand,
+  selectAccount,
+} from "./wrangler";
 
 export function newOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -63,7 +68,9 @@ export async function newHandler(
     "Welcome! Checking that the Wrangler CLI is installed and authenticated"
   );
 
-  if (!(await ensureWranglerAuthenticated())) {
+  let [isLoggedIn, output] = await ensureWranglerAuthenticated();
+
+  if (!isLoggedIn) {
     s.stop("Hmm. Looks like you're not logged in yet.");
 
     const wantsToLogIn = await confirm({
@@ -79,7 +86,12 @@ export async function newHandler(
     }
 
     await wranglerLogin();
+
+    isLoggedIn = true;
+    [, output] = await ensureWranglerAuthenticated();
   }
+
+  const hasMultipleAccounts = parseAccountOutput(output).length > 1;
 
   s.stop("Everything looks good!");
 
@@ -237,20 +249,30 @@ Do you want to continue?`;
 
   const plan = await buildPlan();
 
+  let accountId;
+
+  if (
+    planMightRequireAccountSelection(plan) &&
+    hasMultipleAccounts &&
+    !(await hasAlreadySelectedAccount())
+  ) {
+    accountId = await selectAccount();
+  }
+
   s.start("Creating resources...");
 
   const promises: TaskResult[] = [];
 
   if (plan.d1) {
-    promises.push(createD1Database(plan.d1));
+    promises.push(createD1Database(plan.d1, accountId));
   }
 
   if (plan.r2) {
-    promises.push(createR2Bucket(plan.r2));
+    promises.push(createR2Bucket(plan.r2, accountId));
   }
 
   if (plan.queue) {
-    promises.push(createQueue(plan.queue));
+    promises.push(createQueue(plan.queue, accountId));
   }
 
   if (plan.durableOject) {
@@ -305,6 +327,10 @@ Do you want to continue?`;
   outro(
     `You're all set! \`cd ${path}\`, run \`npm install\`, and then \`npx superflare migrate\` to get started.`
   );
+}
+
+function planMightRequireAccountSelection(plan: Plan) {
+  return plan.d1 || plan.r2 || plan.queue;
 }
 
 async function generateTemplate(
@@ -378,9 +404,9 @@ type TaskResult = Promise<{
   superflareConfig?: any;
 }>;
 
-async function createD1Database(name: string): TaskResult {
+async function createD1Database(name: string, accountId?: string): TaskResult {
   try {
-    const result = await runWranglerCommand(["d1", "create", name]);
+    const result = await runWranglerCommand(["d1", "create", name], accountId);
 
     // Parse the ID out of the stdout:
     // database_id = "79da141d-acd3-4d64-adb1-9a50f8ed7e2b"
@@ -420,9 +446,9 @@ async function createD1Database(name: string): TaskResult {
   }
 }
 
-async function createR2Bucket(name: string): TaskResult {
+async function createR2Bucket(name: string, accountId?: string): TaskResult {
   try {
-    await runWranglerCommand(["r2", "bucket", "create", name]);
+    await runWranglerCommand(["r2", "bucket", "create", name], accountId);
 
     return {
       success: true,
@@ -450,9 +476,9 @@ async function createR2Bucket(name: string): TaskResult {
   }
 }
 
-async function createQueue(name: string): TaskResult {
+async function createQueue(name: string, accountId?: string): TaskResult {
   try {
-    await runWranglerCommand(["queues", "create", name]);
+    await runWranglerCommand(["queues", "create", name], accountId);
 
     return {
       success: true,
@@ -580,16 +606,21 @@ async function writeSuperflareConfig(chunks: string[], pathName: string) {
  * BONUS: I think this also forces Wrangler to check for an existing auth token,
  * which will help us later on when we need to create resources without making
  * the user complete the auth flow over again.
+ *
+ * @returns [boolean, string] - [isLoggedIn, output]
  */
-async function ensureWranglerAuthenticated() {
+async function ensureWranglerAuthenticated(): Promise<[boolean, string]> {
   try {
     const result = await runWranglerCommand(["whoami"]);
 
-    return !result.stdout.includes("You are not authenticated");
+    return [
+      !result.stdout.includes("You are not authenticated"),
+      result.stdout,
+    ];
   } catch (_e: any) {
     // Some older versions of Wrangler return a non-zero exit code when
     // you're not logged in.
-    return false;
+    return [false, _e.toString()];
   }
 }
 
@@ -598,7 +629,7 @@ async function ensureWranglerAuthenticated() {
  */
 async function wranglerLogin() {
   return await new Promise<void>((resolve, reject) => {
-    spawn("npx", ["wrangler", "login"], { stdio: "inherit" }).on(
+    spawn("npx", ["wrangler@latest", "login"], { stdio: "inherit" }).on(
       "close",
       (code) => {
         if (code === 0) {

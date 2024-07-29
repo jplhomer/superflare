@@ -12,7 +12,8 @@
     "dev": "turbo run dev --parallel --filter='!./templates/*'",
     "test": "NODE_OPTIONS=--no-warnings npx vitest",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "superflare": "./packages/superflare/bin/superflare.js"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
