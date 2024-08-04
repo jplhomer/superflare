@@ -28,16 +28,20 @@ export async function handleQueue<Env>(
   config({ env, ctx });
 
   return await Promise.all(
-    batch.messages.map((message) => handleQueueMessage(message, ctx))
+    batch.messages.map((message) => handleQueueMessage(message, ctx, env))
   );
 }
 
-async function handleQueueMessage(message: Message, ctx: ExecutionContext) {
+async function handleQueueMessage<Env>(message: Message, ctx: ExecutionContext, env: Env) {
   const instance = await hydrateInstanceFromQueuePayload(
     message.body as MessagePayload
   );
 
   if (instance instanceof Job) {
+    // Set context and Env so its available to the job.
+    instance.ctx = ctx;
+    instance.env = env;
+    // invoke handler
     await instance.handle();
     return;
   }

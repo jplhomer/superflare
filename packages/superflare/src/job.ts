@@ -8,6 +8,9 @@ export abstract class Job {
    */
   queue = "default";
 
+  env: any;
+  ctx: any;
+
   constructor() {}
 
   abstract handle(): Promise<void>;
