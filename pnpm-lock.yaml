@@ -395,6 +395,9 @@ importers:
       typescript:
         specifier: ^5
         version: 5.5.3
+      wrangler:
+        specifier: ^3
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
 
   packages/tsconfig: {}
 

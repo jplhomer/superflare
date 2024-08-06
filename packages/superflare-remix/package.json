@@ -37,11 +37,13 @@
     "@remix-run/server-runtime": "^2",
     "tsconfig": "workspace:*",
     "tsup": "^6.6.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^3"
   },
   "peerDependencies": {
     "@remix-run/cloudflare": "^2",
-    "@remix-run/server-runtime": "^2"
+    "@remix-run/server-runtime": "^2",
+    "wrangler": "^3"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.3.4",
