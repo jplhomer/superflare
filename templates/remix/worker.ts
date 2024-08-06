@@ -16,7 +16,6 @@ const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
 export default {
   async fetch(request, env, ctx) {
     const waitUntil = ctx.waitUntil.bind(ctx);
-    const passThroughOnException = ctx.passThroughOnException.bind(ctx);
     try {
       const url = new URL(request.url);
       const ttl = url.pathname.startsWith("/assets/")
