@@ -55,4 +55,10 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
 
 export const superflareDevProxyVitePlugin = (
   options: GetPlatformProxyOptions = {}
-): Plugin => cloudflareDevProxyVitePlugin({ ...options, getLoadContext });
+): Plugin =>
+  cloudflareDevProxyVitePlugin({
+    ...options,
+    // @cloudflare/workers-types’ Request type incompatible with global used here:
+    // https://github.com/remix-run/remix/blob/main/packages/remix-dev/vite/cloudflare-proxy-plugin.ts
+    getLoadContext: getLoadContext as any,
+  });
