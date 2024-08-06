@@ -1,11 +1,14 @@
 import { type Request } from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
+import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import {
   defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
 } from "superflare";
+import { type Plugin } from "vite";
+import { type GetPlatformProxyOptions } from "wrangler";
 
 import { getLoadContext } from "./load-context";
 
@@ -49,3 +52,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     }
   );
 }
+
+export const superflareDevProxyVitePlugin = (
+  options: GetPlatformProxyOptions = {}
+): Plugin => cloudflareDevProxyVitePlugin({ ...options, getLoadContext });
