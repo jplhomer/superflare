@@ -1,14 +1,12 @@
 import { defineConfig } from "vite";
-import {
-  vitePlugin as remix,
-  cloudflareDevProxyVitePlugin,
-} from "@remix-run/dev";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { vitePlugin as remix } from "@remix-run/dev";
 import { createRoutesFromFolders } from "@remix-run/v1-route-convention";
+import { superflareDevProxyVitePlugin } from "@superflare/remix";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    cloudflareDevProxyVitePlugin(),
+    superflareDevProxyVitePlugin(),
     remix({
       future: {
         v3_fetcherPersist: true,
