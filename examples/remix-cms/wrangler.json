@@ -43,7 +43,8 @@
     "bindings": [
       {
         "name": "CHANNELS",
-        "class_name": "Channel"
+        "class_name": "Channel",
+        "script_name": "worker"
       }
     ]
   },
