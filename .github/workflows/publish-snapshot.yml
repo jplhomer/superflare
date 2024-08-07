@@ -21,4 +21,4 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - run: pnpx pkg-pr-new publish --compact './packages/superflare' './packages/superflare-remix'
+      - run: pnpx pkg-pr-new publish './packages/superflare' './packages/superflare-remix'

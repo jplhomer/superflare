@@ -1,3 +1,4 @@
+import { type Request } from "@cloudflare/workers-types";
 import { defineConfig } from "./config";
 import { type SuperflareSession } from "./session";
 

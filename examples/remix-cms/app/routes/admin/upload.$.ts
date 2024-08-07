@@ -1,7 +1,7 @@
-import { json, type ActionArgs } from "@remix-run/cloudflare";
+import { json, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { parseMultipartFormData, storage } from "superflare";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await parseMultipartFormData(
     request,
     async ({ stream, filename }) => {

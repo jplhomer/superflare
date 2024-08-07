@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 
-import { Icon } from "~/components/Icon";
+import { Icon } from "./Icon";
 
 export function QuickLinks({ children }) {
   return (

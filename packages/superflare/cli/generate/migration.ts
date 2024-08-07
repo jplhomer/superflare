@@ -8,15 +8,10 @@ import { blankMigration } from "../stubs/migration.stub";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "../yargs-types";
 
 export function migrationOptions(yargs: CommonYargsArgv) {
-  return yargs
-    .positional("name", {
-      describe: "The name of the migration",
-      type: "string",
-    })
-    .option("db", {
-      describe: "The local database binding to use for the migration",
-      default: "",
-    });
+  return yargs.positional("name", {
+    describe: "The name of the migration",
+    type: "string",
+  });
 }
 
 export async function migrationHandler(

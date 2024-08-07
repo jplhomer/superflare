@@ -5,22 +5,14 @@ import { homedir } from "node:os";
 import { inspect } from "node:util";
 import path from "node:path";
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
-import { createD1Database } from "./d1-database";
+import { getD1Database } from "./d1-database";
 
 export function consoleOptions(yargs: CommonYargsArgv) {
   return yargs
     .option("db", {
       alias: "d",
-      describe: "Path to the database",
-
-      // Default to the path in the .wrangler directory
-      default: path.join(
-        process.cwd(),
-        ".wrangler",
-        "state",
-        "d1",
-        "db.sqlite"
-      ),
+      describe: "The name of the D1 database binding",
+      default: "DB",
     })
     .option("models", {
       alias: "m",
@@ -35,17 +27,17 @@ export async function consoleHandler(
   argv: StrictYargsOptionsToInterface<typeof consoleOptions>
 ) {
   const modelsDirectory = argv.models;
-  const dbPath = argv.db;
+  const dbName = argv.db;
 
-  return createRepl({ modelsDirectory, dbPath });
+  return createRepl({ modelsDirectory, dbName });
 }
 
 export async function createRepl({
   modelsDirectory,
-  dbPath,
+  dbName,
 }: {
   modelsDirectory: string;
-  dbPath: string;
+  dbName: string;
 }) {
   /**
    * We're going to be importing some TS files, so we need to register esbuild.
@@ -84,7 +76,7 @@ export async function createRepl({
   /**
    * Assign a `db` context with the current database.
    */
-  const db = await createD1Database(dbPath);
+  const db = await getD1Database(dbName);
   server.context["db"] = db;
 
   /**

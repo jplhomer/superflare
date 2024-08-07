@@ -1,4 +1,4 @@
-module.exports = ({ theme }) => ({
+export default ({ theme }) => ({
   DEFAULT: {
     css: {
       '--tw-prose-body': theme('colors.zinc.700'),
@@ -354,4 +354,4 @@ module.exports = ({ theme }) => ({
       '--tw-prose-td-borders': 'var(--tw-prose-invert-td-borders)',
     },
   },
-})
+});

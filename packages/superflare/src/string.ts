@@ -1,4 +1,6 @@
-import { plural, singular } from "pluralize";
+import pluralize from "pluralize";
+
+const { plural, singular } = pluralize;
 
 export function tableNameToModel(tableName: string): string {
   return tableName

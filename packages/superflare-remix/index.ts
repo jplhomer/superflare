@@ -1,43 +1,41 @@
-import { createCookieSessionStorage } from "@remix-run/cloudflare";
+import { type Request } from "@cloudflare/workers-types";
+import { type AppLoadContext } from "@remix-run/cloudflare";
+import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import {
   defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
 } from "superflare";
+import { type Plugin } from "vite";
+import { type GetPlatformProxyOptions } from "wrangler";
+
+import { getLoadContext } from "./load-context";
 
 /**
  * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
- * It handles properly injecting things like `session` and `env` into the Remix load context.
+ * It calls getLoadContext to inject `auth` and `session` into the Remix load context.
  */
 export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<Env>>,
+  config: ReturnType<typeof defineConfig<any>>,
   remixHandler: (
     request: Request,
-    loadContext: SuperflareAppLoadContext<Env>
+    loadContext: AppLoadContext
   ) => Promise<Response>
 ) {
-  if (!env.APP_KEY) {
-    throw new Error(
-      "APP_KEY is required. Please ensure you have defined it as an environment variable."
-    );
-  }
-
-  const sessionStorage = createCookieSessionStorage({
-    cookie: {
-      httpOnly: true,
-      path: "/",
-      secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
-      secrets: [env.APP_KEY],
+  const loadContext = await getLoadContext(config, ctx, {
+    request,
+    context: {
+      // This object matches the return value from Wrangler's
+      // `getPlatformProxy` used during development via Remix's
+      // `cloudflareDevProxyVitePlugin`:
+      // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
+      cloudflare: { caches, ctx, env, cf: request.cf },
     },
   });
-
-  const session = new SuperflareSession(
-    await sessionStorage.getSession(request.headers.get("Cookie"))
-  );
 
   return await superflareHandleFetch<Env>(
     {
@@ -45,29 +43,46 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
       env,
       ctx,
       config,
-      session,
+      session: loadContext.session,
       getSessionCookie: () =>
-        sessionStorage.commitSession(session.getSession()),
+        sessionStorage.commitSession(loadContext.session.getSession()),
     },
     async () => {
-      /**
-       * We inject env and session into the Remix load context.
-       * Someday, we could replace this with AsyncLocalStorage.
-       */
-      const loadContext: SuperflareAppLoadContext<Env> = {
-        session,
-        auth: new SuperflareAuth(session),
-        env,
-        ctx,
-      };
       return await remixHandler(request, loadContext);
     }
   );
 }
 
-export interface SuperflareAppLoadContext<Env> {
-  session: SuperflareSession;
-  auth: SuperflareAuth;
-  env: Env;
-  ctx: ExecutionContext;
+/**
+ * This is copied from the workers-sdk repo (used for wrangler’s getPlatformProxy).
+ * Usages of `waitUntil` invoke the async function on usage, so a no-op works in dev.
+ * @see https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/api/integrations/platform/executionContext.ts
+ */
+class ExecutionContext {
+  waitUntil(promise: Promise<any>): void {
+    if (!(this instanceof ExecutionContext)) {
+      throw new Error("Illegal invocation");
+    }
+  }
+  passThroughOnException(): void {
+    if (!(this instanceof ExecutionContext)) {
+      throw new Error("Illegal invocation");
+    }
+  }
 }
+
+export const superflareDevProxyVitePlugin = (
+  config: ReturnType<typeof defineConfig<any>>,
+  options: GetPlatformProxyOptions = {}
+): Plugin =>
+  cloudflareDevProxyVitePlugin({
+    ...options,
+    experimentalJsonConfig: true,
+    // @cloudflare/workers-types’ Request type incompatible with global used here:
+    // https://github.com/remix-run/remix/blob/main/packages/remix-dev/vite/cloudflare-proxy-plugin.ts
+    getLoadContext: getLoadContext.bind(
+      null,
+      config,
+      new ExecutionContext()
+    ) as any,
+  });

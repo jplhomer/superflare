@@ -2,7 +2,7 @@ import {
   json,
   redirect,
   type SerializeFrom,
-  type ActionArgs,
+  type ActionFunctionArgs,
 } from "@remix-run/cloudflare";
 import { Form, useActionData } from "@remix-run/react";
 import { Article } from "~/models/Article";
@@ -34,7 +34,7 @@ const badResponse = (data: ActionData) => json(data, { status: 422 });
 export async function action({
   request,
   context: { auth, session },
-}: ActionArgs) {
+}: ActionFunctionArgs) {
   const body = new URLSearchParams(await request.text());
   const title = body.get("title");
   const content = body.get("content");

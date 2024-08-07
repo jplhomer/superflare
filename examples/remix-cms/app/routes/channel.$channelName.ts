@@ -1,10 +1,10 @@
-import type { LoaderArgs } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { handleWebSockets } from "superflare";
 import { User } from "~/models/User";
 
 export async function loader({
   request,
   context: { auth, session },
-}: LoaderArgs) {
+}: LoaderFunctionArgs) {
   return handleWebSockets(request, { auth, session, userModel: User });
 }

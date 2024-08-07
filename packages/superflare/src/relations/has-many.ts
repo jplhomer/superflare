@@ -13,7 +13,7 @@ export class HasMany extends Relation {
     super(query);
   }
 
-  save(models: any[] | any) {
+  save(models: Model[] | Model) {
     models = models instanceof Array ? models : [models];
 
     return Promise.all(
@@ -27,10 +27,11 @@ export class HasMany extends Relation {
   }
 
   create(attributeSets: Record<string, any>[] | Record<string, any>) {
-    attributeSets = attributeSets instanceof Array ? attributeSets : [attributeSets];
+    attributeSets =
+      attributeSets instanceof Array ? attributeSets : [attributeSets];
 
     return Promise.all(
-      attributeSets.map(async (attributes) => {
+      attributeSets.map(async (attributes: any) => {
         const model = new this.query.modelInstance.constructor(attributes);
         model[this.foreignKey as keyof Model] =
           this.parent[this.ownerKey as keyof Model];

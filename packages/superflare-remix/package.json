@@ -10,7 +10,8 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -20,7 +21,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "typecheck": "tsc"
   },
   "keywords": [
     "remix",
@@ -30,18 +32,24 @@
   "author": "Josh Larson <jplhomer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@remix-run/cloudflare": "^1.14.0",
-    "@remix-run/server-runtime": "^1.14.0",
+    "@cloudflare/workers-types": "^4.20240718.0",
+    "@remix-run/cloudflare": "^2",
+    "@remix-run/dev": "^2",
+    "@remix-run/server-runtime": "^2",
     "tsconfig": "workspace:*",
     "tsup": "^6.6.3",
-    "typescript": "^4.9.5"
+    "typescript": "^5",
+    "vite": "^5",
+    "wrangler": "^3"
   },
   "peerDependencies": {
-    "@remix-run/cloudflare": "^1.14.0",
-    "@remix-run/server-runtime": "^1.14.0"
+    "@remix-run/cloudflare": "^2",
+    "@remix-run/dev": "^2",
+    "@remix-run/server-runtime": "^2",
+    "wrangler": "^3"
   },
   "dependencies": {
-    "@cloudflare/kv-asset-handler": "^0.3.0",
+    "@cloudflare/kv-asset-handler": "^0.3.4",
     "superflare": "workspace:*"
   }
 }
