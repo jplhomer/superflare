@@ -4,9 +4,11 @@ import { createRoutesFromFolders } from "@remix-run/v1-route-convention";
 import { superflareDevProxyVitePlugin } from "@superflare/remix";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+import config from "./superflare.config";
+
 export default defineConfig({
   plugins: [
-    superflareDevProxyVitePlugin(),
+    superflareDevProxyVitePlugin(config),
     remix({
       future: {
         v3_fetcherPersist: true,

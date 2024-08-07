@@ -3,7 +3,7 @@ import {
   type AppLoadContext,
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
-import { SuperflareAuth, SuperflareSession } from "superflare";
+import { defineConfig, SuperflareAuth, SuperflareSession } from "superflare";
 import { type PlatformProxy } from "wrangler";
 
 // When using `wrangler.toml` to configure bindings,
@@ -30,14 +30,20 @@ declare module "@remix-run/cloudflare" {
   }
 }
 
-type GetLoadContext = (args: {
-  request: Request;
-  context: { cloudflare: Cloudflare };
-}) => Promise<AppLoadContext>;
-
 // Shared implementation compatible with Vite, Wrangler, and Workers
-export const getLoadContext: GetLoadContext = async ({ context, request }) => {
+export const getLoadContext = async (
+  config: ReturnType<typeof defineConfig<Env>>,
+  ctx: ExecutionContext,
+  {
+    request,
+    context,
+  }: {
+    request: Request;
+    context: { cloudflare: Cloudflare };
+  }
+): Promise<AppLoadContext> => {
   const { env } = context.cloudflare;
+  config({ request, env, ctx });
   if (!env.APP_KEY) {
     throw new Error(
       "APP_KEY is required. Please ensure you have defined it as an environment variable."
