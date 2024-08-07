@@ -20,7 +20,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<Env>>,
+  config: ReturnType<typeof defineConfig<any>>,
   remixHandler: (
     request: Request,
     loadContext: AppLoadContext
