@@ -1,5 +1,6 @@
 import { defineConfig } from "superflare";
-import { LogArticleUpdated } from "./app/listeners/LogArticleUpdated";
+
+import { LogArticleUpdated } from "~/listeners/LogArticleUpdated";
 
 export default defineConfig<Env>((ctx) => {
   return {
