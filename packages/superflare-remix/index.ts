@@ -47,15 +47,13 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
       getSessionCookie: () =>
         sessionStorage.commitSession(loadContext.session.getSession()),
     },
-    async () => {
-      return await remixHandler(request, loadContext);
-    }
+    () => remixHandler(request, loadContext)
   );
 }
 
 /**
  * This is copied from the workers-sdk repo (used for wrangler’s getPlatformProxy).
- * Usages of `waitUntil` invoke the async function on usage, so a no-op works in dev.
+ * Using `waitUntil` means invoking the async function, so a no-op works in dev.
  * @see https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/api/integrations/platform/executionContext.ts
  */
 class ExecutionContext {

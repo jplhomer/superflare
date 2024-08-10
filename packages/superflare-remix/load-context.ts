@@ -64,7 +64,7 @@ export const getLoadContext = async (
   );
 
   /**
-   * We inject env and session into the Remix load context.
+   * We inject auth and session into the Remix load context.
    * Someday, we could replace this with AsyncLocalStorage.
    */
   return {
