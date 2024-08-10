@@ -2,15 +2,14 @@ import { type Request } from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
 import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import {
-  handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
   type DefineConfigReturn,
 } from "superflare";
-import { type Plugin } from "vite";
+import { type Plugin, type ViteDevServer } from "vite";
 import { type GetPlatformProxyOptions } from "wrangler";
 
-import { getLoadContext } from "./load-context";
+import { type Cloudflare, getLoadContext } from "./load-context";
 
 /**
  * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
@@ -26,7 +25,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     loadContext: AppLoadContext
   ) => Promise<Response>
 ) {
-  const loadContext = await getLoadContext(config, ctx, {
+  const loadContext = await getLoadContext({
     request,
     context: {
       // This object matches the return value from Wrangler's
@@ -35,7 +34,13 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
       // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
       cloudflare: { caches, ctx, env, cf: request.cf },
     },
+    config,
+    ctx,
+    SuperflareAuth,
+    SuperflareSession,
   });
+
+  const { handleFetch: superflareHandleFetch } = await import("superflare");
 
   return await superflareHandleFetch<Env>(
     {
@@ -69,18 +74,48 @@ class ExecutionContext {
   }
 }
 
+type ConfigureServer = (viteDevServer: ViteDevServer) => Promise<() => void>;
+
 export const superflareDevProxyVitePlugin = (
-  config: DefineConfigReturn<any>,
   options: GetPlatformProxyOptions = {}
-): Plugin =>
-  cloudflareDevProxyVitePlugin({
+): Plugin => {
+  let viteDevServer: ViteDevServer | null = null;
+
+  const getLoadContextWrapper = async ({
+    request,
+    context,
+  }: {
+    request: Request;
+    context: { cloudflare: Cloudflare };
+  }) => {
+    if (!viteDevServer) return context;
+    // use vite dev server to import singleton-dependent modules
+    // ensures the Config singleton class is correct and consistent
+    const superflare = await viteDevServer.ssrLoadModule("superflare");
+    const config = await viteDevServer.ssrLoadModule("./superflare.config");
+    return getLoadContext({
+      request,
+      context,
+      ctx: new ExecutionContext(),
+      config: config.default,
+      SuperflareAuth: superflare.SuperflareAuth,
+      SuperflareSession: superflare.SuperflareSession,
+    });
+  };
+
+  const vitePlugin = cloudflareDevProxyVitePlugin({
     ...options,
     experimentalJsonConfig: true,
     // @cloudflare/workers-types’ Request type incompatible with global used here:
     // https://github.com/remix-run/remix/blob/main/packages/remix-dev/vite/cloudflare-proxy-plugin.ts
-    getLoadContext: getLoadContext.bind(
-      null,
-      config,
-      new ExecutionContext()
-    ) as any,
+    getLoadContext: getLoadContextWrapper as any,
   });
+
+  return {
+    ...vitePlugin,
+    configureServer: (_viteDevServer: ViteDevServer) => {
+      viteDevServer = _viteDevServer;
+      return (vitePlugin.configureServer as ConfigureServer)(_viteDevServer);
+    },
+  };
+};

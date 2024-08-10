@@ -3,7 +3,11 @@ import {
   type AppLoadContext,
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
-import { defineConfig, SuperflareAuth, SuperflareSession } from "superflare";
+import {
+  SuperflareAuth,
+  SuperflareSession,
+  type DefineConfigReturn,
+} from "superflare";
 import { type PlatformProxy } from "wrangler";
 
 // When using `wrangler.toml` to configure bindings,
@@ -17,7 +21,10 @@ interface Env {
 
 // NOTE: PlatformProxy’s caches property is incompatible with the caches global
 // https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/api/integrations/platform/caches.ts
-type Cloudflare = Omit<PlatformProxy<Env>, "dispose" | "caches" | "cf"> & {
+export type Cloudflare = Omit<
+  PlatformProxy<Env>,
+  "dispose" | "caches" | "cf"
+> & {
   caches: CacheStorage;
   cf: Request["cf"];
 };
@@ -31,17 +38,15 @@ declare module "@remix-run/cloudflare" {
 }
 
 // Shared implementation compatible with Vite, Wrangler, and Workers
-export const getLoadContext = async (
-  config: ReturnType<typeof defineConfig<Env>>,
-  ctx: ExecutionContext,
-  {
-    request,
-    context,
-  }: {
-    request: Request;
-    context: { cloudflare: Cloudflare };
-  }
-): Promise<AppLoadContext> => {
+export const getLoadContext = async (payload: {
+  request: Request;
+  context: { cloudflare: Cloudflare };
+  config: DefineConfigReturn<Env>;
+  ctx: ExecutionContext;
+  SuperflareAuth: typeof SuperflareAuth;
+  SuperflareSession: typeof SuperflareSession;
+}): Promise<AppLoadContext> => {
+  const { request, context, ctx, config } = payload;
   const { env } = context.cloudflare;
   config({ request, env, ctx });
   if (!env.APP_KEY) {
@@ -59,7 +64,7 @@ export const getLoadContext = async (
     },
   });
 
-  const session = new SuperflareSession(
+  const session = new payload.SuperflareSession(
     await sessionStorage.getSession(request.headers.get("Cookie"))
   );
 
@@ -70,6 +75,6 @@ export const getLoadContext = async (
   return {
     ...context,
     session,
-    auth: new SuperflareAuth(session),
+    auth: new payload.SuperflareAuth(session),
   };
 };
