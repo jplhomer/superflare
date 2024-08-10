@@ -7,7 +7,7 @@ export {
   setConfig,
   defineConfig,
   type SuperflareUserConfig,
-  type DefineConfigResult,
+  type DefineConfigReturn,
 } from "./src/config";
 export { DatabaseException } from "./src/query-builder";
 export { seed } from "./src/seeder";

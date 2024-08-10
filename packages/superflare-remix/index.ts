@@ -2,10 +2,10 @@ import { type Request } from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
 import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import {
-  defineConfig,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
+  type DefineConfigReturn,
 } from "superflare";
 import { type Plugin } from "vite";
 import { type GetPlatformProxyOptions } from "wrangler";
@@ -20,7 +20,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
   request: Request,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<any>>,
+  config: DefineConfigReturn<any>,
   remixHandler: (
     request: Request,
     loadContext: AppLoadContext
@@ -70,7 +70,7 @@ class ExecutionContext {
 }
 
 export const superflareDevProxyVitePlugin = (
-  config: ReturnType<typeof defineConfig<any>>,
+  config: DefineConfigReturn<any>,
   options: GetPlatformProxyOptions = {}
 ): Plugin =>
   cloudflareDevProxyVitePlugin({
