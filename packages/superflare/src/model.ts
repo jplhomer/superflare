@@ -17,6 +17,7 @@ interface Constructor<T> {
 export class Model {
   static connection = "default";
   static table = "";
+  static $with: string[] = [];
   id: number | null;
   updatedAt?: Date;
   createdAt?: Date;
@@ -31,6 +32,8 @@ export class Model {
     Object.keys(attributes).forEach((key) => {
       this[key as keyof Model] = attributes[key];
     });
+
+    validateModel(this);
 
     return new Proxy(this, {
       get(target, prop) {
@@ -126,6 +129,14 @@ export class Model {
 
   static with(relationName: string | string[]) {
     return this.query().with(relationName);
+  }
+
+  static withOnly(relationName: string | string[]) {
+    return this.query().withOnly(relationName);
+  }
+
+  static without(relationName: string | string[]) {
+    return this.query().without(relationName);
   }
 
   static getRelation(relationName: string) {
@@ -316,3 +327,24 @@ export class Model {
 }
 
 export interface ModelConstructor<M extends Model> extends Constructor<M> {}
+
+function validateModel(model: Model) {
+  function checkStaticWithRelationsExist(model: Model) {
+    if (Object.getOwnPropertyNames(model.constructor).includes("$with")) {
+      (model.constructor as typeof Model).$with.forEach((relationName) => {
+        const methodName = `$${relationName}`;
+        const hasWithRelation = Object.getOwnPropertyNames(
+          model.constructor.prototype
+        ).includes(methodName);
+
+        if (!hasWithRelation) {
+          throw new Error(
+            `Relation "${relationName}" does not exist. Please remove "${relationName}" from $with in ${model.constructor.name}.`
+          );
+        }
+      });
+    }
+  }
+
+  return checkStaticWithRelationsExist(model);
+}

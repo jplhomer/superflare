@@ -196,6 +196,38 @@ const users = await User.with("profile", "posts").get();
 
 It is particularly important to eager-load related models when passing a model instance to a view.
 
+### Eager Loading By Default
+
+Sometimes you might want to always load some relationships when retrieving a model. To accomplish this, you may define a $with property on the model:
+
+```ts
+export class User extends Model {
+  static $with = ["posts", "profile"];
+
+  posts?: Post[] | Promise<Post[]>;
+  $posts() {
+    return this.hasMany(Post);
+  }
+
+  profile?: Profile | Promise<Profile>;
+  $profile() {
+    return this.hasOne(Profile);
+  }
+}
+```
+
+If you would like to remove an item from the $with property for a single query, you may use the without method:
+
+```ts
+const user = await User.without("profile").get();
+```
+
+If you would like to override all items within the $with property for a single query, you may use the withOnly method:
+
+```ts
+const user = await User.withOnly("posts").get();
+```
+
 Most front-end frameworks like Remix and Next.js will call `JSON.stringify` on the model instance, but this will **not** load related models automatically.
 
 If you don't eager load the related models, the related data will not be available in your view:

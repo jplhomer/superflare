@@ -79,7 +79,7 @@ it("saves", async () => {
   const posts = await user.$posts().save(
     new Post({
       text: "Hello World",
-    }),
+    })
   );
 
   expect(posts[0].userId).toBe(user.id);
@@ -102,11 +102,9 @@ it("creates", async () => {
   const user = await User.create({
     name: "John Doe",
   });
-  const posts = await user.$posts().create(
-    {
-      text: "Hello World",
-    },
-  );
+  const posts = await user.$posts().create({
+    text: "Hello World",
+  });
 
   expect(posts[0].userId).toBe(user.id);
 });
