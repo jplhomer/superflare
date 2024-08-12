@@ -29,7 +29,7 @@
     "@tailwindcss/forms": "^0.5.3",
     "clsx": "^1.2.1",
     "highlight.js": "^11.7.0",
-    "isbot": "^3.6.6",
+    "isbot": "^5.1.13",
     "marked": "^4.2.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
