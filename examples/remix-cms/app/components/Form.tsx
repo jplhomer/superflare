@@ -22,7 +22,7 @@ export function FormField({
   const Component = as;
 
   return (
-    <div className={clsx("sm:col-span-4", wrapperClassName)}>
+    <div className={clsx("col-span-6 max-w-96", wrapperClassName)}>
       <label
         htmlFor={name}
         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
