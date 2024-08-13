@@ -42,14 +42,11 @@ declare module "@remix-run/cloudflare" {
 export const getLoadContext = async (payload: {
   request: Request;
   context: { cloudflare: Cloudflare };
-  config: DefineConfigReturn<Env>;
-  ctx: ExecutionContext;
   SuperflareAuth: typeof SuperflareAuth;
   SuperflareSession: typeof SuperflareSession;
 }): Promise<AppLoadContext> => {
-  const { request, context, ctx, config } = payload;
+  const { request, context } = payload;
   const { env } = context.cloudflare;
-  config({ request, env, ctx });
   if (!env.APP_KEY) {
     throw new Error(
       "APP_KEY is required. Please ensure you have defined it as an environment variable."
@@ -68,6 +65,11 @@ export const getLoadContext = async (payload: {
   const session = new payload.SuperflareSession(
     await getSession(request.headers.get("Cookie"))
   );
+
+  // Ensure we have a sessionId here (instead of in superflare#handleFetch)
+  if (!session.has("sessionId")) {
+    session.set("sessionId", crypto.randomUUID());
+  }
 
   /**
    * We inject auth and session into the Remix load context.

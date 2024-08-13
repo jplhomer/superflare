@@ -36,8 +36,6 @@ export async function handleFetch<CloudflareEnv extends Env>(
       // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
       cloudflare: { caches, ctx, env, cf: request.cf },
     },
-    config,
-    ctx,
     SuperflareAuth: superflare.SuperflareAuth,
     SuperflareSession: superflare.SuperflareSession,
   });
@@ -73,12 +71,11 @@ class ExecutionContext {
   }
 }
 
-type ConfigureServer = (viteDevServer: ViteDevServer) => Promise<() => void>;
-
 export const superflareDevProxyVitePlugin = (
   options: GetPlatformProxyOptions = {}
 ): Plugin => {
-  let viteDevServer: ViteDevServer | null = null;
+  const ctx = new ExecutionContext();
+  let server: ViteDevServer;
 
   const getLoadContextWrapper = async ({
     request,
@@ -87,22 +84,24 @@ export const superflareDevProxyVitePlugin = (
     request: Request;
     context: { cloudflare: Cloudflare };
   }) => {
-    if (!viteDevServer) return context;
-    // use vite dev server to import singleton-dependent modules
-    // ensures the Config singleton class is correct and consistent
-    const superflare = await viteDevServer.ssrLoadModule("superflare");
-    const config = await viteDevServer.ssrLoadModule("./superflare.config");
-    return getLoadContext({
+    // Use vite dev server to import singleton-dependent modules,
+    // ensuring the Config singleton class is correct and consistent
+    const superflare = (await server.ssrLoadModule("superflare")) as any;
+    const config = (await server.ssrLoadModule("./superflare.config")).default;
+
+    const loadContext = await getLoadContext({
       request,
       context,
-      ctx: new ExecutionContext(),
-      config: config.default,
       SuperflareAuth: superflare.SuperflareAuth,
       SuperflareSession: superflare.SuperflareSession,
     });
+
+    // Initialize config here (instead of in superflare#handleFetch)
+    config({ request, ctx, env: loadContext.cloudflare.env });
+    return loadContext;
   };
 
-  const vitePlugin = cloudflareDevProxyVitePlugin({
+  const remixVitePlugin = cloudflareDevProxyVitePlugin({
     ...options,
     experimentalJsonConfig: true,
     // @cloudflare/workers-types’ Request type incompatible with global used here:
@@ -111,10 +110,11 @@ export const superflareDevProxyVitePlugin = (
   });
 
   return {
-    ...vitePlugin,
-    configureServer: (_viteDevServer: ViteDevServer) => {
-      viteDevServer = _viteDevServer;
-      return (vitePlugin.configureServer as ConfigureServer)(_viteDevServer);
+    ...remixVitePlugin,
+    configureServer: async (viteDevServer: ViteDevServer) => {
+      server = viteDevServer;
+      // Hand off middleware installation to cloudflareDevProxyVitePlugin
+      return (remixVitePlugin.configureServer as any)(viteDevServer);
     },
   };
 };
