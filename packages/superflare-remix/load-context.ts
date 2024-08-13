@@ -3,11 +3,7 @@ import {
   type AppLoadContext,
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
-import {
-  SuperflareAuth,
-  SuperflareSession,
-  type DefineConfigReturn,
-} from "superflare";
+import type { SuperflareAuth, SuperflareSession } from "superflare";
 import { type PlatformProxy } from "wrangler";
 
 // When using `wrangler.toml` to configure bindings,
