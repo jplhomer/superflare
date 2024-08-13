@@ -34,7 +34,7 @@ export async function action({
 }
 
 export default function Register() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post" className="grid grid-cols-6 gap-4">
@@ -42,11 +42,23 @@ export default function Register() {
         <h1 className="text-2xl font-bold">Register</h1>
       </div>
       <FormField name="name" label="Name" autoComplete="name" />
-      <FormField name="email" label="Email" type="email" required />
-      <FormField name="password" label="Password" type="password" required />
-      {actionData?.error && (
+      <FormField
+        name="email"
+        label="Email"
+        type="email"
+        autoComplete="email"
+        required
+      />
+      <FormField
+        name="password"
+        label="Password"
+        type="password"
+        autoComplete="new-password"
+        required
+      />
+      {actionData?.error ? (
         <div className="col-span-6 text-red-500">{actionData.error}</div>
-      )}
+      ) : null}
       <div className="col-span-6">
         <Button type="submit">Register</Button>
       </div>

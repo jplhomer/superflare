@@ -30,7 +30,7 @@ export async function action({
 }
 
 export default function Login() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
 
   return (
     <>
@@ -38,11 +38,23 @@ export default function Login() {
         <div className="col-span-6">
           <h1 className="text-2xl font-bold">Log in</h1>
         </div>
-        <FormField name="email" label="Email" type="email" required />
-        <FormField name="password" label="Password" type="password" required />
-        {actionData?.error && (
+        <FormField
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <FormField
+          name="password"
+          label="Password"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
+        {actionData?.error ? (
           <div className="col-span-6 text-red-500">{actionData.error}</div>
-        )}
+        ) : null}
         <div className="col-span-6">
           <Button type="submit">Log in</Button>
         </div>
