@@ -1,23 +1,24 @@
 import { type Request } from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
 import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
-import {
-  SuperflareAuth,
-  SuperflareSession,
-  type DefineConfigReturn,
-} from "superflare";
+import { type DefineConfigReturn } from "superflare";
 import { type Plugin, type ViteDevServer } from "vite";
 import { type GetPlatformProxyOptions } from "wrangler";
 
 import { type Cloudflare, getLoadContext } from "./load-context";
 
+// Ensure we have a backup Env type even if not available
+interface Env {
+  APP_KEY: string;
+}
+
 /**
  * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
  * It calls getLoadContext to inject `auth` and `session` into the Remix load context.
  */
-export async function handleFetch<Env extends { APP_KEY: string }>(
+export async function handleFetch<CloudflareEnv extends Env>(
   request: Request,
-  env: Env,
+  env: CloudflareEnv,
   ctx: ExecutionContext,
   config: DefineConfigReturn<any>,
   remixHandler: (
@@ -25,6 +26,7 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     loadContext: AppLoadContext
   ) => Promise<Response>
 ) {
+  const superflare = await import("superflare");
   const loadContext = await getLoadContext({
     request,
     context: {
@@ -36,21 +38,18 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     },
     config,
     ctx,
-    SuperflareAuth,
-    SuperflareSession,
+    SuperflareAuth: superflare.SuperflareAuth,
+    SuperflareSession: superflare.SuperflareSession,
   });
 
-  const { handleFetch: superflareHandleFetch } = await import("superflare");
-
-  return await superflareHandleFetch<Env>(
+  return await superflare.handleFetch<CloudflareEnv>(
     {
       request,
       env,
       ctx,
       config,
       session: loadContext.session,
-      getSessionCookie: () =>
-        sessionStorage.commitSession(loadContext.session.getSession()),
+      getSessionCookie: loadContext.getSessionCookie,
     },
     () => remixHandler(request, loadContext)
   );

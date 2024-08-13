@@ -34,6 +34,7 @@ declare module "@remix-run/cloudflare" {
     cloudflare: Cloudflare;
     auth: InstanceType<typeof SuperflareAuth>;
     session: InstanceType<typeof SuperflareSession>;
+    getSessionCookie: () => Promise<string>;
   }
 }
 
@@ -55,7 +56,7 @@ export const getLoadContext = async (payload: {
     );
   }
 
-  const sessionStorage = createCookieSessionStorage({
+  const { getSession, commitSession } = createCookieSessionStorage({
     cookie: {
       httpOnly: true,
       path: "/",
@@ -65,7 +66,7 @@ export const getLoadContext = async (payload: {
   });
 
   const session = new payload.SuperflareSession(
-    await sessionStorage.getSession(request.headers.get("Cookie"))
+    await getSession(request.headers.get("Cookie"))
   );
 
   /**
@@ -76,5 +77,6 @@ export const getLoadContext = async (payload: {
     ...context,
     session,
     auth: new payload.SuperflareAuth(session),
+    getSessionCookie: () => commitSession(session.getSession()),
   };
 };
