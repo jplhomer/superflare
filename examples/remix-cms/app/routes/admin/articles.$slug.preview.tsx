@@ -1,8 +1,8 @@
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { json, type LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import { auth } from "superflare";
 import invariant from "tiny-invariant";
+
 import { SecondaryButton } from "~/components/admin/Button";
 import { Page } from "~/components/admin/Page";
 import { Article } from "~/models/Article";
