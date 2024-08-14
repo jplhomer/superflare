@@ -11,7 +11,7 @@ import __STATIC_CONTENT_MANIFEST from "__STATIC_CONTENT_MANIFEST";
 
 const MANIFEST = JSON.parse(__STATIC_CONTENT_MANIFEST);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
+const handleRequest = createRequestHandler(build as any as ServerBuild);
 
 export default {
   async fetch(request, env, ctx) {
@@ -37,7 +37,7 @@ export default {
     }
 
     try {
-      return await handleFetch(request, env, ctx, config, handleRemixRequest);
+      return await handleFetch<Env>(request, env, ctx, config, handleRequest);
     } catch (error) {
       console.log(error);
       return new Response("An unexpected error occurred", { status: 500 });

@@ -6,18 +6,9 @@ import {
 import type { SuperflareAuth, SuperflareSession } from "superflare";
 import { type PlatformProxy } from "wrangler";
 
-// When using `wrangler.toml` to configure bindings,
-// `wrangler types` will generate types for those bindings
-// into the global `Env` interface.
-// Need this empty interface so that typechecking passes
-// even if no `wrangler.toml` exists.
-interface Env {
-  APP_KEY: string;
-}
-
 // NOTE: PlatformProxy’s caches property is incompatible with the caches global
 // https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/api/integrations/platform/caches.ts
-export type Cloudflare = Omit<
+export type Cloudflare<Env extends { APP_KEY: string }> = Omit<
   PlatformProxy<Env>,
   "dispose" | "caches" | "cf"
 > & {
@@ -25,22 +16,13 @@ export type Cloudflare = Omit<
   cf: Request["cf"];
 };
 
-declare module "@remix-run/cloudflare" {
-  interface AppLoadContext {
-    cloudflare: Cloudflare;
-    auth: InstanceType<typeof SuperflareAuth>;
-    session: InstanceType<typeof SuperflareSession>;
-    getSessionCookie: () => Promise<string>;
-  }
-}
-
 // Shared implementation compatible with Vite, Wrangler, and Workers
-export const getLoadContext = async (payload: {
+export async function getLoadContext<Env extends { APP_KEY: string }>(payload: {
   request: Request;
-  context: { cloudflare: Cloudflare };
+  context: { cloudflare: Cloudflare<Env> };
   SuperflareAuth: typeof SuperflareAuth;
   SuperflareSession: typeof SuperflareSession;
-}): Promise<AppLoadContext> => {
+}): Promise<AppLoadContext & { cloudflare: Cloudflare<Env> }> {
   const { request, context } = payload;
   const { env } = context.cloudflare;
   if (!env.APP_KEY) {
@@ -77,4 +59,4 @@ export const getLoadContext = async (payload: {
     auth: new payload.SuperflareAuth(session),
     getSessionCookie: () => commitSession(session.getSession()),
   };
-};
+}

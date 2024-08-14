@@ -6,7 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    superflareDevProxyVitePlugin(),
+    superflareDevProxyVitePlugin<Env>(),
     remix({
       future: {
         v3_fetcherPersist: true,
