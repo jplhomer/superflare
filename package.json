@@ -8,7 +8,7 @@
     "templates/*"
   ],
   "scripts": {
-    "build": "turbo run build --filter='./packages/*' --parallel",
+    "build": "turbo run build --filter='./packages/*'",
     "dev": "turbo run dev --parallel --filter='!./templates/*'",
     "test": "NODE_OPTIONS=--no-warnings npx vitest",
     "lint": "turbo run lint",
