@@ -68,7 +68,7 @@ importers:
         version: 5.2.0
       isbot:
         specifier: latest
-        version: 5.1.13
+        version: 5.1.15
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -268,7 +268,7 @@ importers:
         version: 8.10.0(eslint@7.32.0)
       eslint-config-turbo:
         specifier: latest
-        version: 2.0.9(eslint@7.32.0)
+        version: 2.0.13(eslint@7.32.0)
       eslint-plugin-react:
         specifier: 7.31.8
         version: 7.31.8(eslint@7.32.0)
@@ -3032,8 +3032,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-config-turbo@2.0.9:
-    resolution: {integrity: sha512-FoIMElI8md/dR5DxjB5Om52KJfi7Qf7RInXeE+PGU6lN388rumppwyqEJsZ7vnR5GhGa9cLPt0vNZwEK9iXtKg==}
+  eslint-config-turbo@2.0.13:
+    resolution: {integrity: sha512-GdWQa8OAnX7SnrUK49U4zEv6rglLogQs1HQZ56Y7jn87ohkaBQAUFtxjyTNNgcDlYqzT/6deRlEGsJ/maRU2Wg==}
     peerDependencies:
       eslint: '>6.6.0'
 
@@ -3142,8 +3142,8 @@ packages:
     peerDependencies:
       eslint: ^7.5.0 || ^8.0.0
 
-  eslint-plugin-turbo@2.0.9:
-    resolution: {integrity: sha512-q4s4mg6JcXzz5zK4LC3c6FcWehGAWjGj7kIM76ZvG0KiR9Ks0znzjnAKW0NoiDP4s/gt3r4YPOpI357qWt167Q==}
+  eslint-plugin-turbo@2.0.13:
+    resolution: {integrity: sha512-hpHRtQVETm07OBvj8kFy/+sgts+i36wFM8xd4yr9Wt3TWtmC4mealtgSvSEx61vdkqbDhKMP4CftgpHj2DI4yw==}
     peerDependencies:
       eslint: '>6.6.0'
 
@@ -3799,12 +3799,12 @@ packages:
   isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
 
-  isbot@5.1.13:
-    resolution: {integrity: sha512-RXtBib4m9zChSb+187EpNQML7Z3u2i34zDdqcRFZnqSJs0xdh91xzJytc5apYVg+9Y4NGnUQ0AIeJvX9FAnCUw==}
-    engines: {node: '>=18'}
-
   isbot@5.1.14:
     resolution: {integrity: sha512-4X8KZHyaIqXOqEv1qfZOqshMX3r7Q/VtMEMzuGPZljDMEIGpX7bcGODR9gZztXdcPBEJpNioQXXBJun+xi2G5g==}
+    engines: {node: '>=18'}
+
+  isbot@5.1.15:
+    resolution: {integrity: sha512-OxpjfpAt4PbRNbypAGVwDMNu8T40rkjgdeL2ViKINVVRehkzxAV8Z8GDuoAmzyrW46kBnIKzu4vgfDyWp0H/eg==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -8890,10 +8890,10 @@ snapshots:
     dependencies:
       eslint: 7.32.0
 
-  eslint-config-turbo@2.0.9(eslint@7.32.0):
+  eslint-config-turbo@2.0.13(eslint@7.32.0):
     dependencies:
       eslint: 7.32.0
-      eslint-plugin-turbo: 2.0.9(eslint@7.32.0)
+      eslint-plugin-turbo: 2.0.13(eslint@7.32.0)
 
   eslint-import-resolver-node@0.3.7:
     dependencies:
@@ -9237,7 +9237,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-turbo@2.0.9(eslint@7.32.0):
+  eslint-plugin-turbo@2.0.13(eslint@7.32.0):
     dependencies:
       dotenv: 16.0.3
       eslint: 7.32.0
@@ -10037,9 +10037,9 @@ snapshots:
 
   isarray@2.0.5: {}
 
-  isbot@5.1.13: {}
-
   isbot@5.1.14: {}
+
+  isbot@5.1.15: {}
 
   isexe@2.0.0: {}
 
