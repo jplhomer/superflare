@@ -1,7 +1,7 @@
 {
-  "name": "@superflare/remix",
-  "version": "0.0.18",
-  "description": "Remix plugin for Superflare",
+  "name": "@superflare/remix-dev",
+  "version": "0.0.1",
+  "description": "Vite dev plugin for Superflare with Remix",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bugs": {
@@ -26,6 +26,7 @@
   },
   "keywords": [
     "remix",
+    "vite",
     "cloudflare",
     "superflare"
   ],
@@ -38,14 +39,17 @@
     "tsconfig": "workspace:*",
     "tsup": "^6.6.3",
     "typescript": "^5",
+    "vite": "^5",
+    "superflare": "workspace:*",
     "wrangler": "^3"
   },
   "peerDependencies": {
     "@remix-run/cloudflare": "^2",
     "@remix-run/dev": "^2",
+    "superflare": "workspace:*",
     "wrangler": "^3"
   },
   "dependencies": {
-    "superflare": "workspace:*"
+    "@superflare/remix": "workspace:*"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": ["cloudflare-env.d.ts", "**/*"],
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "isolatedModules": false,
+    "rootDir": ".",
+    "outDir": "./dist"
+  }
+}

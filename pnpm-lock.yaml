@@ -386,6 +386,37 @@ importers:
       typescript:
         specifier: ^5
         version: 5.5.3
+      wrangler:
+        specifier: ^3
+        version: 3.64.0(@cloudflare/workers-types@4.20240718.0)
+
+  packages/superflare-remix-dev:
+    dependencies:
+      '@superflare/remix':
+        specifier: workspace:*
+        version: link:../superflare-remix
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20240718.0
+        version: 4.20240718.0
+      '@remix-run/cloudflare':
+        specifier: ^2
+        version: 2.10.3(@cloudflare/workers-types@4.20240718.0)(typescript@5.5.3)
+      '@remix-run/dev':
+        specifier: ^2
+        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@remix-run/serve@2.10.3(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.4(@types/node@18.19.39))(wrangler@3.64.0(@cloudflare/workers-types@4.20240718.0))
+      superflare:
+        specifier: workspace:*
+        version: link:../superflare
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^6.6.3
+        version: 6.7.0(postcss@8.4.39)(typescript@5.5.3)
+      typescript:
+        specifier: ^5
+        version: 5.5.3
       vite:
         specifier: ^5
         version: 5.3.4(@types/node@18.19.39)
