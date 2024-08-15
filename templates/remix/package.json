@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix vite:build",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler -j deploy",
     "dev": "superflare dev",
     "start": "wrangler -j dev",
     "typegen": "wrangler -j types",
