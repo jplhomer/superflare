@@ -48,7 +48,9 @@ export async function devHandler(
   const isWorkersMode = !isPagesMode;
 
   logger.info(
-    `Starting dev server in ${isPagesMode ? "pages" : "workers"} mode...`
+    `Starting "wrangler" and ViteDevServer in ${
+      isPagesMode ? "pages" : "workers"
+    } mode...`
   );
 
   const config = await getSuperflareConfig(process.cwd(), logger);
@@ -81,6 +83,12 @@ export async function devHandler(
     );
     process.exit(1);
   }
+
+  spawn("npx", ["wrangler", "dev", "-j"], {
+    stdio: "inherit",
+    shell: true,
+    env: process.env,
+  });
 
   spawn("npx", ["remix", "vite:dev"], {
     stdio: "inherit",
