@@ -87,9 +87,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      superflare:
-        specifier: workspace:*
-        version: link:../../packages/superflare
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
