@@ -116,8 +116,8 @@ importers:
         specifier: ^18.0.11
         version: 18.3.0
       concurrently:
-        specifier: ^7.6.0
-        version: 7.6.0
+        specifier: ^8.2.2
+        version: 8.2.2
       eslint:
         specifier: 8.26.0
         version: 8.26.0
@@ -2675,9 +2675,9 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  concurrently@7.6.0:
-    resolution: {integrity: sha512-BKtRgvcJGeZ4XttiDiNcFiRlxoAeZOseqUvyYRUp/Vtd+9p1ULmeoSqGsDA+2ivdeDFpqrJvGvmI+StKfKl5hw==}
-    engines: {node: ^12.20.0 || ^14.13.0 || >=16.0.0}
+  concurrently@8.2.2:
+    resolution: {integrity: sha512-1dP4gpXFhei8IOtlXRE/T/4H88ElHgTiUzh71YUmtjTEHMSRS2Z/fgOxHSxxusGHogsRfxNq1vyAwxSC+EVyDg==}
+    engines: {node: ^14.13.0 || >=16.0.0}
     hasBin: true
 
   confbox@0.1.7:
@@ -8402,7 +8402,7 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  concurrently@7.6.0:
+  concurrently@8.2.2:
     dependencies:
       chalk: 4.1.2
       date-fns: 2.30.0
