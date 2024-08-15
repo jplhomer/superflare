@@ -11,7 +11,7 @@ import { type GetPlatformProxyOptions } from "wrangler";
 
 import { type Cloudflare, getLoadContext } from "./load-context";
 
-export type { Cloudflare } from "./load-context";
+export { type Cloudflare, getLoadContext } from "./load-context";
 
 declare module "@remix-run/cloudflare" {
   interface AppLoadContext {
