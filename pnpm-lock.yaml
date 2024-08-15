@@ -230,9 +230,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.39)
-      concurrently:
-        specifier: ^7.6.0
-        version: 7.6.0
       eslint:
         specifier: ^8.35.0
         version: 8.57.0
@@ -449,9 +446,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.11
         version: 18.3.0
-      concurrently:
-        specifier: ^7.6.0
-        version: 7.6.0
       typescript:
         specifier: ^5
         version: 5.5.3
