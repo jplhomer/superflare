@@ -1,6 +1,6 @@
 import { type Request } from "@cloudflare/workers-types";
 import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
-import { type Cloudflare, getLoadContext } from "@superflare/remix";
+import { type Cloudflare, getLoadContext } from "./index";
 import { type Plugin, type ViteDevServer } from "vite";
 import { type GetPlatformProxyOptions } from "wrangler";
 
