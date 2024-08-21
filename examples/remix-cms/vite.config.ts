@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { vitePlugin as remix } from "@remix-run/dev";
 import { createRoutesFromFolders } from "@remix-run/v1-route-convention";
-import { superflareDevProxyVitePlugin } from "@superflare/remix-dev";
+import { superflareDevProxyVitePlugin } from "@superflare/remix/dev";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({

@@ -42,7 +42,6 @@
     "@faker-js/faker": "^7.6.0",
     "@remix-run/dev": "^2",
     "@remix-run/eslint-config": "^2",
-    "@superflare/remix-dev": "workspace:*",
     "@tailwindcss/typography": "^0.5.9",
     "@types/marked": "^4.0.8",
     "@types/react": "^18.0.28",

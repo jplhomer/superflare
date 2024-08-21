@@ -30,7 +30,6 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240718.0",
     "@remix-run/dev": "^2",
-    "@superflare/remix-dev": "workspace:*",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "typescript": "^5",
