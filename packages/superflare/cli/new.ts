@@ -629,7 +629,7 @@ async function ensureWranglerAuthenticated(): Promise<[boolean, string]> {
  */
 async function wranglerLogin() {
   return await new Promise<void>((resolve, reject) => {
-    spawn("npx", ["wrangler@latest", "login"], { stdio: "inherit" }).on(
+    spawn("npx", ["wrangler", "login"], { stdio: "inherit" }).on(
       "close",
       (code) => {
         if (code === 0) {

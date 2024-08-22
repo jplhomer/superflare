@@ -26,7 +26,7 @@ export async function runWranglerCommand(
     env.CLOUDFLARE_ACCOUNT_ID = accountId;
   }
 
-  const child = spawn("npx", ["wrangler@latest", ...command], {
+  const child = spawn("npx", ["wrangler", ...command], {
     shell: true,
     env,
   });
