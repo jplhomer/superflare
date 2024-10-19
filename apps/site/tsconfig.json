@@ -1,10 +1,5 @@
 {
-  "include": [
-    "worker-configuration.d.ts",
-    "cloudflare.env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["worker-configuration.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@remix-run/cloudflare", "vite/client"],

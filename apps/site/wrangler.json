@@ -1,10 +1,9 @@
 {
   "name": "superflare-site",
   "main": "./worker.ts",
-  "workers_dev": true,
-  "compatibility_date": "2024-06-03",
-  "site": {
-    "bucket": "./build/client"
+  "compatibility_date": "2024-09-25",
+  "assets": {
+    "directory": "./build/client"
   },
   "build": {
     "command": "npm run build"
