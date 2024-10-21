@@ -13,11 +13,6 @@ export async function createD1Database(
   return db as any as D1DatabaseType;
 }
 
-type DBConfig = {
-  binding: string;
-  database_id: string;
-};
-
 export async function getD1Database(dbName: string, logger = console.log) {
   const { npxImport } = await import("npx-import");
   const { getPlatformProxy } = await npxImport<typeof import("wrangler")>(
