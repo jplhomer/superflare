@@ -526,6 +526,7 @@ async function setUpDurableObject(pathName: string) {
           {
             name: "CHANNELS",
             class_name: "Channel",
+            script_name: "worker",
           },
         ],
       },
