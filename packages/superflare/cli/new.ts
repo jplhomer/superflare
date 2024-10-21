@@ -431,7 +431,7 @@ async function createD1Database(name: string, accountId?: string): TaskResult {
         d1_databases: [
           {
             binding: "DB",
-            name,
+            database_name: name,
             database_id: databaseId,
           },
         ],
