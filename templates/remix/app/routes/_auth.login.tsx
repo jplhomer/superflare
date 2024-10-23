@@ -22,7 +22,7 @@ export async function action({
 }
 
 export default function Login() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post">

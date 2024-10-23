@@ -30,7 +30,7 @@ export async function action({
 }
 
 export default function Register() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post">
