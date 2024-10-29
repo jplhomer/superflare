@@ -91,7 +91,7 @@ export async function migrateHandler(
   if (fresh) {
     logger.info("Dropping existing tables...");
 
-    const tableList = await getD1DatabaseTables(db);
+    const tableList = await getD1DatabaseTables({ db, withMigrations: true });
     for (const table of tableList) {
       await db.exec(`DROP TABLE IF EXISTS ${table.name}`);
     }

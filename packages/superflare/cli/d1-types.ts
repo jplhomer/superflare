@@ -49,22 +49,30 @@ interface ModelWithSuperflareTypes {
   types: SuperflareType[];
 }
 
-const ignoreSqliteTable = (table: string) =>
-  table === "d1_migrations" ||
-  table === "_cf_KV" ||
-  table.startsWith("sqlite_");
+const isSqliteTable = (table: string) =>
+  table === "_cf_KV" || table.startsWith("sqlite_");
 
-export async function getD1DatabaseTables(db: D1Database) {
+export async function getD1DatabaseTables({
+  db,
+  withMigrations,
+}: {
+  db: D1Database;
+  withMigrations?: boolean;
+}) {
   return (
     await db.prepare("PRAGMA table_list").all<SqliteTableListTable>()
-  ).results!.filter((table) => !ignoreSqliteTable(table.name));
+  ).results!.filter(
+    (table) =>
+      !isSqliteTable(table.name) &&
+      (withMigrations || table.name !== "d1_migrations")
+  );
 }
 
 /**
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
 export async function generateTypesFromSqlite(db: D1Database) {
-  const tableList = await getD1DatabaseTables(db);
+  const tableList = await getD1DatabaseTables({ db });
 
   const types: ModelWithSuperflareTypes[] = [];
 
