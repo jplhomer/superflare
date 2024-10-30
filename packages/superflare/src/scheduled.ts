@@ -1,7 +1,7 @@
 import { type DefineConfigReturn } from "./config";
 
 export async function handleScheduled<Env>(
-  event: ScheduledEvent,
+  event: ScheduledController,
   env: Env,
   ctx: ExecutionContext,
   config: DefineConfigReturn<Env>,
