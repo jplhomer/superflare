@@ -276,7 +276,7 @@ Do you want to continue?`;
   }
 
   if (plan.durableOject) {
-    promises.push(setUpDurableObject(path));
+    promises.push(setUpDurableObject(path, appName));
   }
 
   if (plan.scheduledTasks) {
@@ -508,7 +508,7 @@ async function createQueue(name: string, accountId?: string): TaskResult {
   }
 }
 
-async function setUpDurableObject(pathName: string) {
+async function setUpDurableObject(pathName: string, appName: string) {
   // Add `export { Channel } from "superflare";` to the end of `worker.ts`:
   const workerPath = join(pathName, "worker.ts");
   const contents = await readFile(workerPath, "utf-8");
@@ -526,7 +526,7 @@ async function setUpDurableObject(pathName: string) {
           {
             name: "CHANNELS",
             class_name: "Channel",
-            script_name: "worker",
+            script_name: appName,
           },
         ],
       },
