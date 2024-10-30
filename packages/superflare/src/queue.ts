@@ -21,7 +21,7 @@ export async function handleQueue<Env>(
    */
   config({ env, ctx });
 
-  return await Promise.all(
+  await Promise.all(
     batch.messages.map((message) => handleQueueMessage(message, ctx))
   );
 }
