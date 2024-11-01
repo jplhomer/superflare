@@ -84,13 +84,13 @@ export async function devHandler(
     process.exit(1);
   }
 
-  spawn("npx", ["wrangler", "dev", "-j"], {
-    stdio: "inherit",
+  spawn("wrangler", ["dev", "-j", "--no-bundle"], {
+    stdio: "ignore",
     shell: true,
     env: process.env,
   });
 
-  spawn("npx", ["remix", "vite:dev"], {
+  spawn("remix", ["vite:dev"], {
     stdio: "inherit",
     shell: true,
     env: process.env,
