@@ -3,8 +3,9 @@ import {
   type Request as WorkersRequest,
 } from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
-import type {
-  DefineConfigReturn,
+import {
+  type DefineConfigReturn,
+  handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
 } from "superflare";
@@ -35,7 +36,6 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
     loadContext: AppLoadContext
   ) => Promise<Response>
 ) {
-  const superflare = await import("superflare");
   const loadContext = await getLoadContext<Env>({
     request,
     context: {
@@ -45,11 +45,11 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
       // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
       cloudflare: { caches, ctx, env, cf: request.cf },
     },
-    SuperflareAuth: superflare.SuperflareAuth,
-    SuperflareSession: superflare.SuperflareSession,
+    SuperflareAuth,
+    SuperflareSession,
   });
 
-  return await superflare.handleFetch<Env>(
+  return await superflareHandleFetch<Env>(
     {
       request,
       env,
