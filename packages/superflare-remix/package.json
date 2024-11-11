@@ -38,9 +38,9 @@
   "license": "MIT",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241011.0",
-    "@remix-run/cloudflare": "^2",
-    "@remix-run/dev": "^2",
-    "@remix-run/server-runtime": "^2",
+    "@remix-run/cloudflare": "^2.12.1",
+    "@remix-run/dev": "^2.12.1",
+    "@remix-run/server-runtime": "^2.12.1",
     "tsconfig": "workspace:*",
     "tsup": "^6.6.3",
     "typescript": "^5",
@@ -48,9 +48,9 @@
     "wrangler": "^3.80"
   },
   "peerDependencies": {
-    "@remix-run/cloudflare": "^2",
-    "@remix-run/dev": "^2",
-    "@remix-run/server-runtime": "^2",
+    "@remix-run/cloudflare": "^2.12.1",
+    "@remix-run/dev": "^2.12.1",
+    "@remix-run/server-runtime": "^2.12.1",
     "wrangler": "^3.80"
   },
   "dependencies": {

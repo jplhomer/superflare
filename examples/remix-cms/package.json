@@ -20,9 +20,9 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
-    "@remix-run/cloudflare": "^2",
-    "@remix-run/react": "^2",
-    "@remix-run/server-runtime": "^2",
+    "@remix-run/cloudflare": "^2.12.1",
+    "@remix-run/react": "^2.12.1",
+    "@remix-run/server-runtime": "^2.12.1",
     "@remix-run/v1-route-convention": "^0.1.4",
     "@superflare/remix": "workspace:*",
     "@tailwindcss/forms": "^0.5.3",
@@ -39,8 +39,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241011.0",
     "@faker-js/faker": "^7.6.0",
-    "@remix-run/dev": "^2",
-    "@remix-run/eslint-config": "^2",
+    "@remix-run/dev": "^2.12.1",
+    "@remix-run/eslint-config": "^2.12.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/marked": "^4.0.8",
     "@types/react": "^18.0.28",
