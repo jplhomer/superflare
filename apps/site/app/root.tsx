@@ -16,7 +16,6 @@ import "focus-visible";
 import "./styles/tailwind.css";
 
 export const meta: MetaFunction = () => [
-  { charset: "utf-8" },
   { title: "Superflare", "twitter:title": "Superflare" },
   { viewport: "width=device-width,initial-scale=1" },
   {
@@ -98,6 +97,7 @@ export default function App() {
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
       <head>
+        <meta charSet="utf-8" />
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
