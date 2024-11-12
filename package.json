@@ -11,14 +11,14 @@
     "build": "turbo run build --filter='./packages/*'",
     "dev": "turbo run dev --parallel --filter='!./templates/*'",
     "test": "NODE_OPTIONS=--no-warnings npx vitest",
-  "lint": "turbo run lint",
-  "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "superflare": "./packages/superflare/bin/superflare.js"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.8.4",
-    "turbo": "^1.8.3",
+    "turbo": "^2.2.3",
     "vitest": "^0.28.3"
   },
   "engines": {
