@@ -32,7 +32,7 @@ create table posts (
 
 Models are defined as TypeScript classes. Model class names correspond directly to the table names in the database. For example, a `posts` table would have a corresponding `Post` model:
 
-```typescript
+```ts
 import { Model } from "superflare";
 
 export class Post extends Model {
@@ -60,13 +60,13 @@ Do not manually modify any code within `superflare.env.d.ts`. It is automaticall
 
 When you [migrate your database](/database/migrations), Superflare will automatically update your interfaces to match the new database schema.
 
-```
+```bash
 npx superflare migrate
 ```
 
 When you create a new table in a migration, you can run the following command to generate a new corresponding model for the table with types:
 
-```
+```bash
 npx superflare migrate --create
 ```
 
@@ -82,19 +82,19 @@ You must call `Model.register` after defining each model. This is how Superflare
 
 You can create a new model by running the following command:
 
-```
+```bash
 npx superflare generate model Post
 ```
 
 By default, a new model will be created in the `app/models` directory. You can change this by passing the `--path` flag:
 
-```
+```bash
 npx superflare generate model Post --path app/my-models
 ```
 
 You can also create a migration for your new model at the same time by passing the `--migration` or `-m` flag:
 
-```
+```bash
 npx superflare generate model Post --migration
 ```
 
