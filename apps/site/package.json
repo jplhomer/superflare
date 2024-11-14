@@ -20,7 +20,6 @@
     "@markdoc/markdoc": "0.4.0",
     "@remix-run/cloudflare": "^2.12.1",
     "@remix-run/react": "^2.12.1",
-    "@remix-run/server-runtime": "^2.12.1",
     "@sindresorhus/slugify": "^2.1.1",
     "@tailwindcss/typography": "^0.5.8",
     "autoprefixer": "^10.4.19",

@@ -22,7 +22,6 @@
     "@heroicons/react": "^2.0.16",
     "@remix-run/cloudflare": "^2.12.1",
     "@remix-run/react": "^2.12.1",
-    "@remix-run/server-runtime": "^2.12.1",
     "@remix-run/v1-route-convention": "^0.1.4",
     "@superflare/remix": "workspace:*",
     "@tailwindcss/forms": "^0.5.3",

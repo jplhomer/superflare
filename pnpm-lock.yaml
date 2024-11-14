@@ -45,9 +45,6 @@ importers:
       '@remix-run/react':
         specifier: ^2.12.1
         version: 2.14.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
-      '@remix-run/server-runtime':
-        specifier: ^2.12.1
-        version: 2.14.0(typescript@5.5.3)
       '@sindresorhus/slugify':
         specifier: ^2.1.1
         version: 2.2.1
@@ -154,9 +151,6 @@ importers:
       '@remix-run/react':
         specifier: ^2.12.1
         version: 2.14.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
-      '@remix-run/server-runtime':
-        specifier: ^2.12.1
-        version: 2.14.0(typescript@5.5.3)
       '@remix-run/v1-route-convention':
         specifier: ^0.1.4
         version: 0.1.4(@remix-run/dev@2.14.0(@remix-run/react@2.14.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3))(@types/node@18.19.39)(typescript@5.5.3)(vite@5.3.4(@types/node@18.19.39))(wrangler@3.81.0(@cloudflare/workers-types@4.20241018.0)))
@@ -186,7 +180,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       superflare:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/superflare
       textarea-markdown-editor:
         specifier: ^1.0.4
         version: 1.0.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -357,7 +351,7 @@ importers:
     dependencies:
       superflare:
         specifier: workspace:*
-        version: link:../..
+        version: link:../superflare
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20241011.0
@@ -397,9 +391,6 @@ importers:
       '@remix-run/react':
         specifier: ^2.12.1
         version: 2.14.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.3)
-      '@remix-run/server-runtime':
-        specifier: ^2.12.1
-        version: 2.14.0(typescript@5.5.3)
       '@superflare/remix':
         specifier: workspace:*
         version: link:../../packages/superflare-remix
@@ -414,7 +405,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       superflare:
         specifier: workspace:*
-        version: link:../..
+        version: link:../../packages/superflare
       tiny-invariant:
         specifier: ^1.3.1
         version: 1.3.3

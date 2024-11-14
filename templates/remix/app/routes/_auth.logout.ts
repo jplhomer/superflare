@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, redirect } from "@remix-run/server-runtime";
+import { type ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
 
 export async function action({ context: { auth } }: ActionFunctionArgs) {
   auth.logout();
