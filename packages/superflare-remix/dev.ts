@@ -47,11 +47,9 @@ export function superflareDevProxyVitePlugin<Env extends { APP_KEY: string }>(
   options: GetPlatformProxyOptions = {}
 ): Plugin {
   const ctx = new ExecutionContext();
+  options = { experimentalJsonConfig: true, ...options };
 
-  const remixVitePlugin = cloudflareDevProxyVitePlugin({
-    ...options,
-    experimentalJsonConfig: true,
-  });
+  const remixVitePlugin = cloudflareDevProxyVitePlugin(options);
 
   return {
     ...remixVitePlugin,
