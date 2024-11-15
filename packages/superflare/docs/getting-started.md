@@ -65,7 +65,7 @@ export default {
 } satisfies ExportedHandler<Env & { __STATIC_CONTENT: KVNamespace<string> }>;
 ```
 
-Behind the scenes, Superflare creates a [cookie-based session storage](https://remix.run/docs/en/1.14.1/utils/sessions#createcookiesessionstorage) for you and instantiates the Superflare request handler.
+Behind the scenes, Superflare creates a [cookie-based session storage](https://remix.run/docs/en/main/utils/sessions#createcookiesessionstorage) for you and instantiates the Superflare request handler.
 
 It also injects `auth`, `session`, and `cloudflare` objects into your `AppContext`, which is provided to your loaders and actions. The `cloudflare` object matches the return value of [Wrangler’s `getPlatformProxy`](https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy).
 

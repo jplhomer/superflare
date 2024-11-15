@@ -96,4 +96,4 @@ You can also choose to import a Date library like [Luxon](https://moment.github.
 
 ## Testing Scheduled Tasks
 
-To test your scheduled tasks, can open a browser visit `/__scheduled`. This will fire the `scheduled` function of your worker entrypoint.
+To test your scheduled tasks, open a browser and visit `/__scheduled`. This will fire the `scheduled` function of your worker entrypoint.
