@@ -1,10 +1,10 @@
-import { defineConfig } from "./config";
+import { type DefineConfigReturn } from "./config";
 
 export async function handleScheduled<Env>(
-  event: ScheduledEvent,
+  event: ScheduledController,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<Env>>,
+  config: DefineConfigReturn<Env>,
   scheduleDefinition: (scheduler: Scheduler) => void | Promise<void>
 ) {
   /**

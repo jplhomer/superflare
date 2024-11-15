@@ -8,7 +8,7 @@ To get started with this template, first install the npm dependencies:
 
 ```bash
 npm install
-cp .env.example .env.local
+cp .env.example .dev.vars
 ```
 
 Next, run the development server:
@@ -28,9 +28,9 @@ You can start editing this template by modifying the files in the `/src` folder.
 By default this template uses [Algolia DocSearch](https://docsearch.algolia.com) for the global search. DocSearch is free for open-source projects, and you can sign up for an account on their website. Once your DocSearch account is ready, update the following [environment variables](https://nextjs.org/docs/basic-features/environment-variables) in your project with the values provided by Algolia:
 
 ```
-NEXT_PUBLIC_DOCSEARCH_APP_ID=
-NEXT_PUBLIC_DOCSEARCH_API_KEY=
-NEXT_PUBLIC_DOCSEARCH_INDEX_NAME=
+DOCSEARCH_APP_ID=
+DOCSEARCH_API_KEY=
+DOCSEARCH_INDEX_NAME=
 ```
 
 ## License

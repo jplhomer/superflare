@@ -1,24 +1,18 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import styles from "./tailwind.css";
-import syntax from "./styles/syntax.css";
+import "./tailwind.css";
+import "./styles/syntax.css";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Remix CMS",
-  viewport: "width=device-width,initial-scale=1",
-});
-
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
-  { rel: "stylesheet", href: syntax },
+export const meta: MetaFunction = () => [
+  { charset: "utf-8" },
+  { title: "Remix CMS" },
+  { viewport: "width=device-width,initial-scale=1" },
 ];
 
 export default function App() {
@@ -32,7 +26,6 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );

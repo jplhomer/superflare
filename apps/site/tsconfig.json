@@ -1,16 +1,17 @@
 {
-  "include": ["remix.env.d.ts", "cloudflare.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["worker-configuration.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["@remix-run/cloudflare", "vite/client"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "NodeNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "target": "ES2019",
+    "target": "ES2022",
     "strict": true,
     "allowJs": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {

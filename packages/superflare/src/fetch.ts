@@ -1,4 +1,8 @@
-import { defineConfig } from "./config";
+import {
+  type IncomingRequestCfProperties,
+  type Request,
+} from "@cloudflare/workers-types";
+import { type DefineConfigReturn } from "./config";
 import { type SuperflareSession } from "./session";
 
 export async function handleFetch<Env>(
@@ -10,10 +14,10 @@ export async function handleFetch<Env>(
     session,
     getSessionCookie,
   }: {
-    request: Request;
+    request: Request<unknown, IncomingRequestCfProperties<unknown>>;
     env: Env;
     ctx: ExecutionContext;
-    config: ReturnType<typeof defineConfig<Env>>;
+    config: DefineConfigReturn<Env>;
     session: SuperflareSession;
     /**
      * Superflare will commit changes to the session as a Cookie header on the outgoing response.

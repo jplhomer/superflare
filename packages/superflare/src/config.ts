@@ -1,3 +1,4 @@
+import { type Request } from "@cloudflare/workers-types";
 import { sanitizeModuleName } from "./string";
 
 export interface StorageDiskConfig {
@@ -184,11 +185,13 @@ type DefineConfigContext<Env = Record<string, any>> = {
  * Return both the userConfig and the ctx so we can re-use that in the request
  * handlers without asking the user to pass them again.
  */
-export type DefineConfigResult = SuperflareUserConfig;
+export type DefineConfigReturn<Env> = (
+  ctx: DefineConfigContext<Env>
+) => SuperflareUserConfig;
 
 export function defineConfig<Env = Record<string, any>>(
   callback: (ctx: DefineConfigContext<Env>) => SuperflareUserConfig
-): (ctx: DefineConfigContext<Env>) => DefineConfigResult {
+): DefineConfigReturn<Env> {
   return (ctx: DefineConfigContext<Env>) => {
     setEnv(ctx.env);
     return setConfig(callback(ctx));

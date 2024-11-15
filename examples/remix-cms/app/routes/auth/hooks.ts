@@ -1,5 +1,7 @@
-import { useMatches } from "@remix-run/react";
+import { useRouteLoaderData } from "@remix-run/react";
+
+import { loader as adminLoader } from "../admin";
 
 export function useAdmin() {
-  return useMatches().find((match) => match.id === "routes/admin")!.data;
+  return useRouteLoaderData<typeof adminLoader>("routes/admin");
 }

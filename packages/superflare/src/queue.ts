@@ -1,10 +1,4 @@
-import {
-  defineConfig,
-  DefineConfigResult,
-  getEvent,
-  getJob,
-  setConfig,
-} from "./config";
+import { type DefineConfigReturn, getEvent, getJob, setConfig } from "./config";
 import { dispatchEvent, Event } from "./event";
 import { Job } from "./job";
 import { hydrateArguments } from "./serialize";
@@ -19,7 +13,7 @@ export async function handleQueue<Env>(
   batch: MessageBatch,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<Env>>
+  config: DefineConfigReturn<Env>
 ) {
   /**
    * Set the user config into the singleton context.
@@ -27,7 +21,7 @@ export async function handleQueue<Env>(
    */
   config({ env, ctx });
 
-  return await Promise.all(
+  await Promise.all(
     batch.messages.map((message) => handleQueueMessage(message, ctx))
   );
 }

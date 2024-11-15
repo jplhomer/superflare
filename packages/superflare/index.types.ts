@@ -7,15 +7,19 @@ export {
   setConfig,
   defineConfig,
   type SuperflareUserConfig,
-  type DefineConfigResult,
+  type DefineConfigReturn,
 } from "./src/config";
 export { DatabaseException } from "./src/query-builder";
 export { seed } from "./src/seeder";
-export { storage, servePublicPathFromStorage, R2Input } from "./src/storage";
+export {
+  storage,
+  servePublicPathFromStorage,
+  type R2Input,
+} from "./src/storage";
 export { Factory } from "./src/factory";
 export { handleFetch } from "./src/fetch";
 export { handleQueue } from "./src/queue";
-export { SuperflareSession, Session } from "./src/session";
+export { SuperflareSession, type Session } from "./src/session";
 export { Job } from "./src/job";
 export { SuperflareAuth } from "./src/auth";
 export { hash } from "./src/hash";

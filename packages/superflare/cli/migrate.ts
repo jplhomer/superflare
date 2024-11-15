@@ -1,12 +1,15 @@
 import { CommonYargsArgv, StrictYargsOptionsToInterface } from "./yargs-types";
 import path from "node:path";
-import fs, { mkdir, readdir, writeFile } from "node:fs/promises";
-import fsSync from "node:fs";
+import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { logger } from "./logger";
-import { wranglerMigrate } from "./wrangler";
-import { generateTypesFromSqlite, syncSuperflareTypes } from "./d1-types";
+import { runWranglerCommand, wranglerMigrate } from "./wrangler";
+import { getD1Database } from "./d1-database";
+import {
+  generateTypesFromSqlite,
+  getD1DatabaseTables,
+  syncSuperflareTypes,
+} from "./d1-types";
 import { seedDb } from "./db/seed";
-import { createSQLiteDB } from "./d1-database";
 import { Schema } from "../src/schema";
 import { register } from "esbuild-register/dist/node";
 
@@ -14,37 +17,12 @@ export function defaultSuperflareMigrationsPath(rootPath = process.cwd()) {
   return path.join(rootPath, "db", "migrations");
 }
 
-export function defaultSuperflareDatabasePath(rootPath = process.cwd()) {
-  try {
-    const wranglerConfig = fsSync.readFileSync(
-      path.join(rootPath, "wrangler.json"),
-      "utf8"
-    );
-    const wranglerConfigJson = JSON.parse(wranglerConfig);
-    const d1DatabaseId = wranglerConfigJson?.d1_databases?.[0]?.database_id;
-
-    return path.join(
-      rootPath,
-      ".wrangler",
-      "state",
-      "v3",
-      "d1",
-      d1DatabaseId,
-      "db.sqlite"
-    );
-  } catch (e) {
-    return path.join(rootPath, ".wrangler", "state", "d1", "db.sqlite");
-  }
-}
-
 export function migrateOptions(yargs: CommonYargsArgv) {
   return yargs
     .option("db", {
       alias: "d",
-      describe: "Path to the database",
-
-      // Default to the path in the .wrangler directory
-      default: defaultSuperflareDatabasePath(),
+      describe: "The name of the D1 database binding",
+      default: "DB",
     })
     .option("models", {
       alias: "m",
@@ -75,7 +53,8 @@ export function migrateOptions(yargs: CommonYargsArgv) {
       alias: "f",
       boolean: true,
       default: false,
-      describe: "Run a fresh migration by dropping the existing database",
+      describe:
+        "Run a fresh migration by dropping the existing database tables",
     })
     .option("seed", {
       alias: "s",
@@ -94,26 +73,33 @@ export async function migrateHandler(
 ) {
   const fresh = argv.fresh;
   const modelsDirectory = argv.models;
-  const dbPath = argv.db;
+  const dbName = argv.db;
   const superflareMigrationsPath = argv.superflareMigrations;
   const wranglerMigrationsPath = argv.wranglerMigrations;
 
   logger.info(`Compiling migrations...`);
   await compileMigrations(superflareMigrationsPath, wranglerMigrationsPath);
 
-  if (fresh) {
-    logger.info("Dropping existing database...");
+  const db = await getD1Database(dbName);
+  if (!db) {
+    logger.error(
+      `❌ Unable to find a DB with that name. Try running: npx wrangler d1 create ${dbName}`
+    );
+    process.exit(1);
+  }
 
-    try {
-      await fs.rm(dbPath);
-    } catch (_e: any) {
-      // We don't care if the file doesn't exist
+  if (fresh) {
+    logger.info("Dropping existing tables...");
+
+    const tableList = await getD1DatabaseTables({ db, withMigrations: true });
+    for (const table of tableList) {
+      await db.exec(`DROP TABLE IF EXISTS ${table.name}`);
     }
   }
 
   logger.info(`Migrating database...`);
   try {
-    const results = await wranglerMigrate();
+    const results = await wranglerMigrate(dbName);
 
     // Always print results. Sometimes D1 errors with an exit code of 0, so we
     // can't rely on that. Plus, it might be nice to help the user with debugging.
@@ -127,16 +113,14 @@ export async function migrateHandler(
     process.exit(1);
   }
 
-  const db = await createSQLiteDB(dbPath, logger.log);
-
   const seed = argv.seed;
   const seedPath = argv.seedPath;
   if (seed && seedPath) {
-    await seedDb(dbPath, seedPath);
+    await seedDb(dbName, seedPath);
   }
 
   logger.info("Generating types from database...");
-  const types = generateTypesFromSqlite(db);
+  const types = await generateTypesFromSqlite(db);
   const results = syncSuperflareTypes(process.cwd(), modelsDirectory, types, {
     createIfNotFound: argv.create as boolean,
   });
@@ -144,6 +128,7 @@ export async function migrateHandler(
   logger.table(results);
 
   logger.info("Done!");
+  process.exit(0);
 }
 
 /**

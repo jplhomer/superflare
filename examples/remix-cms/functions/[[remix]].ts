@@ -2,10 +2,11 @@ import {
   createRequestHandler,
   createCookieSessionStorage,
 } from "@remix-run/cloudflare";
+import { handleFetch, SuperflareAuth } from "superflare";
 import getConfig from "../superflare.config";
-
-import * as build from "../build";
-import { Auth, handleFetch } from "superflare";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore This file won’t exist if it hasn’t yet been built
+import * as build from "../build/server"; // eslint-disable-line import/no-unresolved
 
 let remixHandler: ReturnType<typeof createRequestHandler>;
 
@@ -21,7 +22,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     cookie: {
       httpOnly: true,
       path: "/",
-      secure: Boolean(ctx.request.url.match(/^(http|ws)s:\/\//)),
+      secure: /^(http|ws)s:\/\//.test(ctx.request.url),
       secrets: [ctx.env.APP_KEY],
     },
   });
@@ -41,7 +42,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     },
     () =>
       remixHandler(ctx.request, {
-        auth: new Auth(session),
+        auth: new SuperflareAuth(session),
         session,
         env: ctx.env,
       })

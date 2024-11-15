@@ -1,4 +1,4 @@
-import type Database from "better-sqlite3";
+import type { D1Database } from "@cloudflare/workers-types";
 import pluralize from "pluralize";
 import fs from "fs";
 import path from "path";
@@ -49,29 +49,40 @@ interface ModelWithSuperflareTypes {
   types: SuperflareType[];
 }
 
-const ignoreSqliteTable = (table: string) =>
-  table.startsWith("sqlite_") || table === "d1_migrations";
+const isSqliteTable = (table: string) =>
+  table === "_cf_KV" || table.startsWith("sqlite_");
+
+export async function getD1DatabaseTables({
+  db,
+  withMigrations,
+}: {
+  db: D1Database;
+  withMigrations?: boolean;
+}) {
+  return (
+    await db.prepare("PRAGMA table_list").all<SqliteTableListTable>()
+  ).results!.filter(
+    (table) =>
+      !isSqliteTable(table.name) &&
+      (withMigrations || table.name !== "d1_migrations")
+  );
+}
 
 /**
  * Takes a JSON schema and generates a list of Superflare types for each table.
  */
-export function generateTypesFromSqlite(db: Database.Database) {
-  const tableList = db
-    .prepare("PRAGMA table_list")
-    .all()
-    .filter(
-      (table) => !ignoreSqliteTable(table.name)
-    ) as SqliteTableListTable[];
+export async function generateTypesFromSqlite(db: D1Database) {
+  const tableList = await getD1DatabaseTables({ db });
 
   const types: ModelWithSuperflareTypes[] = [];
 
   for (const table of tableList) {
-    const tableInfo = db
+    const { results } = await db
       .prepare(`PRAGMA table_info(${table.name})`)
-      .all() as SqliteTableInfoColumn[];
+      .all<SqliteTableInfoColumn>();
     const tableTypes: SuperflareType[] = [];
 
-    for (const column of tableInfo) {
+    for (const column of results!) {
       const type = sqliteColumnTypeToSuperflareType(column.type.toLowerCase());
 
       tableTypes.push({

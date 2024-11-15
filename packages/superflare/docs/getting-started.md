@@ -32,16 +32,22 @@ npm install @superflare/remix
 Then, in your `worker.ts` file, import the `handleFetch` function from `@superflare/remix`, and import your local `superflare.config.ts` as `config`:
 
 ```ts
+import { createRequestHandler, type ServerBuild } from "@remix-run/cloudflare";
 import { handleFetch } from "@superflare/remix";
 import config from "./superflare.config";
+import * as build from "./build/server";
+import __STATIC_CONTENT_MANIFEST from "__STATIC_CONTENT_MANIFEST";
+
+const MANIFEST = JSON.parse(__STATIC_CONTENT_MANIFEST);
+const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  async fetch(request, env, ctx) {
     // ...
 
-    return handleFetch(request, env, ctx, config, remixHandler);
+    return await handleFetch(request, env, ctx, config, handleRemixRequest);
   },
-};
+} satisfies ExportedHandler<Env & { __STATIC_CONTENT: KVNamespace<string> }>;
 ```
 
 If you plan to use [Queues](/queues), you'll also need to import the `handleQueue` function from `superflare` and handle that in your `worker.ts` file:
@@ -53,19 +59,15 @@ import config './superflare.config';
 export default {
   // ...
 
-  async queue(
-    batch: MessageBatch,
-    env: Env,
-    ctx: ExecutionContext
-  ): Promise<void[]> {
+  async queue(batch, env, ctx) {
     return handleQueue(batch, env, ctx, config);
   },
-}
+} satisfies ExportedHandler<Env & { __STATIC_CONTENT: KVNamespace<string> }>;
 ```
 
 Behind the scenes, Superflare creates a [cookie-based session storage](https://remix.run/docs/en/1.14.1/utils/sessions#createcookiesessionstorage) for you and instantiates the Superflare request handler.
 
-It also injects `auth`, `session`, `env`, and `ctx` to your `AppContext` which is available in your loaders and actions.
+It also injects `auth`, `session`, and `cloudflare` objects into your `AppContext`, which is provided to your loaders and actions. The `cloudflare` object matches the return value of [Wrangler’s `getPlatformProxy`](https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy).
 
 {% callout title="Cookie Monster" %}
 Superflare automatically commits your session data to the outgoing response's `set-cookie` header, so you don't need to worry about that like you do in a standard Remix app.

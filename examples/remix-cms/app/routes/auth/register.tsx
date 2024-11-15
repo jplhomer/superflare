@@ -1,11 +1,14 @@
 import { Form, Link, useActionData } from "@remix-run/react";
-import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { Button } from "~/components/admin/Button";
 import { FormField } from "~/components/Form";
 import { User } from "~/models/User";
 import { hash } from "superflare";
 
-export async function action({ request, context: { auth } }: ActionArgs) {
+export async function action({
+  request,
+  context: { auth },
+}: ActionFunctionArgs) {
   if (await auth.check(User)) {
     return redirect("/admin");
   }
@@ -31,7 +34,7 @@ export async function action({ request, context: { auth } }: ActionArgs) {
 }
 
 export default function Register() {
-  const actionData = useActionData();
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post" className="grid grid-cols-6 gap-4">
@@ -39,11 +42,23 @@ export default function Register() {
         <h1 className="text-2xl font-bold">Register</h1>
       </div>
       <FormField name="name" label="Name" autoComplete="name" />
-      <FormField name="email" label="Email" type="email" required />
-      <FormField name="password" label="Password" type="password" required />
-      {actionData?.error && (
+      <FormField
+        name="email"
+        label="Email"
+        type="email"
+        autoComplete="email"
+        required
+      />
+      <FormField
+        name="password"
+        label="Password"
+        type="password"
+        autoComplete="new-password"
+        required
+      />
+      {actionData?.error ? (
         <div className="col-span-6 text-red-500">{actionData.error}</div>
-      )}
+      ) : null}
       <div className="col-span-6">
         <Button type="submit">Register</Button>
       </div>

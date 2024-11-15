@@ -1,65 +1,31 @@
-import { createRequestHandler } from "@remix-run/cloudflare";
-import config from "./superflare.config";
-import * as build from "./build";
-import {
-  getAssetFromKV,
-  NotFoundError,
-  MethodNotAllowedError,
-} from "@cloudflare/kv-asset-handler";
-import manifestJSON from "__STATIC_CONTENT_MANIFEST";
-import { handleQueue, handleScheduled } from "superflare";
+import { createRequestHandler, type ServerBuild } from "@remix-run/cloudflare";
 import { handleFetch } from "@superflare/remix";
+import { handleQueue, handleScheduled } from "superflare";
+import config from "./superflare.config";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore This file won’t exist if it hasn’t yet been built
+import * as build from "./build/server"; // eslint-disable-line import/no-unresolved
 
 export { Channel } from "superflare";
 
-let remixHandler: ReturnType<typeof createRequestHandler>;
-
-const assetManifest = JSON.parse(manifestJSON);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleRequest = createRequestHandler(build as any as ServerBuild);
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  async fetch(request, env, ctx) {
     try {
-      return await getAssetFromKV(
-        {
-          request,
-          waitUntil(promise) {
-            return ctx.waitUntil(promise);
-          },
-        },
-        {
-          ASSET_NAMESPACE: env.__STATIC_CONTENT,
-          ASSET_MANIFEST: assetManifest,
-        }
-      );
-    } catch (e) {
-      if (e instanceof NotFoundError || e instanceof MethodNotAllowedError) {
-        // fall through to the remix handler
-      } else {
-        return new Response("An unexpected error occurred", { status: 500 });
-      }
-    }
-
-    if (!remixHandler) {
-      remixHandler = createRequestHandler(build as any, process.env.NODE_ENV);
-    }
-
-    try {
-      return handleFetch(request, env, ctx, config, remixHandler);
-    } catch (reason) {
-      console.error(reason);
-      return new Response("Internal Server Error", { status: 500 });
+      return await handleFetch<Env>(request, env, ctx, config, handleRequest);
+    } catch (error) {
+      console.log(error);
+      return new Response("An unexpected error occurred", { status: 500 });
     }
   },
 
-  async queue(
-    batch: MessageBatch,
-    env: Env,
-    ctx: ExecutionContext
-  ): Promise<void[]> {
+  async queue(batch, env, ctx) {
     return handleQueue(batch, env, ctx, config);
   },
 
-  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+  async scheduled(event, env, ctx) {
     return await handleScheduled(event, env, ctx, config, (schedule) => {
       schedule
         .run(async () => {
@@ -68,4 +34,4 @@ export default {
         .everyMinute();
     });
   },
-};
+} satisfies ExportedHandler<Env>;

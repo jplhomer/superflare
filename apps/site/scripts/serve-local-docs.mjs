@@ -15,7 +15,7 @@ const docsPath = resolve(__dirname, "../../../../packages/superflare/docs");
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost`);
 
-  let pathname = url.pathname === "/" ? "/index" : url.pathname;
+  let pathname = url.pathname === "/" ? "/index.md" : url.pathname;
 
   const filePath = join(docsPath, pathname);
 

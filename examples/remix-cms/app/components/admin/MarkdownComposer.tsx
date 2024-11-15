@@ -4,9 +4,10 @@ import {
   useCallback,
   useRef,
 } from "react";
-import TextareaMarkdown, {
-  type TextareaMarkdownRef,
-} from "textarea-markdown-editor";
+import TME, { type TextareaMarkdownRef } from "textarea-markdown-editor";
+
+// https://github.com/vitejs/vite/issues/2139#issuecomment-802981228
+const TextareaMarkdown: typeof TME = (TME as any).default ?? TME;
 
 /**
  * MarkdownComposer is a wrapper around the [`TextareaMarkdown`](https://github.com/Resetand/textarea-markdown-editor) component.

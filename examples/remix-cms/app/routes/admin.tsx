@@ -14,7 +14,7 @@ import {
 import clsx from "clsx";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Toast } from "~/components/Toast";
-import { json, type LoaderArgs, redirect } from "@remix-run/cloudflare";
+import { json, type LoaderFunctionArgs, redirect } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
 
 const navigation = [
@@ -22,7 +22,9 @@ const navigation = [
   { name: "Articles", href: "./articles", icon: FolderIcon },
 ];
 
-export async function loader({ context: { auth, session } }: LoaderArgs) {
+export async function loader({
+  context: { auth, session },
+}: LoaderFunctionArgs) {
   if (!(await auth.check(User))) {
     return redirect("/auth/login");
   }

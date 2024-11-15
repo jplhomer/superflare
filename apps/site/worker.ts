@@ -1,66 +1,33 @@
-import {
-  createCookieSessionStorage,
-  createRequestHandler,
-} from "@remix-run/cloudflare";
-import * as build from "./build";
-import {
-  getAssetFromKV,
-  NotFoundError,
-  MethodNotAllowedError,
-} from "@cloudflare/kv-asset-handler";
-import manifestJSON from "__STATIC_CONTENT_MANIFEST";
+import { createRequestHandler, type ServerBuild } from "@remix-run/cloudflare";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore This file won’t exist if it hasn’t yet been built
+import * as build from "./build/server"; // eslint-disable-line import/no-unresolved
 
-let remixHandler: ReturnType<typeof createRequestHandler>;
-
-const assetManifest = JSON.parse(manifestJSON);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  async fetch(request, env, ctx) {
     try {
-      return await getAssetFromKV(
-        {
-          request,
-          waitUntil(promise) {
-            return ctx.waitUntil(promise);
+      const loadContext = {
+        cloudflare: {
+          // This object matches the return value from Wrangler's
+          // `getPlatformProxy` used during development via Remix's
+          // `cloudflareDevProxyVitePlugin`:
+          // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
+          cf: request.cf,
+          ctx: {
+            passThroughOnException: ctx.passThroughOnException.bind(ctx),
+            waitUntil: ctx.waitUntil.bind(ctx),
           },
+          caches,
+          env,
         },
-        {
-          ASSET_NAMESPACE: env.__STATIC_CONTENT,
-          ASSET_MANIFEST: assetManifest,
-        }
-      );
-    } catch (e) {
-      if (e instanceof NotFoundError || e instanceof MethodNotAllowedError) {
-        // fall through to the remix handler
-      } else {
-        return new Response("An unexpected error occurred", { status: 500 });
-      }
-    }
-
-    if (!remixHandler) {
-      remixHandler = createRequestHandler(build as any, process.env.NODE_ENV);
-    }
-
-    const sessionStorage = createCookieSessionStorage({
-      cookie: {
-        httpOnly: true,
-        path: "/",
-        secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
-        secrets: [env.SESSION_SECRET],
-      },
-    });
-
-    const session = await sessionStorage.getSession(
-      request.headers.get("Cookie")
-    );
-
-    try {
-      return await remixHandler(request, {
-        env,
-      });
-    } catch (reason) {
-      console.error(reason);
-      return new Response("Internal Server Error", { status: 500 });
+      };
+      return await handleRemixRequest(request, loadContext);
+    } catch (error) {
+      console.log(error);
+      return new Response("An unexpected error occurred", { status: 500 });
     }
   },
-};
+} satisfies ExportedHandler<Env>;

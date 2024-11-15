@@ -1,43 +1,53 @@
-import { createCookieSessionStorage } from "@remix-run/cloudflare";
 import {
-  defineConfig,
+  type IncomingRequestCfProperties,
+  type Request as WorkersRequest,
+} from "@cloudflare/workers-types";
+import { type AppLoadContext } from "@remix-run/cloudflare";
+import {
+  type DefineConfigReturn,
   handleFetch as superflareHandleFetch,
   SuperflareAuth,
   SuperflareSession,
 } from "superflare";
 
+import { type Cloudflare, getLoadContext } from "./load-context";
+
+export { type Cloudflare, getLoadContext } from "./load-context";
+
+declare module "@remix-run/cloudflare" {
+  interface AppLoadContext {
+    auth: InstanceType<typeof SuperflareAuth>;
+    session: InstanceType<typeof SuperflareSession>;
+    getSessionCookie: () => Promise<string>;
+  }
+}
+
 /**
  * `handleFetch` is a Remix-specific wrapper around Superflare's function of the same name.
- * It handles properly injecting things like `session` and `env` into the Remix load context.
+ * It calls getLoadContext to inject `auth` and `session` into the Remix load context.
  */
 export async function handleFetch<Env extends { APP_KEY: string }>(
-  request: Request,
+  request: WorkersRequest<unknown, IncomingRequestCfProperties<unknown>>,
   env: Env,
   ctx: ExecutionContext,
-  config: ReturnType<typeof defineConfig<Env>>,
+  config: DefineConfigReturn<any>,
   remixHandler: (
     request: Request,
-    loadContext: SuperflareAppLoadContext<Env>
+    loadContext: AppLoadContext
   ) => Promise<Response>
 ) {
-  if (!env.APP_KEY) {
-    throw new Error(
-      "APP_KEY is required. Please ensure you have defined it as an environment variable."
-    );
-  }
-
-  const sessionStorage = createCookieSessionStorage({
-    cookie: {
-      httpOnly: true,
-      path: "/",
-      secure: Boolean(request.url.match(/^(http|ws)s:\/\//)),
-      secrets: [env.APP_KEY],
+  const loadContext = await getLoadContext<Env>({
+    request,
+    context: {
+      // This object matches the return value from Wrangler's
+      // `getPlatformProxy` used during development via Remix's
+      // `cloudflareDevProxyVitePlugin`:
+      // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
+      cloudflare: { caches, ctx, env, cf: request.cf },
     },
+    SuperflareAuth,
+    SuperflareSession,
   });
-
-  const session = new SuperflareSession(
-    await sessionStorage.getSession(request.headers.get("Cookie"))
-  );
 
   return await superflareHandleFetch<Env>(
     {
@@ -45,29 +55,14 @@ export async function handleFetch<Env extends { APP_KEY: string }>(
       env,
       ctx,
       config,
-      session,
-      getSessionCookie: () =>
-        sessionStorage.commitSession(session.getSession()),
+      session: loadContext.session,
+      getSessionCookie: loadContext.getSessionCookie,
     },
-    async () => {
-      /**
-       * We inject env and session into the Remix load context.
-       * Someday, we could replace this with AsyncLocalStorage.
-       */
-      const loadContext: SuperflareAppLoadContext<Env> = {
-        session,
-        auth: new SuperflareAuth(session),
-        env,
-        ctx,
-      };
-      return await remixHandler(request, loadContext);
+    () => {
+      return remixHandler(
+        request as any as Request,
+        loadContext as any as AppLoadContext
+      );
     }
   );
-}
-
-export interface SuperflareAppLoadContext<Env> {
-  session: SuperflareSession;
-  auth: SuperflareAuth;
-  env: Env;
-  ctx: ExecutionContext;
 }

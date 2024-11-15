@@ -13,7 +13,7 @@ export default defineConfig([
   {
     format: ["esm", "cjs"],
     esbuildPlugins: [nodejsCompatPlugin],
-    entry: ["index.ts"],
+    entry: ["index.ts", "dev.ts"],
     dts: true,
   },
 ]);

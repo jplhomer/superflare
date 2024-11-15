@@ -18,7 +18,12 @@ import gunzipMaybe from "gunzip-maybe";
 import { extract } from "tar-fs";
 import { spawn } from "child_process";
 import { randomBytes } from "crypto";
-import { runWranglerCommand } from "./wrangler";
+import {
+  hasAlreadySelectedAccount,
+  parseAccountOutput,
+  runWranglerCommand,
+  selectAccount,
+} from "./wrangler";
 
 export function newOptions(yargs: CommonYargsArgv) {
   return yargs
@@ -31,6 +36,12 @@ export function newOptions(yargs: CommonYargsArgv) {
     .option("ref", {
       type: "string",
       description: "Optional GitHub ref to use for templates",
+      default: "main",
+    })
+    .option("repo", {
+      type: "string",
+      description: "Optional GitHub repo to use for templates",
+      default: "jplhomer/superflare",
     })
     .positional("name", {
       type: "string",
@@ -54,10 +65,12 @@ export async function newHandler(
   const s = spinner();
 
   s.start(
-    "Welcome! Checking to make sure you have the Wrangler CLI installed and authenticated..."
+    "Welcome! Checking that the Wrangler CLI is installed and authenticated"
   );
 
-  if (!(await ensureWranglerAuthenticated())) {
+  let [isLoggedIn, output] = await ensureWranglerAuthenticated();
+
+  if (!isLoggedIn) {
     s.stop("Hmm. Looks like you're not logged in yet.");
 
     const wantsToLogIn = await confirm({
@@ -73,7 +86,12 @@ export async function newHandler(
     }
 
     await wranglerLogin();
+
+    isLoggedIn = true;
+    [, output] = await ensureWranglerAuthenticated();
   }
+
+  const hasMultipleAccounts = parseAccountOutput(output).length > 1;
 
   s.stop("Everything looks good!");
 
@@ -123,9 +141,15 @@ export async function newHandler(
     );
   }
 
-  s.start(`Creating a new Remix Superflare app in ${path}...`);
+  s.start(`Creating a new Remix Superflare app in ${path}`);
 
-  await generateTemplate(path, appName, argv.template || "remix", argv.ref);
+  await generateTemplate(
+    path,
+    appName,
+    argv.template || "remix",
+    argv.repo,
+    argv.ref
+  );
 
   s.stop(`App created!`);
 
@@ -136,7 +160,7 @@ export async function newHandler(
         {
           value: "database",
           label: "Database Models",
-          hint: "We'll create D1 a database for you",
+          hint: "We'll create a D1 database for you",
         },
         {
           value: "storage",
@@ -225,24 +249,34 @@ Do you want to continue?`;
 
   const plan = await buildPlan();
 
+  let accountId;
+
+  if (
+    planMightRequireAccountSelection(plan) &&
+    hasMultipleAccounts &&
+    !(await hasAlreadySelectedAccount())
+  ) {
+    accountId = await selectAccount();
+  }
+
   s.start("Creating resources...");
 
   const promises: TaskResult[] = [];
 
   if (plan.d1) {
-    promises.push(createD1Database(plan.d1));
+    promises.push(createD1Database(plan.d1, accountId));
   }
 
   if (plan.r2) {
-    promises.push(createR2Bucket(plan.r2));
+    promises.push(createR2Bucket(plan.r2, accountId));
   }
 
   if (plan.queue) {
-    promises.push(createQueue(plan.queue));
+    promises.push(createQueue(plan.queue, accountId));
   }
 
   if (plan.durableOject) {
-    promises.push(setUpDurableObject(path));
+    promises.push(setUpDurableObject(path, appName));
   }
 
   if (plan.scheduledTasks) {
@@ -290,24 +324,26 @@ Do you want to continue?`;
 
   note(allResults.join("\n"), "Here's what we did:");
 
-  // TODO: Drop the `--legacy-peer-deps` once the remix template is fixed:
-  // @see https://github.com/remix-run/remix/pull/5425
   outro(
-    `You're all set! \`cd ${path}\`, run \`npm install --legacy-peer-deps\`, and then \`npx superflare migrate\` to get started.`
+    `You're all set! \`cd ${path}\`, run \`npm install\`, and then \`npx superflare migrate\` to get started.`
   );
+}
+
+function planMightRequireAccountSelection(plan: Plan) {
+  return plan.d1 || plan.r2 || plan.queue;
 }
 
 async function generateTemplate(
   path: string,
   appName: string,
   template: string,
+  repo: string,
   ref?: string
 ) {
-  const gitHubRepo = `jplhomer/superflare`;
   const templatePath = `templates/${template}`;
 
   // Download tarball to a temp directory
-  const tempDir = await downloadGitHubTarball(gitHubRepo, ref);
+  const tempDir = await downloadGitHubTarball(repo, ref);
 
   // Copy the templatePath to the path
   await cp(join(tempDir, templatePath), path, { recursive: true });
@@ -328,11 +364,7 @@ async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   // Get version of latest release from GitHub, and use that if no ref is specified.
   const release = await fetch(
     `https://api.github.com/repos/${gitHubRepo}/releases/latest`,
-    {
-      headers: {
-        "user-agent": "Superflare CLI",
-      },
-    }
+    { headers: { "user-agent": "Superflare CLI" } }
   );
 
   const { name } = (await release.json()) as { name: string };
@@ -343,9 +375,7 @@ async function downloadGitHubTarball(gitHubRepo: string, ref?: string) {
   );
 
   const response = await fetch(downloadUrl.toString(), {
-    headers: {
-      "user-agent": "Superflare CLI",
-    },
+    headers: { "user-agent": "Superflare CLI" },
   });
 
   await pipeline(
@@ -374,9 +404,9 @@ type TaskResult = Promise<{
   superflareConfig?: any;
 }>;
 
-async function createD1Database(name: string): TaskResult {
+async function createD1Database(name: string, accountId?: string): TaskResult {
   try {
-    const result = await runWranglerCommand(["d1", "create", name]);
+    const result = await runWranglerCommand(["d1", "create", name], accountId);
 
     // Parse the ID out of the stdout:
     // database_id = "79da141d-acd3-4d64-adb1-9a50f8ed7e2b"
@@ -401,7 +431,7 @@ async function createD1Database(name: string): TaskResult {
         d1_databases: [
           {
             binding: "DB",
-            name,
+            database_name: name,
             database_id: databaseId,
           },
         ],
@@ -416,9 +446,9 @@ async function createD1Database(name: string): TaskResult {
   }
 }
 
-async function createR2Bucket(name: string): TaskResult {
+async function createR2Bucket(name: string, accountId?: string): TaskResult {
   try {
-    await runWranglerCommand(["r2", "bucket", "create", name]);
+    await runWranglerCommand(["r2", "bucket", "create", name], accountId);
 
     return {
       success: true,
@@ -446,9 +476,9 @@ async function createR2Bucket(name: string): TaskResult {
   }
 }
 
-async function createQueue(name: string): TaskResult {
+async function createQueue(name: string, accountId?: string): TaskResult {
   try {
-    await runWranglerCommand(["queues", "create", name]);
+    await runWranglerCommand(["queues", "create", name], accountId);
 
     return {
       success: true,
@@ -478,7 +508,7 @@ async function createQueue(name: string): TaskResult {
   }
 }
 
-async function setUpDurableObject(pathName: string) {
+async function setUpDurableObject(pathName: string, appName: string) {
   // Add `export { Channel } from "superflare";` to the end of `worker.ts`:
   const workerPath = join(pathName, "worker.ts");
   const contents = await readFile(workerPath, "utf-8");
@@ -496,6 +526,7 @@ async function setUpDurableObject(pathName: string) {
           {
             name: "CHANNELS",
             class_name: "Channel",
+            script_name: appName,
           },
         ],
       },
@@ -576,16 +607,21 @@ async function writeSuperflareConfig(chunks: string[], pathName: string) {
  * BONUS: I think this also forces Wrangler to check for an existing auth token,
  * which will help us later on when we need to create resources without making
  * the user complete the auth flow over again.
+ *
+ * @returns [boolean, string] - [isLoggedIn, output]
  */
-async function ensureWranglerAuthenticated() {
+async function ensureWranglerAuthenticated(): Promise<[boolean, string]> {
   try {
     const result = await runWranglerCommand(["whoami"]);
 
-    return !result.stdout.includes("You are not authenticated");
+    return [
+      !result.stdout.includes("You are not authenticated"),
+      result.stdout,
+    ];
   } catch (_e: any) {
     // Some older versions of Wrangler return a non-zero exit code when
     // you're not logged in.
-    return false;
+    return [false, _e.toString()];
   }
 }
 

@@ -1,9 +1,11 @@
 import { Form, Link, useActionData } from "@remix-run/react";
-import { json, redirect, type ActionArgs } from "@remix-run/cloudflare";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { User } from "~/models/User";
-import { hash } from "superflare";
 
-export async function action({ request, context: { auth } }: ActionArgs) {
+export async function action({
+  request,
+  context: { auth },
+}: ActionFunctionArgs) {
   if (await auth.check(User)) {
     return redirect("/dashboard");
   }
@@ -12,26 +14,19 @@ export async function action({ request, context: { auth } }: ActionArgs) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  if (await User.where("email", email).count()) {
-    return json({ error: "Email already exists" }, { status: 400 });
+  if (await auth.attempt(User, { email, password })) {
+    return redirect("/dashboard");
   }
 
-  const user = await User.create({
-    email,
-    password: await hash().make(password),
-  });
-
-  auth.login(user);
-
-  return redirect("/dashboard");
+  return json({ error: "Invalid credentials" }, { status: 400 });
 }
 
-export default function Register() {
-  const actionData = useActionData();
+export default function Login() {
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post">
-      <h1>Register</h1>
+      <h1>Log in</h1>
 
       <div>
         <label htmlFor="email">Email</label>
@@ -47,9 +42,9 @@ export default function Register() {
         <div style={{ color: "red" }}>{actionData.error}</div>
       )}
 
-      <button type="submit">Register</button>
+      <button type="submit">Log in</button>
 
-      <Link to="/login">Log in</Link>
+      <Link to="/register">Register</Link>
     </Form>
   );
 }

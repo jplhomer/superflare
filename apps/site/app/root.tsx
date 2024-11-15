@@ -2,38 +2,38 @@ import {
   json,
   type LinksFunction,
   type MetaFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
 } from "@remix-run/cloudflare";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import styles from "./styles/tailwind.css";
 import "focus-visible";
+import "./styles/tailwind.css";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Superflare",
-  "twitter:title": "Superflare",
-  viewport: "width=device-width,initial-scale=1",
-  description:
-    "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
-  "twitter:description":
-    "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
-  "twitter:card": "summary_large_image",
-  "twitter:creator": "@jplhomer",
-  "og:type": "website",
-  "og:image": "https://superflare.dev/superflare-og.jpg",
-  "twitter:image": "https://superflare.dev/superflare-og.jpg",
-});
+export const meta: MetaFunction = () => [
+  { title: "Superflare", "twitter:title": "Superflare" },
+  { viewport: "width=device-width,initial-scale=1" },
+  {
+    description:
+      "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
+  },
+  {
+    "twitter:description":
+      "Superflare is a full-stack toolkit for building applications on Cloudflare Workers.",
+  },
+  { "twitter:card": "summary_large_image" },
+  { "twitter:creator": "@jplhomer" },
+  { "og:type": "website" },
+  { "og:image": "https://superflare.dev/superflare-og.jpg" },
+  { "twitter:image": "https://superflare.dev/superflare-og.jpg" },
+];
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap",
@@ -44,12 +44,12 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ context: { env } }: LoaderArgs) {
+export async function loader({ context: { cloudflare } }: LoaderFunctionArgs) {
   return json({
     ENV: {
-      DOCSEARCH_APP_ID: env.DOCSEARCH_APP_ID,
-      DOCSEARCH_API_KEY: env.DOCSEARCH_API_KEY,
-      DOCSEARCH_INDEX_NAME: env.DOCSEARCH_INDEX_NAME,
+      DOCSEARCH_APP_ID: cloudflare.env.DOCSEARCH_APP_ID,
+      DOCSEARCH_API_KEY: cloudflare.env.DOCSEARCH_API_KEY,
+      DOCSEARCH_INDEX_NAME: cloudflare.env.DOCSEARCH_INDEX_NAME,
     },
   });
 }
@@ -97,6 +97,7 @@ export default function App() {
   return (
     <html lang="en" className="antialiased [font-feature-settings:'ss01']">
       <head>
+        <meta charSet="utf-8" />
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
@@ -110,7 +111,6 @@ export default function App() {
         />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );

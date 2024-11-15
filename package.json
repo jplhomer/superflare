@@ -8,29 +8,25 @@
     "templates/*"
   ],
   "scripts": {
-    "build": "turbo run build --filter='./packages/*' --parallel",
+    "build": "turbo run build --filter='./packages/*'",
     "dev": "turbo run dev --parallel --filter='!./templates/*'",
     "test": "NODE_OPTIONS=--no-warnings npx vitest",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "superflare": "./packages/superflare/bin/superflare.js"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.8.4",
-    "turbo": "^1.8.3",
+    "turbo": "^2.2.3",
     "vitest": "^0.28.3"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "pnpm@7.17.1",
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
   "dependencies": {
     "@changesets/changelog-git": "^0.1.14",
     "@changesets/cli": "^2.26.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@remix-run/dev@1.14.1": "patches/@remix-run__dev@1.14.1.patch"
-    }
   }
 }

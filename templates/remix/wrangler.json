@@ -1,8 +1,12 @@
 {
   "name": "remix-cms",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "worker.ts",
-  "define": {
-    "process.env.REMIX_DEV_SERVER_WS_PORT": "8002"
+  "main": "./worker.ts",
+  "compatibility_date": "2024-09-25",
+  "assets": {
+    "directory": "./build/client"
+  },
+  "build": {
+    "command": "npm run build"
   }
 }
