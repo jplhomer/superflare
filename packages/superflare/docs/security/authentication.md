@@ -16,8 +16,8 @@ However, Superflare takes the stance that **authentication should be built in**,
 To set up authentication, you need to do a few things:
 
 1. Add a `User` model (and a `users` table)
-2. Ensure you've created an instance of [`SuperflareSession`](/sessions)
-3. Create an instance of `SuperflareAuth` (with a session) and pass it to a place your application code can access it during a request (like a Remix `AppContext`).
+2. Ensure you’ve created an instance of [`SuperflareSession`](/sessions) (handled by `@superflare/remix` if you’re using that already)
+3. Create an instance of `SuperflareAuth` (with a session) and pass it so your application code can access it during a request (handled by `@superflare/remix` if you’re using that already)
 4. Add some sort of `/register` and `/login` routes to your application so users can log in.
 
 {% callout title="Batteries-included" %}
@@ -26,11 +26,11 @@ If you've created a Superflare app with `npx superflare new`, you should already
 
 ## Register and Login pages
 
-Superflare provides basic `/register` and `/login` routes and forms for you to use. You can use these as-is, or you can copy the code and modify it to your liking.
+The [Superflare Remix template](https://github.com/jplhomer/superflare/tree/main/templates/remix) provides basic `/register` and `/login` routes and forms for you to use. You can use these as-is, or you can copy the code and modify it to your liking.
 
 ## Protecting routes
 
-You can protect routes by using the `SuperflareAuth` instance you created in your app's entrypoint. For the purpose of this example, we'll pretend you're using Remix, and that you've injected the `SuperflareAuth` instance into the `AppContext` as `auth`:
+You can protect routes by using the `SuperflareAuth` instance from your app’s entrypoint. For the purpose of this example, we’ll pretend you're using `@superflare/remix`, which injects the `SuperflareAuth` instance into the `AppContext` as `auth`:
 
 ```ts
 // routes/my-secret-route.tsx
