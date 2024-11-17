@@ -7,46 +7,11 @@ Sessions provide a way to store information about users across requests. Superfl
 
 The `SuperflareSession` instance keeps track of any changes to the session, and Superflare automatically commits the changes to the session store on the outgoing response.
 
-## Creating a `SuperflareSession`
+## Creating sessions
 
-_The following examples assume you are using Remix. They will be updated when Superflare supports other frameworks._
+_The following instructions assume you are using Remix. They will be updated when Superflare supports other frameworks._
 
-To create a `SuperflareSession` instance, pass a valid `Session` instance:
-
-```ts
-// worker.ts
-
-import { SuperflareSession } from "superflare";
-
-// Create a Remix `session`...
-const session = "...";
-
-const superflareSession = new SuperflareSession(session);
-```
-
-Then, you can inject the session into your Remix `loadContext`:
-
-```ts
-// worker.ts
-
-const loadContext = { session, env };
-
-try {
-  const config = getConfig({ request, env, ctx });
-
-  return handleFetch(
-    {
-      config,
-      session,
-      getSessionCookie: () =>
-        sessionStorage.commitSession(session.getSession()),
-    },
-    () => remixHandler(request, loadContext)
-  );
-} catch (error) {
-  return new Response("Internal Server Error", { status: 500 });
-}
-```
+The `@superflare/remix` package exports `handleFetch`, which takes care of session creation and makes the session available on your Remix `AppContext` in deployed workers. There is an additional entry point, `@superflare/remix/dev`, that exports `superflareDevProxyVitePlugin` to provide the same automatic session handling in local dev when using the Vite dev server. See the [Getting Started](/getting-started) guide for details.
 
 ## Using sessions
 
