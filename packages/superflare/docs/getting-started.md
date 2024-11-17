@@ -66,6 +66,23 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
+Likewise for using [Cron Triggers](/scheduled-tasks):
+
+```ts
+import { handleScheduled } from 'superflare';
+import config './superflare.config';
+
+export default {
+  // ...
+
+  async scheduled(event, env, ctx) {
+    return await handleScheduled(event, env, ctx, config, (schedule) => {
+      // Define a schedule
+    });
+  },
+} satisfies ExportedHandler<Env>;
+```
+
 For local development, Remix uses Vite’s dev server with a [Cloudflare Proxy Vite plugin](https://remix.run/docs/en/main/guides/vite#cloudflare-proxy) that invokes [`getPlatformProxy`](https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy) to provide [bindings](https://developers.cloudflare.com/workers/wrangler/api/#supported-bindings) to your application from outside of the deployed `workersd` environment. Superflare has an additional entry point, `@superflare/remix/dev`, that exports `superflareDevProxyVitePlugin`, which adds Superflare support and can be used in place of Remix’s proxy plugin in your Vite config:
 
 ```ts
