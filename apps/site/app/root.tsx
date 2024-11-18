@@ -12,6 +12,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import "@docsearch/css";
 import "focus-visible";
 import "./styles/tailwind.css";
 
