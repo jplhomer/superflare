@@ -1,4 +1,3 @@
-import { type Request } from "@cloudflare/workers-types";
 import {
   type AppLoadContext,
   createCookieSessionStorage,

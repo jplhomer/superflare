@@ -1,7 +1,3 @@
-import {
-  type IncomingRequestCfProperties,
-  type Request,
-} from "@cloudflare/workers-types";
 import { type DefineConfigReturn } from "./config";
 import { type SuperflareSession } from "./session";
 
@@ -14,7 +10,7 @@ export async function handleFetch<Env>(
     session,
     getSessionCookie,
   }: {
-    request: Request<unknown, IncomingRequestCfProperties<unknown>>;
+    request: Request;
     env: Env;
     ctx: ExecutionContext;
     config: DefineConfigReturn<Env>;

@@ -1,4 +1,3 @@
-import { type Request } from "@cloudflare/workers-types";
 import { sanitizeModuleName } from "./string";
 
 export interface StorageDiskConfig {
