@@ -18,6 +18,10 @@ export class QueryBuilder {
     this.$from =
       this.$modelClass.table ||
       modelToTableName(sanitizeModuleName(this.$modelClass.name));
+
+    if (this.$modelClass.$with) {
+      this.$eagerLoad.push(...this.$modelClass.$with);
+    }
   }
 
   select(...fields: string[]) {
@@ -115,6 +119,30 @@ export class QueryBuilder {
       this.$eagerLoad.push(...relationName);
     } else {
       this.$eagerLoad.push(relationName);
+    }
+
+    return this;
+  }
+
+  withOnly(relationName: string | string[]) {
+    if (Array.isArray(relationName)) {
+      this.$eagerLoad = relationName;
+    } else {
+      this.$eagerLoad = [relationName];
+    }
+
+    return this;
+  }
+
+  without(relationName: string | string[]) {
+    if (Array.isArray(relationName)) {
+      this.$eagerLoad = this.$eagerLoad.filter(
+        (relation) => !relationName.includes(relation)
+      );
+    } else {
+      this.$eagerLoad = this.$eagerLoad.filter(
+        (relation) => relation !== relationName
+      );
     }
 
     return this;

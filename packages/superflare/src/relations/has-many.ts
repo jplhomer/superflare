@@ -17,7 +17,7 @@ export class HasMany extends Relation {
     models = models instanceof Array ? models : [models];
 
     return Promise.all(
-      models.map(async (model) => {
+      models.map(async (model: any) => {
         model[this.foreignKey as keyof Model] =
           this.parent[this.ownerKey as keyof Model];
         await model.save();
