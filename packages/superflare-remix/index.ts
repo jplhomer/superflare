@@ -1,7 +1,3 @@
-import {
-  type IncomingRequestCfProperties,
-  type Request as WorkersRequest,
-} from "@cloudflare/workers-types";
 import { type AppLoadContext } from "@remix-run/cloudflare";
 import {
   type DefineConfigReturn,
@@ -27,7 +23,7 @@ declare module "@remix-run/cloudflare" {
  * It calls getLoadContext to inject `auth` and `session` into the Remix load context.
  */
 export async function handleFetch<Env extends { APP_KEY: string }>(
-  request: WorkersRequest<unknown, IncomingRequestCfProperties<unknown>>,
+  request: Request,
   env: Env,
   ctx: ExecutionContext,
   config: DefineConfigReturn<any>,

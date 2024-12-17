@@ -1,7 +1,3 @@
-import {
-  type IncomingRequestCfProperties,
-  type Request,
-} from "@cloudflare/workers-types";
 import { cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import {
   fromNodeRequest,
@@ -14,8 +10,6 @@ import {
 import { type Plugin, type ViteDevServer } from "vite";
 import { type GetPlatformProxyOptions } from "wrangler";
 import { type Cloudflare, getLoadContext } from "./load-context";
-
-type WorkersRequest = Request<unknown, IncomingRequestCfProperties<unknown>>;
 
 /**
  * This is copied from the workers-sdk repo (used for wrangler’s getPlatformProxy).
@@ -76,7 +70,7 @@ export function superflareDevProxyVitePlugin<Env extends { APP_KEY: string }>(
               const request = fromNodeRequest(nodeReq, nodeRes);
               const loadContext = await getLoadContext<Env>({
                 context,
-                request: request as unknown as WorkersRequest,
+                request,
                 SuperflareAuth: superflare.SuperflareAuth,
                 SuperflareSession: superflare.SuperflareSession,
               });
