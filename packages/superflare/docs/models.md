@@ -47,7 +47,7 @@ export interface Post extends PostRow {}
 ```
 
 {% callout title="Model class names" %}
-Model class names are automatically converted to pluralized versions when referencing table names. For example, a `Post` model would have a corresponding `posts` table, and a `Person` model would have a corresponding `people` table.
+Model class names are automatically converted to pluralized versions when referencing table names. For example, a `Post` model would have a corresponding `posts` table, and a `Person` model would have a corresponding `people` table. This means model class names must not be [mangled](https://github.com/terser/terser?tab=readme-ov-file#cli-mangle-options) when deployed, so do not use `build: { minify: true }` in your Vite config (Vite’s [default minify behavior](https://vite.dev/config/build-options.html#build-minify) is to minify the client build and leave the SSR build untouched).
 {% /callout %}
 
 Superflare provides utilities to help you keep your model's type definition in sync with your database.

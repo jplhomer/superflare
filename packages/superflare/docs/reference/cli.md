@@ -35,13 +35,21 @@ By default, it:
 4. (Optional with `-s`) [Seeds](/database/seeding) your local database
 5. Parses the column types in your local database and syncs them to `superflare.env.d.ts` to be used by your [Models](/models)
 
-## `superflare dev`
-
-The `dev` command starts a local development server for your Superflare app. It's effectively a wrapper around `wrangler dev --local`. It will be more useful in the context of Cloudflare Pages because all bindings are passed via CLI flags, which can be tedious to type out.
+It takes the binding name of your D1 database as a positional argument, which is `DB` by default:
 
 ```bash
-npx superflare dev
+npx superflare migrate DB
 ```
+
+Superflare’s `migrate` command is intended for use in development, both for managing your local database (e.g. wiping it clean to start fresh, seeding it, running migrations) and for creating the TypeScript types to match your database schema. To run your migrations in production when you are ready to deploy your latest, use wrangler directly:
+
+```bash
+npx wrangler d1 migrations apply DB --remote
+```
+
+## `superflare dev`
+
+The `dev` command starts a local development server for your Superflare app. It’s a wrapper around two commands: `remix vite:dev` (starts the main Vite dev server) and `wrangler dev -j` (enables working with [Durable Object bindings](https://developers.cloudflare.com/workers/wrangler/api/#supported-bindings)). You can use it directly or put it in your `package.json`’s scripts: `"dev": "superflare dev"`.
 
 ## `superflare generate`
 

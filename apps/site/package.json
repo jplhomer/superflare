@@ -15,7 +15,8 @@
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
-    "@docsearch/react": "^3.6.1",
+    "@docsearch/css": "^3.8.0",
+    "@docsearch/react": "^3.8.0",
     "@headlessui/react": "^2.1.2",
     "@markdoc/markdoc": "0.4.0",
     "@remix-run/cloudflare": "^2.12.1",

@@ -9,7 +9,7 @@ Events are a powerful way to tell other parts of your application that something
 
 Superflare provides `Events` to emit changes to other parts of the application, and `Listeners` to subscribe to those events.
 
-Imagine that you a file upload has finished processing. You might emit a `FileProcessed` event, and then a listener `SendFileProcessedNotification` could be used to alert the user via email or Slack that the file has been processed.
+Imagine that you want to know when a file upload has finished processing. You might emit a `FileProcessed` event, and then a listener `SendFileProcessedNotification` could be used to alert the user via email or Slack that the file has been processed.
 
 ## Defining Events
 
