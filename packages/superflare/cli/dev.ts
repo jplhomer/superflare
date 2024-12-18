@@ -84,7 +84,7 @@ export async function devHandler(
     process.exit(1);
   }
 
-  spawn("wrangler", ["dev", "-j", "--no-bundle"], {
+  spawn("wrangler", ["dev", "--no-bundle"], {
     stdio: "ignore",
     shell: true,
     env: process.env,
