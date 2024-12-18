@@ -130,6 +130,5 @@ export async function wranglerMigrate(dbName: string) {
     "apply",
     dbName,
     "--local",
-    "-j",
   ]);
 }

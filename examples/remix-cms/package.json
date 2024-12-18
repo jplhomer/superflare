@@ -7,11 +7,11 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix vite:build",
-    "deploy": "wrangler -j deploy",
+    "deploy": "wrangler deploy",
     "dev": "superflare dev",
-    "start": "wrangler -j dev",
+    "start": "wrangler dev",
     "migrate": "superflare migrate",
-    "typegen": "wrangler -j types",
+    "typegen": "wrangler types",
     "typecheck": "tsc"
   },
   "keywords": [],
@@ -52,7 +52,7 @@
     "typescript": "^5",
     "vite": "^5.3.4",
     "vite-tsconfig-paths": "^4.3.2",
-    "wrangler": "^3.80.0"
+    "wrangler": "^3.91.0"
   },
   "engines": {
     "node": ">=16.13"

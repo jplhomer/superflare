@@ -45,13 +45,13 @@
     "tsup": "^6.6.3",
     "typescript": "^5",
     "vite": "^5",
-    "wrangler": "^3.80"
+    "wrangler": "^3.91.0"
   },
   "peerDependencies": {
     "@remix-run/cloudflare": "^2.12.1",
     "@remix-run/dev": "^2.12.1",
     "@remix-run/server-runtime": "^2.12.1",
-    "wrangler": "^3.80"
+    "wrangler": "^3.91.0"
   },
   "dependencies": {
     "superflare": "workspace:*"

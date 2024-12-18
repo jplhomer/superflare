@@ -49,7 +49,7 @@ npx wrangler d1 migrations apply DB --remote
 
 ## `superflare dev`
 
-The `dev` command starts a local development server for your Superflare app. It’s a wrapper around two commands: `remix vite:dev` (starts the main Vite dev server) and `wrangler dev -j` (enables working with [Durable Object bindings](https://developers.cloudflare.com/workers/wrangler/api/#supported-bindings)). You can use it directly or put it in your `package.json`’s scripts: `"dev": "superflare dev"`.
+The `dev` command starts a local development server for your Superflare app. It’s a wrapper around two commands: `remix vite:dev` (starts the main Vite dev server) and `wrangler dev --no-bundle` (enables working with [Durable Object bindings](https://developers.cloudflare.com/workers/wrangler/api/#supported-bindings)). You can use it directly or put it in your `package.json`’s scripts: `"dev": "superflare dev"`.
 
 ## `superflare generate`
 

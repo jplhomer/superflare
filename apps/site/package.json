@@ -9,8 +9,8 @@
     "dev:remix": "remix vite:dev",
     "dev:docs": "node ./scripts/serve-local-docs.mjs",
     "dev": "concurrently \"npm:dev:*\"",
-    "start": "wrangler -j dev",
-    "typegen": "wrangler -j types",
+    "start": "wrangler dev",
+    "typegen": "wrangler types",
     "typecheck": "tsc"
   },
   "browserslist": "defaults, not ie <= 11",
@@ -52,6 +52,6 @@
     "typescript": "^5",
     "vite": "^5.3.4",
     "vite-tsconfig-paths": "^4.3.2",
-    "wrangler": "^3.80.0"
+    "wrangler": "^3.91.0"
   }
 }

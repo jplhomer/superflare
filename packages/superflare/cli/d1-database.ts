@@ -19,6 +19,6 @@ export async function getD1Database(dbName: string, logger = console.log) {
     "wrangler",
     logger
   );
-  const { env } = await getPlatformProxy({ experimentalJsonConfig: true });
+  const { env } = await getPlatformProxy();
   return env[dbName] as D1DatabaseType | undefined;
 }
